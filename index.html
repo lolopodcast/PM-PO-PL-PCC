@@ -92,6 +92,8 @@ const contentData = {
         audio_pause: "暫停",
         audio_resume: "繼續",
         audio_stop: "停止",
+        quiz_title: "隨機知識檢定",
+        flip_title: "關鍵專有名詞翻轉卡",
         nav: [
             { id: "exec", title: "0. 執行摘要", icon: "star" },
             { id: "npd", title: "1. 新產品開發流程", icon: "layers" },
@@ -113,17 +115,41 @@ const contentData = {
             {
                 title: "1. 新產品開發流程 (NPD Stage-Gate)",
                 desc: "新產品開發 (NPD) 遵循階段-關卡模型，確保在進入下一階段前，符合商業、技術與資源標準。",
+                deepDive: [
+                    "由羅勃·庫柏 (Robert G. Cooper) 提出的階段-關卡模型 (Stage-Gate Model) 是硬體製造與實體產品開發的黃金標準。其核心精神在於將高風險的創新過程，切分為可管理的離散階段，並在每個階段的末端設立「關卡 (Gate)」。",
+                    "關卡會議的核心目的並非單純的進度報告，而是嚴格的「Go/Kill (繼續/終止)」商業決策。在「模糊前端 (Fuzzy Front End)」階段，PM 必須透過市場研究過濾掉沒有商業價值的概念，以避免後續投入龐大的研發與開模成本。",
+                    "進入開發階段後，專案的複雜度與投入資源呈指數型上升。此時，跨部門團隊 (Cross-functional team) 必須無縫協作，確保設計、工程驗證與供應鏈採購同步進行，這也是大型硬體專案為何高度依賴專案負責人 (PL) 與專案協調員 (PCC) 的根本原因。"
+                ],
                 image: "NPD_Stage-Gate Model_Coggle_SML 20240312.png",
                 imageAlt: "新產品開發流程階段關卡模型圖",
                 points: [
                     { title: "階段一：規劃與提案 (Plan & Proposal)", text: "涵蓋市場行銷與可行性分析，由 PM 與行銷業務主導，評估技術與財務風險，決定產品概念。" },
                     { title: "階段二：設計與執行 (Design & Execute)", text: "涵蓋產品設計與模具/工具製作，此時 PL 與研發工程師 (RD) 成為核心，進行規格展開與架構設計。" },
                     { title: "階段三：驗證與量產 (Validation & MP)", text: "工程驗證到最終上市，由專案協調員 (PCC) 協助跨部門資源整合，確保產線與品質達標。" }
+                ],
+                flipCards: [
+                    { front: "Stage-Gate Model", back: "階段-關卡模型：透過設立嚴格的審查關卡，降低新產品開發風險的流程管理框架。" },
+                    { front: "Go/Kill Decision", back: "繼續/終止決策：在每個關卡中，高階主管基於商業與技術指標，決定專案是否繼續投入資源或直接終止。" },
+                    { front: "Fuzzy Front End (FFE)", back: "模糊前端：NPD 的最早期階段，充滿不確定性，主要進行創意發想、市場評估與概念成型。" },
+                    { front: "Cross-functional Team", back: "跨部門團隊：由研發、行銷、製造、採購等不同專業人員組成，共同為新產品上市負責。" }
+                ],
+                quizBank: [
+                    { question: "在 NPD 流程的「模糊前端 (FFE)」階段，哪一個角色扮演最關鍵的決策主導者？", options: [ {title: "PM (產品經理)", correct: true, feedback: "正確。FFE 階段充滿不確定性，PM 需主導市場評估與概念發想，過濾無效創意。"}, {title: "RD (研發工程師)", correct: false, feedback: "錯誤。此階段尚屬概念與市場評估，尚未進入實體設計開發。"}, {title: "PCC (專案協調員)", correct: false, feedback: "錯誤。協調員主要在專案進入實質開發後，協助跨部門進度追蹤。"} ] },
+                    { question: "Stage-Gate 模型的「關卡 (Gate)」最核心的目的是什麼？", options: [ {title: "追蹤工程師每天的程式碼產出進度", correct: false, feedback: "錯誤。這是敏捷開發中 Daily Standup 的目的，而非 Gate 審查。"}, {title: "進行嚴格的 Go/Kill (繼續/終止) 商業資源決策", correct: true, feedback: "正確。關卡的存在是為了及時止損，確保只將資源投入有價值的專案。"}, {title: "決定產品行銷廣告的顏色與文案", correct: false, feedback: "錯誤。這是行銷執行的細節，並非決定專案生死的 Gate 審查核心。"} ] },
+                    { question: "在「階段二：設計與執行」中，主要的負責人通常會轉換為哪個角色？", options: [ {title: "PL (專案負責人) 與 RD", correct: true, feedback: "正確。一旦產品概念確立，將轉交給技術團隊進行規格展開與架構設計。"}, {title: "Sales (業務銷售)", correct: false, feedback: "錯誤。業務主要負責前端探勘與後期銷售，非設計階段核心。"}, {title: "QA (品質驗證)", correct: false, feedback: "錯誤。QA 雖然會參與前期規劃，但主戰場在開發後的測試階段。"} ] },
+                    { question: "為什麼實體產品開發極度依賴 Stage-Gate 而非純粹的敏捷開發？", options: [ {title: "因為硬體工程師不喜歡開會", correct: false, feedback: "錯誤。選擇方法論是基於產業特性，而非個人喜好。"}, {title: "因為硬體的變更成本 (Cost of Change) 在開模後極高", correct: true, feedback: "正確。實體零件一旦投入生產，修改成本巨大，因此需要階段性嚴格把關。"}, {title: "因為軟體無法進行市場測試", correct: false, feedback: "錯誤。軟體反而更容易進行 A/B 測試與快速迭代。"} ] },
+                    { question: "下列何者並非 NPD Phase 1 (規劃與提案) 的產出？", options: [ {title: "市場可行性分析報告", correct: false, feedback: "錯誤。這是 Phase 1 的標準產出。"}, {title: "量產良率與生產治具報告", correct: true, feedback: "正確。量產良率是在 Phase 3 (驗證與量產) 階段才會產出的指標。"}, {title: "產品概念與商業模式", correct: false, feedback: "錯誤。確立商業模式是規劃階段的重要任務。"} ] },
+                    { question: "「確保跨部門資源整合與生產線準備就緒」通常是哪一個階段的核心任務？", options: [ {title: "Phase 1: 規劃與提案", correct: false, feedback: "錯誤。此時連規格都尚未確定。"}, {title: "Phase 2: 設計與執行", correct: false, feedback: "錯誤。此階段著重於圖面設計與模具開發。"}, {title: "Phase 3: 驗證與量產", correct: true, feedback: "正確。產品設計完成後，需經由嚴格的工程驗證並導入工廠量產。"} ] }
                 ]
             },
             {
                 title: "2. 專案管理與 PM 職能",
                 desc: "整合觀點：從產品開發流程，推導至產品經理所需具備的七大核心職能。",
+                deepDive: [
+                    "產品經理 (Product Manager) 被譽為「產品的 CEO」，其職能要求廣泛且跨越了多個專業領域。從市場前端的探索到後端工程交付，PM 必須具備三位一體的立體視角：商業導向 (Business)、技術導向 (Technical) 以及管理導向 (Management)。",
+                    "在商業導向構面，PM 必須精通「策略 (Strategy)」、「產品組合管理 (Portfolio Management)」與「市場研究 (Market Research)」。這決定了產品是否能為公司帶來獲利，也是 PM 最大的價值所在。若缺乏這層素養，PM 將退化為單純的專案追蹤員。",
+                    "在技術與管理導向構面，PM 不一定需要親自寫程式碼或畫 3D 圖，但必須深諳「產品創新流程 (PI Process)」，並具備高度的「領導力與團隊文化建立 (Culture, Team, & Leadership)」能力。PM 需透過影響力 (Influence without authority) 來帶領研發與行銷團隊，確保資源投入在最高價值的功能上。"
+                ],
                 image: "PM產品經理_Coggle_20250317.png",
                 imageAlt: "PM產品經理職能心智圖",
                 table: {
@@ -133,46 +159,138 @@ const contentData = {
                         { stage: "設計/開模", comp: "產品創新流程 (15%)、產品設計開發工具 (15%)", domain: "技術導向 (Technical-Oriented)" },
                         { stage: "工程/上市", comp: "產品創新管理 (20%)、文化, 團隊, 與領導力 (10%)", domain: "管理導向 (Management-Oriented)" }
                     ]
-                }
+                },
+                flipCards: [
+                    { front: "Portfolio Management", back: "產品組合管理：平衡公司旗下多項產品的資源分配、風險與收益，以達成企業總體戰略目標。" },
+                    { front: "Influence without Authority", back: "無權力影響：PM 通常不是研發團隊的直屬主管，必須透過願景、數據與溝通技巧來驅動團隊前進。" },
+                    { front: "Market Research", back: "市場研究：透過量化數據與質化訪談，挖掘未被滿足的使用者需求，作為產品規格定義的基石。" },
+                    { front: "Business-Oriented", back: "商業導向：在產品決策時，優先考量投資報酬率 (ROI)、市佔率與商業模式的思維模式。" }
+                ],
+                quizBank: [
+                    { question: "根據上述模型，PM 在「市場/可行性分析」階段，最不需要動用哪一項職能？", options: [ {title: "市場研究 (Market Research)", correct: false, feedback: "錯誤。市場研究是此階段的核心。"}, {title: "策略定義 (Strategy)", correct: false, feedback: "錯誤。策略決定了產品的定位與走向。"}, {title: "產品設計開發工具 (PDD Tools)", correct: true, feedback: "正確。在早期的商業評估階段，尚未進入實質設計，對工程工具的掌握並非首要。"} ] },
+                    { question: "「產品組合管理 (Portfolio Management)」的主要目的為何？", options: [ {title: "分配單一專案內工程師的每日工作", correct: false, feedback: "錯誤。這是執行層面的任務。"}, {title: "平衡公司多項產品間的資源、風險與收益", correct: true, feedback: "正確。產品組合管理是在宏觀層面上做資源配置，確保公司總體獲利。"}, {title: "管理工廠生產線的庫存零件", correct: false, feedback: "錯誤。那是供應鏈與物管 (MC) 的職責。"} ] },
+                    { question: "為什麼 PM 需要具備「無權力影響 (Influence without Authority)」的能力？", options: [ {title: "因為 PM 通常是全公司的最高執行長", correct: false, feedback: "錯誤。PM 通常位階平行於其他部門主管。"}, {title: "因為 PM 往往不是 RD 的直屬主管，需靠願景與數據說服團隊", correct: true, feedback: "正確。矩陣組織中，PM 需跨部門領導，因此軟實力與影響力極為關鍵。"}, {title: "因為 PM 不需要為產品的市場成敗負責", correct: false, feedback: "錯誤。PM 必須為產品最終的商業成敗負責。"} ] },
+                    { question: "在「工程/上市」階段，PM 的主要教育構面偏向何者？", options: [ {title: "商業導向 (Business-Oriented)", correct: false, feedback: "錯誤。這主要在前端規劃期。"}, {title: "技術導向 (Technical-Oriented)", correct: false, feedback: "錯誤。這主要在中端設計期。"}, {title: "管理導向 (Management-Oriented)", correct: true, feedback: "正確。上市前夕極度考驗 PM 的時程、資源掌控與團隊領導能力。"} ] },
+                    { question: "下列何者不屬於「商業導向」的核心職能？", options: [ {title: "策略定義", correct: false, feedback: "錯誤。這是商業導向核心。"}, {title: "市場研究", correct: false, feedback: "錯誤。這屬於商業探索。"}, {title: "產品創新流程 (PI Process)", correct: true, feedback: "正確。流程掌控更偏向技術與開發執行的導向。"} ] },
+                    { question: "PM 職能的分佈反映了什麼樣的專案管理事實？", options: [ {title: "PM 只需懂行銷，不需懂任何技術", correct: false, feedback: "錯誤。PM 也需要理解開發流程與工具。"}, {title: "PM 的角色是動態的，需隨著專案生命週期切換不同專業視角", correct: true, feedback: "正確。從商業評估到工程交付，PM 的關注點必須隨著階段靈活轉換。"}, {title: "PM 的工作可以完全被專案協調員 (PCC) 取代", correct: false, feedback: "錯誤。PCC 缺乏前期的商業策略與市場洞察職能。"} ] }
+                ]
             },
             {
                 title: "3. 軟體工程 Agile/Scrum",
                 desc: "敏捷開發 (Agile) 是一種以使用者價值為核心，強調迭代、漸進式交付的軟體開發架構。",
+                deepDive: [
+                    "敏捷軟體開發宣言 (Agile Manifesto) 顛覆了傳統軟體工程。它強調「個人與互動重於流程與工具」、「可用的軟體重於詳盡的文件」、「與客戶合作重於合約協商」以及「回應變化重於遵循計畫」。這種典範轉移之所以能在軟體界成功，根本原因在於軟體代碼的「修改成本 (Cost of Change)」極低，允許團隊透過快速試錯來逼近完美。",
+                    "在 Scrum 框架中，經驗主義 (Empiricism) 是其三大支柱：透明性 (Transparency)、檢驗 (Inspection) 與調適 (Adaptation)。Product Owner (PO) 作為價值的守門員，負責動態排序 Product Backlog，確保開發團隊在每次短短 1-4 週的 Sprint (衝刺期) 中，都能產出具備最高商業價值的潛在可發布增量 (Increment)。",
+                    "有別於硬體的 Waterfall 模型，Scrum 摒棄了厚重的期初規格書 (PRD)。PO 透過 User Story (使用者故事) 來描述需求，並在 Sprint Planning 會議中與開發團隊共同決定當期承諾。當遭遇技術瓶頸時，PO 擁有在 Sprint 內進行功能裁切 (Scope cut) 的絕對戰術決策權。"
+                ],
                 points: [
                     { title: "Scrum 核心角色", text: "Product Owner (PO) 決定產品價值與待辦清單順序；Scrum Master 確保流程順暢；開發團隊 (Developers) 負責實作產出。" },
                     { title: "反覆運算與交付", text: "透過 Sprint（衝刺期）進行短期且高頻的開發循環，每個 Sprint 結束皆需產出可用的潛在發布增量。" },
                     { title: "Agile vs. V-Model", text: "相較於傳統 V-Model 的嚴謹循序漸進與需求凍結，Agile 擁抱變更，透過持續回饋來修正方向，適用於需求變化快且修改成本低的軟體環境。" }
+                ],
+                flipCards: [
+                    { front: "Sprint", back: "衝刺期：Scrum 中固定長度 (通常為 1-4 週) 的開發週期，團隊在此期間內專注完成承諾的項目。" },
+                    { front: "Product Backlog", back: "產品待辦清單：由 PO 負責維護與排序的動態需求列表，是產品所有變更與新增功能的唯一來源。" },
+                    { front: "User Story", back: "使用者故事：從終端使用者視角出發的需求描述格式，強調「誰」、「想要什麼」以及「為了達成什麼商業價值」。" },
+                    { front: "Scrum Master", back: "敏捷教練：負責移除團隊開發障礙，確保 Scrum 框架被正確理解與執行的僕人式領導者。" },
+                    { front: "Increment", back: "潛在可發布增量：每個 Sprint 結束時，團隊交付的必須是經過測試、可獨立運作且能帶來價值的軟體版本。" }
+                ],
+                quizBank: [
+                    { question: "下列何者是 Scrum 框架中的三大支柱之一？", options: [ {title: "合約協商", correct: false, feedback: "錯誤。敏捷宣言強調客戶合作重於合約協商。"}, {title: "透明性 (Transparency)", correct: true, feedback: "正確。Scrum 基於經驗主義，三大支柱為透明性、檢驗與調適。"}, {title: "零缺陷保證", correct: false, feedback: "錯誤。這並非 Scrum 定義的框架支柱。"} ] },
+                    { question: "在 Scrum 團隊中，誰負責對 Product Backlog (產品待辦清單) 進行優先順序的排列？", options: [ {title: "Scrum Master", correct: false, feedback: "錯誤。SM 負責流程與排除障礙。"}, {title: "Product Owner (PO)", correct: true, feedback: "正確。PO 是價值的守門員，全權負責 Backlog 的排序與投資報酬率。"}, {title: "開發團隊 (Developers)", correct: false, feedback: "錯誤。開發團隊負責估算工時與執行實作，不負責決定商業價值排序。"} ] },
+                    { question: "敏捷開發 (Agile) 為什麼在軟體工程中比在硬體工程中更容易成功落地？", options: [ {title: "因為軟體工程師技術較強", correct: false, feedback: "錯誤。這與工程師的技術能力無關。"}, {title: "因為軟體的修改成本 (Cost of Change) 極低，允許快速迭代試錯", correct: true, feedback: "正確。軟體不需開模且沒有零件交期，隨時可以修改程式碼以回應市場變更。"}, {title: "因為軟體開發不需要 QA 測試", correct: false, feedback: "錯誤。軟體開發同樣極度重視自動化測試與驗證。"} ] },
+                    { question: "每一個 Sprint (衝刺期) 結束時，團隊必須產出什麼？", options: [ {title: "厚重的系統規格書", correct: false, feedback: "錯誤。敏捷強調可用的軟體重於詳盡文件。"}, {title: "潛在可發布的產品增量 (Increment)", correct: true, feedback: "正確。每個 Sprint 的產出都必須是可獨立運作、隨時能上線的軟體版本。"}, {title: "下一季的行銷計畫", correct: false, feedback: "錯誤。這是 PM 或行銷單位的職責，非 Sprint 的開發產出。"} ] },
+                    { question: "User Story (使用者故事) 的核心描述結構通常包含哪三個元素？", options: [ {title: "角色、需求、商業價值", correct: true, feedback: "正確。標準格式為：「身為 [角色]，我想要 [需求]，以便於 [商業價值]」。"}, {title: "資料庫、API、前端畫面", correct: false, feedback: "錯誤。這是技術規格，不是使用者故事。"}, {title: "成本、時程、風險", correct: false, feedback: "錯誤。這是傳統專案管理的鐵三角。"} ] },
+                    { question: "當開發過程中發現這週絕對做不完承諾的 User Story 時，PO 通常會採取什麼戰術？", options: [ {title: "強迫工程師加班直到做完", correct: false, feedback: "錯誤。敏捷強調可持續的開發步調 (Sustainable pace)。"}, {title: "進行範圍裁切 (Scope cut)，保住最核心的商業價值 MVP", correct: true, feedback: "正確。PO 擁有戰術決策權，透過砍掉邊角功能來確保核心增量能如期交付。"}, {title: "直接取消整個 Sprint", correct: false, feedback: "錯誤。Sprint 取消是極端情況，通常僅在商業目標完全失效時發生。"} ] }
                 ]
             },
             {
                 title: "4. 硬體設計 Waterfall",
                 desc: "瀑布式開發 (Waterfall) 是硬體領域的主流，特徵為嚴謹的線性流程與高度的相依性。",
+                deepDive: [
+                    "不同於軟體的敏捷彈性，硬體產品開發深受實體物理法則與全球供應鏈的制約。一個硬體專案必須經過嚴格的線性階段：需求分析 (Requirement)、系統架構 (Architecture)、細部設計 (Detailed Design)、工程試產 (EVT)、設計驗證 (DVT)、生產驗證 (PVT) 乃至最終量產 (MP)。每個階段的產出都是下一個階段的輸入，且極難逆向修改。",
+                    "硬體的「變更成本」隨著階段推進呈現陡峭的指數型上升。在設計圖紙階段修改一顆電容或許只需幾分鐘；但若在模具開立 (Tooling) 甚至打件生產後才發現設計瑕疵，不僅幾百萬的模具報廢，更可能面臨數十週的零件交期 (Lead Time) 延遲，這對產品上市檔期是毀滅性的打擊。",
+                    "因此，在 Waterfall 模型下的硬體 PL (專案負責人)，其決策基準高度偏向「可行性驅動 (Feasibility-driven)」。他們必須在前期規格定義時，極度謹慎地盤點最低訂購量 (MOQ)、第二料源 (Second Source) 與散熱安規等物理限制，並透過嚴謹的 V-Model 驗證架構，確保每一個硬體規格都能被穩定、高良率地製造出來。"
+                ],
                 points: [
                     { title: "線性且不可逆的流程", text: "從需求分析、系統設計、硬體實作、到各階段驗證（EVT、DVT、PVT）。一旦進入開模或打件階段，設計變更的代價極其高昂。" },
                     { title: "物理與供應鏈限制", text: "硬體開發深受物理世界的限制（如散熱、安規）以及供應鏈的制約（如零組件交期 Lead Time、起訂量 MOQ）。" },
                     { title: "驗證驅動", text: "與軟體的價值驅動不同，硬體在瀑布流的後期高度依賴嚴謹的可靠度測試與生產驗證，以確保進入量產後的良率。" }
+                ],
+                flipCards: [
+                    { front: "EVT / DVT / PVT", back: "硬體驗證三階段：Engineering (工程/功能驗證)、Design (設計/安規驗證)、Production (生產/良率驗證)。" },
+                    { front: "Lead Time (L/T)", back: "前置交期：從向供應商下達零組件訂單，到物料實際送達工廠產線所需等待的總時間。" },
+                    { front: "MOQ", back: "最低訂購量 (Minimum Order Quantity)：供應商願意接受並啟動生產的最少零件購買數量，直接影響硬體庫存成本。" },
+                    { front: "Tooling / NRE", back: "開模與非重覆性工程費用：硬體製造前期投入的模具開發、治具設計等一次性高昂成本。" }
+                ],
+                quizBank: [
+                    { question: "硬體開發通常遵循 EVT、DVT、PVT 的驗證流程，其中 DVT 的全名與主要目的為何？", options: [ {title: "Design Verification Test (設計驗證)：著重於安規認證、可靠度與環境測試", correct: true, feedback: "正確。DVT 階段必須確保產品設計符合所有外在規範與極端環境要求。"}, {title: "Development Visual Test (開發視覺測試)：確認產品顏色與外觀", correct: false, feedback: "錯誤。外觀通常在更早期的模型階段確認，並非 DVT 的核心嚴謹測試。"}, {title: "Data Validation Test (數據驗證)：測試資料庫存取速度", correct: false, feedback: "錯誤。這是軟體後端工程的測試範疇。"} ] },
+                    { question: "為什麼硬體開發難以採用純粹的 Agile (敏捷) 模式在量產階段不斷修改規格？", options: [ {title: "因為硬體工程師不懂 Agile", correct: false, feedback: "錯誤。與個人知識無關，是產業物理特性決定方法論。"}, {title: "因為牽涉到開模 (Tooling) 與零件交期，變更成本極其高昂", correct: true, feedback: "正確。硬體一旦開模或下單特殊料件，事後修改將導致嚴重的金錢與時間損失。"}, {title: "因為硬體不需要進行測試", correct: false, feedback: "錯誤。硬體測試(EVT/DVT)比軟體更加曠日費時且嚴謹。"} ] },
+                    { question: "在硬體供應鏈中，「Lead Time (L/T)」指的是什麼？", options: [ {title: "產品研發的總耗時", correct: false, feedback: "錯誤。這通常稱為 Time-to-Market。"}, {title: "從下單零件到實際到料所需的前置等待時間", correct: true, feedback: "正確。某些關鍵 IC 的交期甚至長達數十週，是硬體排程最大的風險來源。"}, {title: "產品開機到畫面出現的等待時間", correct: false, feedback: "錯誤。這是硬體效能指標，並非供應鏈術語。"} ] },
+                    { question: "下列何者是硬體開發在前期規劃時，必須考量的重大供應鏈限制？", options: [ {title: "MOQ (最低訂購量)", correct: true, feedback: "正確。若產品預估銷量未達零件供應商的 MOQ，將面臨極高的庫存呆滯風險。"}, {title: "伺服器 AWS 的月租費", correct: false, feedback: "錯誤。這是軟體雲端營運成本。"}, {title: "程式碼的版本控制系統", correct: false, feedback: "錯誤。這是軟體工程的管理工具。"} ] },
+                    { question: "在 V-Model 瀑布式開發中，左側的下降階段代表什麼意義？", options: [ {title: "系統需求與規格的逐步拆解、細化", correct: true, feedback: "正確。V-Model 左側為從高階需求展開至細部硬體/軟體設計的過程。"}, {title: "各階段的組裝與驗收測試", correct: false, feedback: "錯誤。這是 V-Model 右側上升階段的任務。"}, {title: "產品獲利的衰退曲線", correct: false, feedback: "錯誤。V-Model 與產品生命週期的獲利曲線無關。"} ] },
+                    { question: "當硬體專案進入 PVT (生產驗證測試) 階段，團隊最關注的核心指標是什麼？", options: [ {title: "產品要用什麼顏色的包裝盒", correct: false, feedback: "錯誤。這在前期設計與 DVT 前就該底定。"}, {title: "工廠產線的組裝順暢度與量產良率 (Yield Rate)", correct: true, feedback: "正確。PVT 的核心目的是驗證產線是否已準備好進入大規模量產 (MP)。"}, {title: "競爭對手是否發布了新產品", correct: false, feedback: "錯誤。這是 PM 前端市場關注的重點，非 PVT 工程驗證核心。"} ] }
                 ]
             },
             {
                 title: "5. 角色與決策架構綜整",
                 desc: "將上述方法論對應至組織架構，我們總結出軟硬體在角色與決策上的通用法則。",
-                equation: { left: "軟體 PO", equals: "≈", right1: "硬體 PL", right1_sub: "(Owner 型)", right2: "硬體 PCC", right2_sub: "(協調支援)" },
+                deepDive: [
+                    "當我們撥開「軟硬體名詞」的迷霧，會發現專案管理的底層權力架構是高度對稱的。軟體 Scrum 中的 Product Owner (PO) 是一個極端集權的角色，他同時肩負了「技術規格的取捨決策」與「跨職能的開發追蹤」。然而，在龐大的硬體體系中，因為必須處理繁雜的供應鏈與工廠生管，這個沉重的重擔被拆解了：由 PL (Project Leader) 專注擔任技術與規格的 Decision Maker，並由獨立的 PCC (Project Coordinator) 負責繁瑣的進度追蹤與跨部門溝通。",
+                    "這就導出了一個精闢的跨領域轉譯公式：在執行層面，『軟體的 PO 等同於硬體的強勢 PL 加上 PCC』。這兩者都是 Execution Layer (執行層) 的絕對 Owner，負責帶領團隊把產品「生出來」。",
+                    "而在分層決策模型中，我們必須嚴格區分「策略層」與「戰術執行層」。PM 永遠是站在最外圍防衛線的將軍，他們掌握「總體策略 (Strategic)」，負責解決來自業務 (Sales) 的無理客製化要求，並承擔產品的最終市場盈虧；而 PO 或 PL 則是前線指揮官，掌握「個體戰術 (Tactical)」，他們在會議室裡解決 RD 提出的技術瓶頸，透過 MVP 裁切或規格妥協，確保部隊能持續往前推進。"
+                ],
+                equation: { left: "軟體 PO", equals: "≈", right1: "硬體 PL", right1_sub: "(決策 Owner)", right2: "硬體 PCC", right2_sub: "(協調支援)" },
                 table: {
                     headers: ["決策層級", "主導角色", "核心提問", "防守陣線"],
                     rows: [
-                        { level: "策略層", role: "PM (產品經理)", question: "做不做這個產品？", scope: "PM 解決 Sales：擋住外部商業干擾與客製化要求。" },
-                        { level: "執行層", role: "PO / PL", question: "先做哪個功能？", scope: "PO/PL 搞定 RD：主導技術取捨，確保開發實作步調。" }
+                        { level: "策略層 (Strategic)", role: "PM (產品經理)", question: "做不做這個產品？", scope: "PM 解決 Sales：擋住外部商業干擾與客製化要求。" },
+                        { level: "執行層 (Tactical)", role: "PO / PL", question: "先做哪個功能？", scope: "PO/PL 搞定 RD：主導技術取捨，確保開發實作步調。" }
                     ]
-                }
+                },
+                flipCards: [
+                    { front: "Strategic Decision", back: "策略決策：由 PM 主導的宏觀決策，影響公司資源配置、市場定位與長遠商業成敗 (做對的事)。" },
+                    { front: "Tactical Decision", back: "戰術決策：由 PO/PL 主導的微觀決策，在有限資源與技術限制下，決定實作的優先順序與範圍取捨 (把事做對)。" },
+                    { front: "Scope Cut", back: "範圍裁切：為確保專案如期交付，前線指揮官 (PO/PL) 主動捨棄非核心功能的戰術性妥協。" },
+                    { front: "Defense Line", back: "防守陣線：PM 防守外部業務壓力，守住產品標準化；PO/PL 防守內部開發進度，解決工程瓶頸。" }
+                ],
+                quizBank: [
+                    { question: "依據跨領域對齊公式，軟體的 PO (Product Owner) 職能在硬體組織中，通常被拆解為哪兩個角色？", options: [ {title: "PM 與 QA", correct: false, feedback: "錯誤。QA 負責品質驗證，PM 負責總體商業策略。"}, {title: "PL (專案負責人) 與 PCC (專案協調員)", correct: true, feedback: "正確。硬體將 PO 的技術決策權交給 PL，將繁瑣的跨部門進度追蹤交給 PCC。"}, {title: "RD 與 Sales", correct: false, feedback: "錯誤。這是純工程與純業務的極端。"} ] },
+                    { question: "決定「產品定價與第一波目標上市市場」屬於哪一種決策層級？", options: [ {title: "執行層 (Tactical)", correct: false, feedback: "錯誤。這並非日常開發的技術取捨。"}, {title: "策略層 (Strategic)", correct: true, feedback: "正確。這是影響產品生命週期與獲利模式的高階商業決策，由 PM 負責。"}, {title: "驗證層 (Validation)", correct: false, feedback: "錯誤。這屬於測試除錯範疇。"} ] },
+                    { question: "當遭遇技術難題需要臨時捨棄 (Scope Cut) 某個小功能以趕上這週的 Sprint 產出時，這屬於誰的職權？", options: [ {title: "PM (產品經理)", correct: false, feedback: "錯誤。如果 PM 介入這種微觀裁切，將淪為微觀管理 (Micro-management)。"}, {title: "PO / PL (前線指揮官)", correct: true, feedback: "正確。在不影響核心商業價值的前提下，PO/PL 擁有個體戰術上的絕對裁切權。"}, {title: "Sales (業務)", correct: false, feedback: "錯誤。業務無權介入工程開發的細部規格裁切。"} ] },
+                    { question: "「PM 解決 Sales，PO/PL 搞定 RD」這句黃金防守法則中，PM 擋住 Sales 的核心目的是什麼？", options: [ {title: "為了展現 PM 的辦公室政治權力", correct: false, feedback: "錯誤。專案管理不應以政治鬥爭為出發點。"}, {title: "為了保護 RD 不必寫程式", correct: false, feedback: "錯誤。RD 的職責本來就是開發。"}, {title: "為了守住產品「標準化」底線，避免淪為滿足單一客戶的客製化工廠", correct: true, feedback: "正確。PM 必須確保開發資源投入在能賣給 100 個客戶的功能上，而非單一短期訂單。"} ] },
+                    { question: "如果一個組織中，PM 同時包辦了看市場方向、寫 PRD、畫架構圖、催工程師進度、訂便當，這會造成什麼後果？", options: [ {title: "組織效率極大化，溝通零成本", correct: false, feedback: "錯誤。過度集權在一人身上，絕對會產生嚴重瓶頸。"}, {title: "PM 淪為決策瓶頸 (Bottleneck)，且失去總體商業策略焦點", correct: true, feedback: "正確。這就是為何需要分層架構 (分離 PM 與 PO/PL)，讓 PM 專注外部戰場。"}, {title: "RD 會變得更加自動自發", correct: false, feedback: "錯誤。RD 會因為缺乏明確的戰術指揮官而陷入混亂。"} ] },
+                    { question: "在硬體 V-Model 的實務運作中，PCC (專案協調員) 最主要的職責是不斷追問哪一個問題？", options: [ {title: "「這個功能可以賣多少錢？」", correct: false, feedback: "錯誤。這是 PM 的商業提問。"}, {title: "「料件何時到工廠？各部門的進度是否會卡到試產排程？」", correct: true, feedback: "正確。PCC 的天職是跨部門協調與進度追蹤 (Execution Support)。"}, {title: "「這個晶片的底層演算法該怎麼寫？」", correct: false, feedback: "錯誤。這是 RD 與技術 PL 的職責。"} ] }
+                ]
             },
             {
                 title: "6. 驅力與組織運作綜整",
                 desc: "從動機驅力到大型矩陣組織的協作，梳理出跨領域的通用核心公式。",
+                deepDive: [
+                    "雖然軟體 PO 與硬體 PL 掌握著相似的執行決策權，但他們背後的「決策驅動力」卻有著根本差異。軟體開發的本質允許快速迭代與發布更新，因此 PO 具備較大的容錯空間，他們的裁切基準強烈偏向「價值驅動 (Value-driven)」— 也就是永遠優先實作對使用者與商業影響最大的功能。反觀硬體，因為開模費用高昂且實體零件變更不易，PL 的裁量空間被嚴重限縮，他們的決策無奈地必須偏向「可行性驅動 (Feasibility-driven)」— 優先考量技術上能否做得出來、零件是否買得到。",
+                    "當專案規模擴大，硬體組織會演化出龐大的「矩陣式架構 (Matrix Organization)」，由各部門 (採購、生管、製造) 派出代表組成 Core Team。在這種結構下，每個部門的 PCC 都會為了自身的局部 KPI (例如採購追求最低成本、製造追求最高良率) 而發生激烈角力，這就是所謂的「局部最佳化陷阱 (Local Optimization)」。",
+                    "當跨部門衝突陷入死局，且前線 PL 無法單憑技術指標說服眾人時，專案管理唯一的解藥就是「升級 (Escalation)」。此時，不隸屬於任何技術或製造部門、唯一背負產品最終營收成敗的 PM 必須挺身而出，打破局部僵局，用「總體最佳化 (Global Optimization)」的商業視角進行最終的 Trade-off 拍板定案。"
+                ],
                 comparisons: [
                     { type: "軟體 PO", focus: "價值驅動 (Value-driven)", detail: "追求「做對東西」，以商業影響優先。" },
                     { type: "硬體 PL", focus: "可行性驅動 (Feasibility)", detail: "受限於零件交期，追求「做得出來」，以成本與技術優先。" }
                 ],
-                quote: "PM 決定產品成功的方向 (Strategy)，PO/PL 決定產品如何被做出來 (Execution)。當執行遭遇無法克服的衝突時，升級至策略層由 PM 進行總體價值拍板。"
+                quote: "PM 決定產品成功的方向 (Strategy)，PO/PL 決定產品如何被做出來 (Execution)。當執行遭遇無法克服的衝突時，升級至策略層由 PM 進行總體價值拍板。",
+                flipCards: [
+                    { front: "Value-Driven", back: "價值驅動：決策時優先考量功能對使用者的體驗升級與潛在商業價值 (常見於軟體)。" },
+                    { front: "Feasibility-Driven", back: "可行性驅動：決策時受制於物理限制，優先考量技術實作難度、成本與供應鏈狀態 (常見於硬體)。" },
+                    { front: "Local Optimization", back: "局部最佳化陷阱：各部門只專注於達成自身的 KPI (如壓低採購成本)，卻反過來損害了專案整體的利益。" },
+                    { front: "Global Optimization", back: "總體最佳化：由 PM 從全域商業視角出發，為確保產品最終市場成功而做出的綜合性妥協與裁決。" },
+                    { front: "Escalation Path", back: "升級機制：當前線團隊遭遇無法自行排解的跨部門資源或利益衝突時，將決策權向上移交給具備全局視角的管理層。" }
+                ],
+                quizBank: [
+                    { question: "為什麼軟體 PO 的決策通常偏向「價值驅動」，而硬體 PL 偏向「可行性驅動」？", options: [ {title: "因為硬體 PL 不需要考慮產品會不會賺錢", correct: false, feedback: "錯誤。PL 當然希望產品成功，但決策是被物理條件限制的。"}, {title: "因為軟體修改成本低，有空間追求價值最大化；硬體受限於實體供應鏈，必須優先確保能被製造出來", correct: true, feedback: "正確。兩者的驅動力差異來自於產業底層的「變更成本」與「物理限制」。"}, {title: "因為軟體 PO 的位階通常比硬體 PL 高出許多", correct: false, feedback: "錯誤。這與組織層級位階無關。"} ] },
+                    { question: "在大型矩陣組織中，採購部門堅持採用低價次級料件以達成其部門降本 KPI，但這會導致研發部門面臨極高的品質風險。這屬於何種現象？", options: [ {title: "總體最佳化 (Global Optimization)", correct: false, feedback: "錯誤。這完全違背了總體最佳化。"}, {title: "局部最佳化陷阱 (Local Optimization)", correct: true, feedback: "正確。各部門各自為政，只看自身的 KPI，反而危害了專案整體的品質與進度。"}, {title: "價值驅動 (Value-driven)", correct: false, feedback: "錯誤。降本 KPI 屬於成本考量，並非創造使用者價值。"} ] },
+                    { question: "承上題，當採購與研發陷入「局部最佳化」的嚴重僵局，PL 無法擺平時，根據通用公式，最正確的解法為何？", options: [ {title: "啟動升級 (Escalation) 機制，交由 PM 基於產品總體商業利益進行最終拍板", correct: true, feedback: "正確。當衝突涉及成本、品質與最終上市風險的妥協時，必須由扛營收責任的 PM 來做總體決策。"}, {title: "丟硬幣決定聽誰的", correct: false, feedback: "錯誤。專案管理不能依賴運氣。"}, {title: "強迫採購人員去研發部門寫程式", correct: false, feedback: "錯誤。職能互換無法解決根本的利益衝突。"} ] },
+                    { question: "PM 在「總體最佳化」的裁決中，可能會做出下列哪一種看似反直覺，但對公司整體最有利的決定？", options: [ {title: "為了省下 10 塊錢的零件成本，同意將產品延後半年上市", correct: false, feedback: "錯誤。延後半年通常會錯失龐大的市場先機，因小失大。"}, {title: "為了趕上最重要的耶誕節上市檔期，同意支付高昂的空運費用空運晶片", correct: true, feedback: "正確。這就是標準的「犧牲局部成本 (空運費)，保住總體商業利益 (旺季營收)」的戰略決策。"}, {title: "因為某個非核心小功能做不出來，決定取消整個產品專案", correct: false, feedback: "錯誤。這是極度缺乏戰術彈性的做法。"} ] },
+                    { question: "「PM 決定方向，PO/PL 決定實作。當遭遇無法克服的衝突時，升級交由 PM 進行商業判斷。」這個通用公式的背後，彰顯了什麼管理哲學？", options: [ {title: "權責分立與分層決策的機制", correct: true, feedback: "正確。讓戰術指揮官專心打仗，讓戰略將軍專心看地圖與資源，並建立暢通的求救升級管道。"}, {title: "老闆說了算的一言堂", correct: false, feedback: "錯誤。這公式強調的是依據職能與影響範圍進行專業分工，而非盲目服從。"}, {title: "技術至上的工程師思維", correct: false, feedback: "錯誤。最終的仲裁權回歸到「商業判斷」，代表這並非技術至上。"} ] },
+                    { question: "關於「升級 (Escalation) 機制」，下列觀念何者正確？", options: [ {title: "升級代表前線 PL 能力不足，應盡量避免，否則會被開除", correct: false, feedback: "錯誤。健康的組織鼓勵及早提出無法解決的系統性風險。"}, {title: "升級是專案管理中，用來解除跨部門資源互卡與層級權限不足的正常且必要的手段", correct: true, feedback: "正確。適時的 Escalation 才能讓高層及早介入，避免專案空轉。"}, {title: "一遇到 Bug 就應該立刻升級給 PM 處理", correct: false, feedback: "錯誤。日常技術 Bug 屬於執行層範圍，PL 應自行解決；只有動搖到商業指標時才需升級。"} ] }
+                ]
             },
             {
                 title: "7. 互動實驗室",
@@ -212,10 +330,12 @@ const contentData = {
         architect_url: "https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo",
         nav_prev: "Previous",
         nav_next: "Next",
-        audio_play: "Play",
+        audio_play: "Play Guide",
         audio_pause: "Pause",
         audio_resume: "Resume",
         audio_stop: "Stop",
+        quiz_title: "Knowledge Check",
+        flip_title: "Key Terminology Cards",
         nav: [
             { id: "exec", title: "0. Exec Summary", icon: "star" },
             { id: "npd", title: "1. NPD Process", icon: "layers" },
@@ -237,17 +357,41 @@ const contentData = {
             {
                 title: "1. New Product Development (Stage-Gate)",
                 desc: "NPD follows the Stage-Gate model, ensuring business, technical, and resource criteria are met before proceeding.",
+                deepDive: [
+                    "Developed by Robert G. Cooper, the Stage-Gate Model is the gold standard for hardware and physical product development. Its core philosophy is to divide the high-risk innovation process into manageable, discrete stages, separated by rigorous 'Gates'.",
+                    "The primary purpose of a gate review is not merely a status update, but a strict 'Go/Kill' business decision. In the 'Fuzzy Front End', the PM must filter out non-viable concepts through market research to prevent massive R&D and tooling costs later on.",
+                    "Once in the execution phase, project complexity skyrockets. Cross-functional teams must collaborate seamlessly to align design, engineering validation, and supply chain procurement. This is why large hardware projects rely heavily on Project Leaders (PL) and Project Coordinators (PCC)."
+                ],
                 image: "NPD_Stage-Gate Model_Coggle_SML 20240312.png",
                 imageAlt: "NPD Stage-Gate Model",
                 points: [
                     { title: "Phase 1: Plan & Proposal", text: "Covers marketing and feasibility. Led by PM and Sales to evaluate technical and financial risks." },
                     { title: "Phase 2: Design & Execute", text: "Product design and tooling. PL and R&D engineers unfold specifications and architectures." },
                     { title: "Phase 3: Validation & MP", text: "Engineering verification to launch. PCCs assist in cross-department integration to ensure quality and production capacity." }
+                ],
+                flipCards: [
+                    { front: "Stage-Gate Model", back: "A project management technique in which an initiative is divided into distinct stages, separated by decision points (gates)." },
+                    { front: "Go/Kill Decision", back: "The critical choice made at each gate by senior management to either fund the next stage or terminate the project." },
+                    { front: "Fuzzy Front End (FFE)", back: "The messy, early period of the NPD process where concepts are brainstormed and viability is assessed." },
+                    { front: "Cross-functional Team", back: "A group of people with different functional expertise (R&D, marketing, manufacturing) working toward a common goal." }
+                ],
+                quizBank: [
+                    { question: "In the 'Fuzzy Front End' (FFE) of the NPD process, which role acts as the primary decision-maker?", options: [ {title: "Product Manager (PM)", correct: true, feedback: "Correct. The PM navigates the uncertainty of the FFE, filtering ideas based on market viability."}, {title: "R&D Engineer", correct: false, feedback: "Incorrect. Technical design happens after the concept is proven viable."}, {title: "Project Coordinator (PCC)", correct: false, feedback: "Incorrect. The PCC manages execution timelines later in the process."} ] },
+                    { question: "What is the core purpose of a 'Gate' in the Stage-Gate model?", options: [ {title: "To track daily coding progress", correct: false, feedback: "Incorrect. This is Agile's Daily Standup."}, {title: "To make strict Go/Kill resource allocation decisions", correct: true, feedback: "Correct. Gates prevent sunk costs by killing unviable projects early."}, {title: "To choose marketing colors", correct: false, feedback: "Incorrect. This is an execution detail."} ] },
+                    { question: "During 'Phase 2: Design & Execute', who takes over as the primary execution leaders?", options: [ {title: "PL (Project Leader) and R&D", correct: true, feedback: "Correct. They take the approved concept and turn it into technical specifications and designs."}, {title: "Sales Team", correct: false, feedback: "Incorrect. Sales focuses on the front and back ends of the lifecycle."}, {title: "Quality Assurance (QA)", correct: false, feedback: "Incorrect. QA executes primarily in the testing phases."} ] },
+                    { question: "Why does hardware development rely so heavily on Stage-Gate rather than pure Agile?", options: [ {title: "Hardware engineers dislike meetings", correct: false, feedback: "Incorrect. Methodology is driven by physics, not preference."}, {title: "The Cost of Change is astronomically high after tooling", correct: true, feedback: "Correct. Once metal is cut for molds, changes cost millions, requiring strict upfront validation."}, {title: "Software cannot be tested", correct: false, feedback: "Incorrect. Software relies heavily on continuous testing."} ] },
+                    { question: "Which of the following is NOT an output of Phase 1 (Plan & Proposal)?", options: [ {title: "Market Feasibility Report", correct: false, feedback: "Incorrect. This is a standard Phase 1 deliverable."}, {title: "Mass Production Yield Rate Report", correct: true, feedback: "Correct. Yield rates are measured in Phase 3 (Validation & MP)."}, {title: "Business Model Canvas", correct: false, feedback: "Incorrect. Establishing the business model happens in Phase 1."} ] },
+                    { question: "Which phase focuses on 'ensuring cross-department integration and production line readiness'?", options: [ {title: "Phase 1: Plan & Proposal", correct: false, feedback: "Incorrect. Specs aren't even defined yet."}, {title: "Phase 2: Design & Execute", correct: false, feedback: "Incorrect. This phase focuses on drawings and prototypes."}, {title: "Phase 3: Validation & MP", correct: true, feedback: "Correct. The focus shifts from engineering to manufacturing readiness."} ] }
                 ]
             },
             {
                 title: "2. PM Competencies",
                 desc: "Integration: Deriving the seven core competencies of a Product Manager from the development process.",
+                deepDive: [
+                    "Often referred to as the 'CEO of the Product', a Product Manager requires a vast, cross-functional skill set. Moving from market exploration to engineering delivery, a PM must master three dimensions: Business-Oriented, Technical-Oriented, and Management-Oriented skills.",
+                    "In the Business domain, PMs must excel in Strategy, Portfolio Management, and Market Research. This determines the product's profitability and market fit. Without this foundation, a PM devolves into a mere project tracker.",
+                    "In the Technical and Management domains, while a PM doesn't need to write code or draw CAD models, they must deeply understand the 'Product Innovation (PI) Process' and possess strong 'Influence without Authority'. They lead R&D and Marketing teams via vision and data to ensure resources are spent on high-value features."
+                ],
                 image: "PM產品經理_Coggle_20250317.png",
                 imageAlt: "PM Competencies Mindmap",
                 table: {
@@ -257,29 +401,87 @@ const contentData = {
                         { stage: "Product Design / Tooling", comp: "PI Process (15%), PDD Tools (15%)", domain: "Technical-Oriented" },
                         { stage: "Engineering / Launch", comp: "PI Management (20%), Culture, Team, & Leadership (10%)", domain: "Management-Oriented" }
                     ]
-                }
+                },
+                flipCards: [
+                    { front: "Portfolio Management", back: "Balancing resource allocation, risks, and returns across a company's product lines to achieve strategic goals." },
+                    { front: "Influence w/o Authority", back: "The ability to lead and motivate cross-functional teams without having direct reporting power over them." },
+                    { front: "Market Research", back: "Gathering quantitative and qualitative data to uncover unmet user needs, serving as the foundation for product specs." },
+                    { front: "Business-Oriented", back: "A mindset that prioritizes ROI, market share, and business models in product decision-making." }
+                ],
+                quizBank: [
+                    { question: "During the 'Marketing / Feasibility' stage, which competency is LEAST required for a PM?", options: [ {title: "Market Research", correct: false, feedback: "Incorrect. Market research is crucial here."}, {title: "Strategy", correct: false, feedback: "Incorrect. Strategy defines the product's direction."}, {title: "PDD Tools (Design Tools)", correct: true, feedback: "Correct. Deep engineering tool knowledge isn't the primary focus during early business evaluation."} ] },
+                    { question: "What is the primary goal of 'Portfolio Management'?", options: [ {title: "Assigning daily tasks to engineers", correct: false, feedback: "Incorrect. This is a micro-management execution task."}, {title: "Balancing resources, risks, and returns across multiple products", correct: true, feedback: "Correct. It ensures the company's overall product mix is profitable and aligned with strategy."}, {title: "Managing factory component inventory", correct: false, feedback: "Incorrect. That is a supply chain function."} ] },
+                    { question: "Why must a PM master 'Influence without Authority'?", options: [ {title: "Because the PM is the CEO of the entire company", correct: false, feedback: "Incorrect. PMs are usually peer-level to other managers."}, {title: "Because the PM rarely manages R&D directly, relying on vision to persuade teams", correct: true, feedback: "Correct. In a matrix, soft skills and data-driven persuasion are key to moving teams forward."}, {title: "Because the PM isn't responsible for product failure", correct: false, feedback: "Incorrect. The PM is ultimately accountable for market success."} ] },
+                    { question: "What is the primary educational domain focus during the 'Engineering / Launch' stage?", options: [ {title: "Business-Oriented", correct: false, feedback: "Incorrect. This is the focus of the early planning stage."}, {title: "Technical-Oriented", correct: false, feedback: "Incorrect. This peaks during the middle design stage."}, {title: "Management-Oriented", correct: true, feedback: "Correct. Nearing launch requires intense resource management and team leadership."} ] },
+                    { question: "Which of the following is NOT considered a core 'Business-Oriented' competency?", options: [ {title: "Strategy", correct: false, feedback: "Incorrect. Strategy is highly business-focused."}, {title: "Market Research", correct: false, feedback: "Incorrect. This is business exploration."}, {title: "PI Process", correct: true, feedback: "Correct. Understanding development processes leans towards the Technical/Execution domain."} ] },
+                    { question: "What does the distribution of PM competencies reveal about the role?", options: [ {title: "PMs only need to know marketing", correct: false, feedback: "Incorrect. PMs must understand technical processes too."}, {title: "The PM role is dynamic, shifting perspectives across the lifecycle", correct: true, feedback: "Correct. A PM must seamlessly shift from business strategist to execution manager as the project progresses."}, {title: "PCCs can entirely replace PMs", correct: false, feedback: "Incorrect. PCCs lack the frontend strategic and market competencies."} ] }
+                ]
             },
             {
                 title: "3. Software Agile / Scrum",
                 desc: "Agile is a user-value-centric architecture emphasizing iterative and incremental delivery.",
+                deepDive: [
+                    "The Agile Manifesto disrupted traditional software engineering. It prioritizes 'Individuals and interactions over processes and tools', 'Working software over comprehensive documentation', and 'Responding to change over following a plan'. This paradigm shift succeeds in software because the 'Cost of Change' for code is extremely low, allowing teams to fail fast and iterate.",
+                    "Within the Scrum framework, Empiricism is supported by three pillars: Transparency, Inspection, and Adaptation. The Product Owner (PO), acting as the value gatekeeper, dynamically reprioritizes the Product Backlog. This ensures the team delivers a potentially releasable Increment of the highest business value in every short Sprint (1-4 weeks).",
+                    "Unlike the hardware Waterfall model, Scrum discards heavy upfront PRDs. The PO uses User Stories to define needs and negotiates sprint commitments with Developers during Sprint Planning. When facing technical roadblocks, the PO holds absolute tactical authority to execute 'Scope Cuts' within the Sprint to preserve core value."
+                ],
                 points: [
                     { title: "Core Scrum Roles", text: "The PO prioritizes the backlog. The Scrum Master ensures process flow. Developers execute the work." },
                     { title: "Iterative Delivery", text: "Short, high-frequency development cycles (Sprints) produce usable, potentially releasable increments." },
                     { title: "Agile vs. V-Model", text: "Unlike the rigid V-Model, Agile embraces change through continuous feedback, thriving in software where change costs are low." }
+                ],
+                flipCards: [
+                    { front: "Sprint", back: "A fixed-length timebox (1-4 weeks) during which a Scrum team works to complete a set amount of work." },
+                    { front: "Product Backlog", back: "An ordered, dynamic list of everything that is known to be needed in the product, managed exclusively by the PO." },
+                    { front: "User Story", back: "An informal, general explanation of a software feature written from the perspective of the end user." },
+                    { front: "Scrum Master", back: "The servant-leader responsible for promoting Scrum, removing impediments, and facilitating team dynamics." },
+                    { front: "Increment", back: "The sum of all the Product Backlog items completed during a Sprint, which must be in a usable condition." }
+                ],
+                quizBank: [
+                    { question: "Which of the following is one of the three pillars of empirical process control in Scrum?", options: [ {title: "Contract Negotiation", correct: false, feedback: "Incorrect. Agile prioritizes collaboration over negotiation."}, {title: "Transparency", correct: true, feedback: "Correct. The three pillars are Transparency, Inspection, and Adaptation."}, {title: "Zero Defect Guarantee", correct: false, feedback: "Incorrect. This is not a Scrum pillar."} ] },
+                    { question: "Who is solely responsible for prioritizing the Product Backlog?", options: [ {title: "Scrum Master", correct: false, feedback: "Incorrect. The SM facilitates the process."}, {title: "Product Owner (PO)", correct: true, feedback: "Correct. The PO is the value maximizer and owns the backlog."}, {title: "Developers", correct: false, feedback: "Incorrect. Developers estimate effort, but the PO dictates business priority."} ] },
+                    { question: "Why is Agile more natively successful in software than in hardware engineering?", options: [ {title: "Software engineers are more skilled", correct: false, feedback: "Incorrect. It's about industry mechanics, not personal skill."}, {title: "The Cost of Change in software is very low, allowing for rapid iteration", correct: true, feedback: "Correct. Code can be rewritten easily, unlike physical metal molds in hardware."}, {title: "Software doesn't require QA testing", correct: false, feedback: "Incorrect. Automated testing is heavily emphasized in Agile."} ] },
+                    { question: "What must be produced at the end of every Sprint?", options: [ {title: "A heavy system specification document", correct: false, feedback: "Incorrect. Agile values working software over documentation."}, {title: "A potentially releasable Increment", correct: true, feedback: "Correct. The output must be tested, integrated, and ready to ship if the PO decides to."}, {title: "Next quarter's marketing plan", correct: false, feedback: "Incorrect. This is a PM task, not a Sprint execution output."} ] },
+                    { question: "What are the three core elements of a standard User Story?", options: [ {title: "Role, Need, Business Value", correct: true, feedback: "Correct. Format: 'As a [Role], I want [Need], so that [Value]'."}, {title: "Database, API, UI", correct: false, feedback: "Incorrect. These are technical specifications."}, {title: "Cost, Schedule, Risk", correct: false, feedback: "Incorrect. These are traditional project management constraints."} ] },
+                    { question: "If the team realizes they cannot finish all committed User Stories mid-Sprint, what tactical move should the PO make?", options: [ {title: "Force overtime until completion", correct: false, feedback: "Incorrect. Agile promotes a sustainable pace."}, {title: "Perform a Scope Cut to protect the core MVP value", correct: true, feedback: "Correct. The PO adjusts the tactical scope to ensure a valuable Increment is still delivered."}, {title: "Cancel the Sprint immediately", correct: false, feedback: "Incorrect. Sprint cancellation is reserved for when the Sprint Goal becomes obsolete."} ] }
                 ]
             },
             {
                 title: "4. Hardware Waterfall",
                 desc: "Waterfall is the mainstream methodology for hardware, characterized by strict linear processes and dependencies.",
+                deepDive: [
+                    "Unlike the agile flexibility of software, hardware product development is heavily constrained by the laws of physics and global supply chains. A hardware project must navigate strict, linear phases: Requirement, Architecture, Detailed Design, EVT (Engineering), DVT (Design), PVT (Production), and MP (Mass Production). Outputs from one phase strictly feed the next, making reverse modifications incredibly difficult.",
+                    "The 'Cost of Change' in hardware rises exponentially. Altering a capacitor on a schematic takes minutes; however, discovering a flaw after Tooling (mold creation) or PCB placement means millions in scrapped molds and devastating delays due to component Lead Times. This can destroy a product's market launch window.",
+                    "Consequently, Hardware PLs under the Waterfall model are heavily 'Feasibility-driven'. During early spec definition, they must meticulously account for Minimum Order Quantities (MOQ), Second Sources, and thermal/safety physics. They rely on the rigorous V-Model validation structure to ensure every spec can be manufactured with high yield rates."
+                ],
                 points: [
                     { title: "Linear & Irreversible", text: "From requirements to EVT/DVT/PVT. Once tooling or board placement begins, changes become extremely costly." },
                     { title: "Physical Constraints", text: "Heavily restricted by physics (e.g., thermals) and supply chain issues (e.g., component lead times, MOQ)." },
                     { title: "Verification Driven", text: "Unlike software's value-driven approach, hardware relies heavily on strict reliability and production validation to secure mass production yield rates." }
+                ],
+                flipCards: [
+                    { front: "EVT / DVT / PVT", back: "Hardware validation phases: Engineering (function), Design (safety/reliability), Production (yield)." },
+                    { front: "Lead Time (L/T)", back: "The total latency between placing an order for a component and receiving it at the factory." },
+                    { front: "MOQ", back: "Minimum Order Quantity: The smallest amount of stock a supplier is willing to produce/sell, impacting inventory risk." },
+                    { front: "Tooling / NRE", back: "Non-Recurring Engineering: The high, one-time upfront costs required to design and create molds for hardware." }
+                ],
+                quizBank: [
+                    { question: "Hardware development follows EVT, DVT, PVT. What is the primary focus of DVT?", options: [ {title: "Design Verification Test: Focusing on safety certifications and reliability under extreme environments", correct: true, feedback: "Correct. DVT ensures the design complies with external standards and physical stress tests."}, {title: "Development Visual Test: Confirming product colors", correct: false, feedback: "Incorrect. Visuals are locked much earlier; DVT is rigorous engineering testing."}, {title: "Data Validation Test: Database speed", correct: false, feedback: "Incorrect. This is a software backend concept."} ] },
+                    { question: "Why is it nearly impossible to use pure Agile to constantly alter specs during hardware mass production?", options: [ {title: "Hardware engineers do not understand Agile", correct: false, feedback: "Incorrect. Methodology is dictated by physical constraints, not knowledge."}, {title: "High tooling costs and component lead times make late changes financially ruinous", correct: true, feedback: "Correct. Once metal is cut, changing specs means scrapping expensive molds and missing market windows."}, {title: "Hardware doesn't need testing", correct: false, feedback: "Incorrect. Hardware testing is arguably more rigorous and time-consuming."} ] },
+                    { question: "In a hardware supply chain, what does 'Lead Time (L/T)' refer to?", options: [ {title: "Total project development time", correct: false, feedback: "Incorrect. This is Time-to-Market."}, {title: "The waiting period from ordering a component to its arrival at the factory", correct: true, feedback: "Correct. Long lead times for key ICs are the biggest scheduling risk in hardware."}, {title: "The time it takes for a device to boot up", correct: false, feedback: "Incorrect. This is a performance metric, not a supply chain term."} ] },
+                    { question: "Which of the following is a critical supply chain constraint considered during early hardware planning?", options: [ {title: "MOQ (Minimum Order Quantity)", correct: true, feedback: "Correct. If projected sales don't meet the supplier's MOQ, the project faces massive dead inventory risk."}, {title: "AWS Monthly Fees", correct: false, feedback: "Incorrect. This is a software cloud operational cost."}, {title: "Git repository structures", correct: false, feedback: "Incorrect. This is software configuration management."} ] },
+                    { question: "In the V-Model of hardware development, what does the descending left side represent?", options: [ {title: "The progressive breakdown of high-level requirements into detailed specs", correct: true, feedback: "Correct. The left side moves from system requirements down to detailed hardware/software design."}, {title: "Assembly and acceptance testing", correct: false, feedback: "Incorrect. This is represented by the ascending right side."}, {title: "The product's declining profitability", correct: false, feedback: "Incorrect. The V-Model has nothing to do with product lifecycle profits."} ] },
+                    { question: "During the PVT (Production Validation Test) phase, what is the team's primary metric?", options: [ {title: "Choosing the color of the packaging box", correct: false, feedback: "Incorrect. This should be locked before DVT."}, {title: "Assembly line smoothness and Mass Production Yield Rate", correct: true, feedback: "Correct. PVT exists purely to prove the factory is ready to scale up to Mass Production smoothly."}, {title: "Tracking competitor product launches", correct: false, feedback: "Incorrect. This is a frontend PM task, not a factory PVT metric."} ] }
                 ]
             },
             {
                 title: "5. Synthesized Roles & Decisions",
                 desc: "Aligning the methodologies with organizational structures to define universal rules.",
+                deepDive: [
+                    "When we strip away the jargon of 'Software vs. Hardware', the underlying power dynamics of project management are highly symmetrical. In Software Scrum, the Product Owner (PO) is highly centralized, juggling both 'technical trade-off decisions' and 'cross-functional tracking'. However, in massive hardware systems with complex supply chains, this burden is split: the PL (Project Leader) acts as the technical Decision Maker, while the PCC (Project Coordinator) handles the grueling cross-departmental tracking.",
+                    "This leads to a brilliant cross-domain translation formula: At the execution layer, 'Software PO ≈ Strong Hardware PL + PCC'. Both are the absolute Owners of the Execution Layer, tasked with getting the product built.",
+                    "In our Tiered Decision Model, we strictly separate the 'Strategic Layer' from the 'Tactical Layer'. The PM is the general guarding the outer perimeter—managing 'Strategic' business goals, fending off unreasonable custom requests from Sales, and owning the market P&L. Meanwhile, the PO or PL acts as the frontline commander—managing 'Tactical' execution, resolving engineering bottlenecks, and executing Scope Cuts to ensure the troops keep advancing."
+                ],
                 equation: { left: "Software PO", equals: "≈", right1: "Hardware PL", right1_sub: "(Owner)", right2: "Hardware PCC", right2_sub: "(Coordination)" },
                 table: {
                     headers: ["Decision Tier", "Lead Role", "Core Question", "Defense Line"],
@@ -287,16 +489,50 @@ const contentData = {
                         { level: "Strategic", role: "PM", question: "Build it or not?", scope: "PM handles Sales: blocks external interference and custom requests." },
                         { level: "Tactical", role: "PO / PL", question: "What to build first?", scope: "PO/PL manages RD: leads tech trade-offs to keep dev rhythm." }
                     ]
-                }
+                },
+                flipCards: [
+                    { front: "Strategic Decision", back: "Macro-decisions led by the PM affecting resource allocation, market fit, and long-term business success (Doing the right thing)." },
+                    { front: "Tactical Decision", back: "Micro-decisions led by the PO/PL regarding priority and scope trade-offs under resource limits (Doing things right)." },
+                    { front: "Scope Cut", back: "A tactical compromise where frontline leaders (PO/PL) drop non-core features to ensure on-time delivery." },
+                    { front: "Defense Line", back: "PMs block external sales pressure (standardization); PO/PLs block internal dev bottlenecks (execution)." }
+                ],
+                quizBank: [
+                    { question: "According to the alignment formula, the Software PO's functions are typically split into which two roles in Hardware?", options: [ {title: "PM and QA", correct: false, feedback: "Incorrect. QA tests, PM does strategy."}, {title: "PL (Project Leader) and PCC (Project Coordinator)", correct: true, feedback: "Correct. Hardware gives technical authority to the PL and tracking duties to the PCC."}, {title: "R&D and Sales", correct: false, feedback: "Incorrect. These are purely engineering and business execution roles."} ] },
+                    { question: "Deciding 'Product pricing and initial target market' belongs to which decision tier?", options: [ {title: "Tactical Layer", correct: false, feedback: "Incorrect. This isn't a daily engineering trade-off."}, {title: "Strategic Layer", correct: true, feedback: "Correct. This is a high-level business decision owned by the PM."}, {title: "Validation Layer", correct: false, feedback: "Incorrect. This relates to QA testing."} ] },
+                    { question: "Who holds the authority to perform a 'Scope Cut' on a minor feature to ensure the current Sprint is delivered on time?", options: [ {title: "Product Manager (PM)", correct: false, feedback: "Incorrect. If a PM micromanages sprint scope, it creates a severe bottleneck."}, {title: "Product Owner (PO) / Project Leader (PL)", correct: true, feedback: "Correct. The PO/PL has absolute tactical authority to cut scope as long as core business value is preserved."}, {title: "Sales Team", correct: false, feedback: "Incorrect. Sales cannot dictate granular engineering scope."} ] },
+                    { question: "In the golden rule 'PM handles Sales, PO/PL manages R&D', what is the PM's core objective in blocking Sales?", options: [ {title: "To flex office political power", correct: false, feedback: "Incorrect. Project management is not about politics."}, {title: "To protect R&D from writing code", correct: false, feedback: "Incorrect. Coding is R&D's job."}, {title: "To protect the product's 'Standardization' and avoid becoming a custom dev shop for single clients", correct: true, feedback: "Correct. PMs must ensure features are scalable and sellable to 100 clients, not just one."} ] },
+                    { question: "If a PM tries to simultaneously define strategy, write PRDs, chase engineer daily tasks, and order lunch, what happens?", options: [ {title: "Maximum efficiency with zero communication cost", correct: false, feedback: "Incorrect. Over-centralization guarantees failure."}, {title: "The PM becomes a severe bottleneck and loses focus on the macro business strategy", correct: true, feedback: "Correct. This is exactly why the Strategic PM and Tactical PO/PL roles must be separated."}, {title: "R&D becomes completely autonomous", correct: false, feedback: "Incorrect. R&D will flounder without a dedicated tactical leader."} ] },
+                    { question: "In a hardware V-Model, what is the most critical question a PCC constantly asks?", options: [ {title: "'How much revenue will this generate?'", correct: false, feedback: "Incorrect. This is the PM's strategic question."}, {title: "'When do parts arrive, and will department delays impact the pilot run?'", correct: true, feedback: "Correct. The PCC's core duty is cross-departmental coordination and execution support."}, {title: "'How should we write this low-level algorithm?'", correct: false, feedback: "Incorrect. This is the responsibility of R&D and the PL."} ] }
+                ]
             },
             {
                 title: "6. Synthesized Matrix & Drivers",
                 desc: "From core motivations to matrix collaboration, formulating the universal formula.",
+                deepDive: [
+                    "Though Software POs and Hardware PLs share execution authority, their underlying 'decision drivers' differ fundamentally. Software allows for rapid patches, giving the PO room to fail fast. Thus, POs are 'Value-driven'—prioritizing features that maximize user and business impact. Hardware, constrained by expensive tooling and rigid lead times, forces the PL to be 'Feasibility-driven'—prioritizing what can actually be built and sourced reliably.",
+                    "As projects scale, hardware organizations form massive 'Matrix Organizations' where representatives (Core Teams) from various silos (Procurement, Manufacturing) collaborate. Here lies the 'Local Optimization' trap: each department's PCC fights to maximize their own localized KPIs (e.g., Procurement pushing for lowest cost, Manufacturing demanding highest yield), often to the detriment of the overall project.",
+                    "When cross-departmental conflicts deadlock, and the frontline PL cannot resolve it via technical logic alone, the ultimate cure is 'Escalation'. The PM—the only entity accountable for the global P&L and not bound to a specific factory silo—must step in. The PM breaks the deadlock by enforcing 'Global Optimization', making the final trade-off based on total market success."
+                ],
                 comparisons: [
                     { type: "Software PO", focus: "Value-driven", detail: "Focuses on 'building the right thing', prioritizing business impact." },
                     { type: "Hardware PL", focus: "Feasibility-driven", detail: "Restricted by supply chains, focuses on 'getting it built' with cost/tech priority." }
                 ],
-                quote: "The PM decides the direction of product success (Strategy), while the PO/PL decides how it gets built step-by-step (Execution). When conflicts escalate, the PM makes the global value call."
+                quote: "The PM decides the direction of product success (Strategy), while the PO/PL decides how it gets built step-by-step (Execution). When conflicts escalate, the PM makes the global value call.",
+                flipCards: [
+                    { front: "Value-Driven", back: "Making decisions based on maximizing user experience and business ROI (Dominant in Software)." },
+                    { front: "Feasibility-Driven", back: "Making decisions constrained by physics, supply chain availability, and manufacturing costs (Dominant in Hardware)." },
+                    { front: "Local Optimization", back: "A trap where departments hyper-focus on their own KPIs (e.g., lowest part cost) at the expense of the overall project." },
+                    { front: "Global Optimization", back: "The PM's holistic approach to making compromises that ensure the ultimate market success of the product." },
+                    { front: "Escalation Path", back: "The formal mechanism to push unresolved, cross-departmental conflicts up to the PM for a strategic business ruling." }
+                ],
+                quizBank: [
+                    { question: "Why is a Software PO's decision-making typically 'Value-driven', while a Hardware PL is 'Feasibility-driven'?", options: [ {title: "Because PLs don't care about profitability", correct: false, feedback: "Incorrect. PLs care, but are constrained by physics."}, {title: "Because software has a low Cost of Change, allowing value maximization; hardware is constrained by physical supply chains", correct: true, feedback: "Correct. The driver differences stem directly from the underlying physical cost of modification."}, {title: "Because POs outrank PLs", correct: false, feedback: "Incorrect. This has nothing to do with corporate hierarchy."} ] },
+                    { question: "In a Matrix Org, Procurement insists on cheap components to hit their cost KPI, but this causes massive quality risks for R&D. What is this an example of?", options: [ {title: "Global Optimization", correct: false, feedback: "Incorrect. This is the exact opposite."}, {title: "The Local Optimization Trap", correct: true, feedback: "Correct. Departments working in silos to maximize their own KPIs can severely harm the overall project."}, {title: "Value-driven development", correct: false, feedback: "Incorrect. Cost cutting KPIs don't inherently generate user value."} ] },
+                    { question: "Following the previous question, when Procurement and R&D deadlock and the PL cannot resolve it, what is the correct procedural move?", options: [ {title: "Escalate to the PM to make a Global Optimization decision based on overall business impact", correct: true, feedback: "Correct. Only the PM, who carries the P&L burden, can arbitrate between cost and quality based on the market strategy."}, {title: "Flip a coin", correct: false, feedback: "Incorrect. Project management requires structured decision-making."}, {title: "Force procurement to write code", correct: false, feedback: "Incorrect. Swapping roles does not solve systemic KPI conflicts."} ] },
+                    { question: "Which of the following is a counter-intuitive but necessary 'Global Optimization' decision a PM might make?", options: [ {title: "Delaying a launch by 6 months to save $10 on components", correct: false, feedback: "Incorrect. Missing a 6-month market window is usually catastrophic."}, {title: "Approving astronomically high air-freight costs to ensure the product hits the critical Holiday market window", correct: true, feedback: "Correct. The PM sacrifices local cost (freight) to protect global revenue (holiday sales)."}, {title: "Canceling the entire project because one minor feature failed", correct: false, feedback: "Incorrect. This shows zero tactical flexibility."} ] },
+                    { question: "What management philosophy is behind the rule: 'PM decides direction, PO/PL executes, escalate conflicts to PM'?", options: [ {title: "A clear separation of Strategic and Tactical powers with a defined escalation path", correct: true, feedback: "Correct. It lets commanders fight the battle, generals view the map, and provides a clear SOS protocol."}, {title: "A dictatorship where the boss is always right", correct: false, feedback: "Incorrect. The formula emphasizes role-based expertise, not blind obedience."}, {title: "Engineering supremacy", correct: false, feedback: "Incorrect. Escalating to a 'business' PM proves engineering doesn't hold ultimate supremacy."} ] },
+                    { question: "Which statement about the 'Escalation Mechanism' is true?", options: [ {title: "Escalation means the PL is incompetent and should be fired", correct: false, feedback: "Incorrect. Healthy organizations encourage surfacing systemic risks early."}, {title: "Escalation is a normal, necessary tool to resolve cross-departmental deadlocks and authority limits", correct: true, feedback: "Correct. Timely escalation allows senior management to intervene before the project stalls."}, {title: "Every minor code bug should be escalated to the PM", correct: false, feedback: "Incorrect. Daily tactical bugs are the PL/PO's job; only business-threatening issues are escalated."} ] }
+                ]
             },
             {
                 title: "7. Interactive Lab",
@@ -336,26 +572,16 @@ const App = () => {
     const [visited, setVisited] = useState(Array(TOTAL_MODULES).fill(false));
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [ttsState, setTtsState] = useState('idle'); // 'idle', 'playing', 'paused'
-    const [voicesLoaded, setVoicesLoaded] = useState(false);
     
+    // Quiz Randomization State for Modules 1-6
+    const [quizIndices, setQuizIndices] = useState([]);
+    const [quizAnswers, setQuizAnswers] = useState({});
+
     const contentRef = useRef(null);
     const menuRef = useRef(null);
 
     const t = contentData[lang];
     const m = t.modules[module];
-
-    // Initialize TTS Voices
-    useEffect(() => {
-        const loadVoices = () => {
-            if(window.speechSynthesis.getVoices().length > 0) {
-                setVoicesLoaded(true);
-            }
-        };
-        loadVoices();
-        if (window.speechSynthesis.onvoiceschanged !== undefined) {
-            window.speechSynthesis.onvoiceschanged = loadVoices;
-        }
-    }, []);
 
     // Theme initialization
     useEffect(() => {
@@ -386,7 +612,7 @@ const App = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // Track progress & scroll top on module change
+    // Track progress & scroll top on module change + Handle Quiz Randomization
     useEffect(() => {
         setVisited(prev => {
             const next = [...prev];
@@ -395,20 +621,38 @@ const App = () => {
         });
         scrollToTop();
         stopTTS();
-    }, [module, lang]);
+
+        // Randomize Quizzes for Modules 1-6
+        if (module >= 1 && module <= 6 && t.modules[module].quizBank) {
+            const indices = [];
+            const bankSize = t.modules[module].quizBank.length;
+            while(indices.length < 2 && indices.length < bankSize) {
+                const r = Math.floor(Math.random() * bankSize);
+                if(!indices.includes(r)) indices.push(r);
+            }
+            setQuizIndices(indices);
+            setQuizAnswers({}); // Reset answers for the new module
+        } else {
+            setQuizIndices([]);
+            setQuizAnswers({});
+        }
+    }, [module]); // Deliberately omit 'lang' so questions don't change when toggling language
 
     const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
-    const toggleLang = () => setLang(lang === 'zh' ? 'en' : 'zh');
+    const toggleLang = () => {
+        stopTTS();
+        setLang(lang === 'zh' ? 'en' : 'zh');
+    };
 
     // --- Web Speech API (TTS) ---
     const getPreferredVoice = (langCode) => {
         const voices = window.speechSynthesis.getVoices();
         if (langCode === 'zh') {
-            return voices.find(v => v.lang.includes('zh-TW') && (v.name.includes('Yating') || v.name.includes('Ya-Ting'))) ||
+            return voices.find(v => v.lang.includes('zh-TW') && (v.name.includes('Yating') || v.name.includes('Ya-Ting') || v.name.includes('Hsiao') || v.name.includes('Mei-Jia'))) ||
                    voices.find(v => v.lang === 'zh-TW') ||
                    voices.find(v => v.lang.includes('zh'));
         } else {
-            return voices.find(v => v.lang === 'en-GB' && (v.name.includes('Male') || v.name.includes('George'))) ||
+            return voices.find(v => v.lang === 'en-GB' && (v.name.includes('Male') || v.name.includes('George') || v.name.includes('Brian'))) ||
                    voices.find(v => v.lang === 'en-GB') ||
                    voices.find(v => v.lang.includes('en'));
         }
@@ -417,6 +661,7 @@ const App = () => {
     const generateFullText = (mod) => {
         let parts = [mod.title, mod.desc];
         if (mod.content) parts.push(mod.content);
+        if (mod.deepDive) mod.deepDive.forEach(p => parts.push(p));
         if (mod.points) mod.points.forEach((p, i) => parts.push(`第${i+1}點：${p.title}。${p.text}`));
         if (mod.table) {
             parts.push(lang === 'zh' ? '表格重點整理：' : 'Table Summary:');
@@ -427,14 +672,36 @@ const App = () => {
                 parts.push(`${k}，負責角色為${v}。涵蓋範疇：${s}。`);
             });
         }
+        if (mod.equation) {
+            parts.push(`${mod.equation.left} 等同於 ${mod.equation.right1} 加上 ${mod.equation.right2}`);
+        }
         if (mod.cards) mod.cards.forEach(c => parts.push(`情境：${c.front}。應對：${c.back}，${c.backDesc}`));
         if (mod.nodes) mod.nodes.forEach(n => parts.push(`${n.title}。${n.desc}`));
         if (mod.comparisons) mod.comparisons.forEach(c => parts.push(`${c.type}，主要考量為${c.focus}。${c.detail}`));
         if (mod.quote) parts.push(`總結論點：${mod.quote}`);
-        if (mod.quiz) {
+        
+        // Render Flip Cards text for TTS
+        if (mod.flipCards) {
+            parts.push(lang === 'zh' ? '關鍵專有名詞翻轉卡：' : 'Key Terminology Flashcards:');
+            mod.flipCards.forEach(c => parts.push(`${c.front}。定義：${c.back}`));
+        }
+
+        // Render Random Quiz text for TTS
+        if (mod.quizBank && quizIndices.length > 0) {
+            parts.push(lang === 'zh' ? '隨機知識檢定：' : 'Random Knowledge Check:');
+            quizIndices.forEach((qIdx, i) => {
+                const q = mod.quizBank[qIdx];
+                parts.push(`第${i+1}題：${q.question}`);
+                q.options.forEach((o, j) => parts.push(`選項 ${String.fromCharCode(65+j)}：${o.title}。`));
+            });
+        }
+
+        // Module 7 standalone quiz
+        if (mod.quiz && !mod.quizBank) {
             parts.push(`互動實驗室情境題：${mod.quiz.question}`);
             mod.quiz.options.forEach((o, i) => parts.push(`選項 ${String.fromCharCode(65+i)}：${o.title}。`));
         }
+
         if (mod.links) {
             parts.push(lang === 'zh' ? '推薦外部資源：' : 'External Resources:');
             mod.links.forEach(l => parts.push(`${l.title}。${l.desc}`));
@@ -477,7 +744,103 @@ const App = () => {
         setTtsState('idle');
     };
 
-    // --- Content Renderers ---
+    // --- Reusable Component Renderers ---
+    
+    // Renders the DeepDive paragraph array
+    const renderDeepDive = (paragraphs) => {
+        if (!paragraphs) return null;
+        return (
+            <div className="space-y-4 mb-8">
+                {paragraphs.map((p, idx) => (
+                    <p key={idx} className="text-base text-slate-700 dark:text-slate-300 leading-loose text-justify">
+                        {p}
+                    </p>
+                ))}
+            </div>
+        );
+    };
+
+    // Renders the RWD Flip Cards
+    const renderFlipCards = (cards) => {
+        if (!cards) return null;
+        return (
+            <div className="mt-10">
+                <h3 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5] mb-6 border-l-4 border-[#004030] dark:border-[#D8C3A5] pl-3">
+                    {t.flip_title}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 perspective">
+                    {cards.map((card, idx) => (
+                        <div key={idx} className="flip-card h-48 group cursor-pointer relative">
+                            <div className="flip-card-inner relative w-full h-full shadow-sm rounded-2xl border border-slate-200 dark:border-slate-700">
+                                <div className="absolute w-full h-full backface-hidden bg-white dark:bg-slate-800 rounded-2xl flex flex-col items-center justify-center p-4 sm:p-6 text-center">
+                                    <h4 className="text-lg font-bold text-slate-800 dark:text-white break-words">{card.front}</h4>
+                                    <Icon name="play" size={16} className="mt-4 text-[#D8C3A5] animate-bounce" />
+                                </div>
+                                <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-[#004030] dark:bg-slate-900 rounded-2xl border border-[#D8C3A5] flex flex-col items-center justify-center p-4 sm:p-6 text-center text-white">
+                                    <p className="text-sm sm:text-base leading-relaxed break-words">{card.back}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
+    // Renders the Random Quizzes
+    const renderRandomQuiz = (bank) => {
+        if (!bank || quizIndices.length === 0) return null;
+        return (
+            <div className="mt-12 bg-[#004030]/5 dark:bg-slate-800/40 p-6 rounded-2xl border border-[#004030]/10 dark:border-slate-700">
+                <div className="flex items-center gap-2 mb-6 border-b border-[#004030]/10 dark:border-slate-700 pb-3">
+                    <Icon name="flask" size={24} className="text-[#004030] dark:text-[#D8C3A5]" />
+                    <h3 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5]">{t.quiz_title}</h3>
+                </div>
+                <div className="space-y-8">
+                    {quizIndices.map((qIdx, idx) => {
+                        const q = bank[qIdx];
+                        const selectedOption = quizAnswers[qIdx];
+                        return (
+                            <div key={qIdx} className="space-y-4">
+                                <h4 className="text-lg font-bold text-slate-800 dark:text-slate-200 leading-relaxed">
+                                    {idx + 1}. {q.question}
+                                </h4>
+                                <div className="grid gap-3">
+                                    {q.options.map((opt, oIdx) => (
+                                        <button
+                                            key={oIdx}
+                                            onClick={() => setQuizAnswers(prev => ({...prev, [qIdx]: oIdx}))}
+                                            className={`p-4 text-left rounded-xl border-2 transition-all duration-300 shadow-sm ${
+                                                selectedOption === oIdx 
+                                                ? (opt.correct 
+                                                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30' 
+                                                    : 'border-rose-500 bg-rose-50 dark:bg-rose-900/30') 
+                                                : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-[#D8C3A5] hover:shadow-md'
+                                            }`}
+                                        >
+                                            <div className="font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                                                <span>{String.fromCharCode(65+oIdx)}. {opt.title}</span>
+                                                {selectedOption === oIdx && (
+                                                    <Icon name={opt.correct ? "checkCircle" : "x"} className={`shrink-0 ml-2 ${opt.correct ? "text-emerald-500" : "text-rose-500"}`} />
+                                                )}
+                                            </div>
+                                            {selectedOption === oIdx && (
+                                                <div className={`text-sm mt-3 pt-3 border-t ${opt.correct ? 'border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300' : 'border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300'} animate-fade-in`}>
+                                                    {opt.feedback}
+                                                </div>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    };
+
+    // --- Content Page Renderers ---
     
     // Module 0: Exec
     const renderExec = () => (
@@ -514,7 +877,8 @@ const App = () => {
     // Module 1: NPD
     const renderNPD = () => (
         <div className="animate-fade-in space-y-6">
-            <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
+            {renderDeepDive(m.deepDive)}
             {m.image && (
                 <div className="mt-6 w-full bg-white dark:bg-slate-200 p-2 rounded-xl shadow-md border border-slate-200 overflow-hidden group">
                     <img src={m.image} alt={m.imageAlt} className="w-full h-auto object-contain max-h-[400px] transform transition duration-500 group-hover:scale-[1.02]" />
@@ -533,13 +897,16 @@ const App = () => {
                     </div>
                 ))}
             </div>
+            {renderFlipCards(m.flipCards)}
+            {renderRandomQuiz(m.quizBank)}
         </div>
     );
 
     // Module 2: PM Competencies
     const renderPMComp = () => (
         <div className="animate-fade-in space-y-6">
-            <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
+            {renderDeepDive(m.deepDive)}
             {m.image && (
                 <div className="mt-6 w-full bg-white dark:bg-slate-200 p-2 rounded-xl shadow-md border border-slate-200 overflow-hidden group">
                     <img src={m.image} alt={m.imageAlt} className="w-full h-auto object-contain max-h-[400px] transform transition duration-500 group-hover:scale-[1.02]" />
@@ -565,14 +932,17 @@ const App = () => {
                     </tbody>
                 </table>
             </div>
+            {renderFlipCards(m.flipCards)}
+            {renderRandomQuiz(m.quizBank)}
         </div>
     );
 
     // Module 3 & 4: Frameworks
     const renderFrameworks = () => (
         <div className="animate-fade-in space-y-6">
-            <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
+            {renderDeepDive(m.deepDive)}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 {m.points.map((pt, idx) => (
                     <div key={idx} className={`bg-white dark:bg-slate-800 p-6 rounded-xl border-t-4 shadow-sm ${module === 3 ? 'border-blue-500 dark:border-blue-400' : 'border-purple-500 dark:border-purple-400'}`}>
                         <h3 className="font-bold text-lg mb-3 dark:text-white flex items-center gap-2">
@@ -583,13 +953,16 @@ const App = () => {
                     </div>
                 ))}
             </div>
+            {renderFlipCards(m.flipCards)}
+            {renderRandomQuiz(m.quizBank)}
         </div>
     );
 
     // Module 5: Synthesized Roles
     const renderSynRoles = () => (
         <div className="animate-fade-in space-y-8">
-            <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
+            {renderDeepDive(m.deepDive)}
             <div className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-8 transform transition hover:scale-[1.01]">
                 <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/30 rounded-xl border border-blue-100 dark:border-blue-800 w-full lg:w-auto">
                     <div className="font-bold text-2xl text-blue-700 dark:text-blue-400">{m.equation.left}</div>
@@ -628,13 +1001,16 @@ const App = () => {
                     </tbody>
                 </table>
             </div>
+            {renderFlipCards(m.flipCards)}
+            {renderRandomQuiz(m.quizBank)}
         </div>
     );
 
     // Module 6: Synthesized Drivers & Conclusion
     const renderSynDrivers = () => (
         <div className="animate-fade-in space-y-8">
-            <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
+            {renderDeepDive(m.deepDive)}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 perspective">
                 {m.comparisons.map((comp, idx) => (
                     <div key={idx} className="flip-card h-72 group cursor-pointer relative">
@@ -659,10 +1035,12 @@ const App = () => {
                     {m.quote}
                 </p>
             </blockquote>
+            {renderFlipCards(m.flipCards)}
+            {renderRandomQuiz(m.quizBank)}
         </div>
     );
 
-    // Module 7: Interactive Lab
+    // Module 7: Interactive Lab (Fallback if accessed directly)
     const InteractiveLab = () => {
         const [selected, setSelected] = useState(null);
         return (
@@ -767,7 +1145,7 @@ const App = () => {
             case 0: return renderExec();
             case 1: return renderNPD();
             case 2: return renderPMComp();
-            case 3: 
+            case 3: return renderFrameworks();
             case 4: return renderFrameworks();
             case 5: return renderSynRoles();
             case 6: return renderSynDrivers();
@@ -926,16 +1304,14 @@ const App = () => {
             <footer className="fixed bottom-0 left-0 right-0 h-12 bg-[#004030] dark:bg-slate-950 border-t border-[#D8C3A5] z-50">
                 <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center gap-2">
                     <div className="flex items-center gap-3 overflow-hidden">
-                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs truncate">{t.date} · {t.copyright}</span>
-                    </div>
-                    <div className="flex items-center gap-4 shrink-0">
-                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs hidden sm:flex items-center gap-1">
+                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs truncate max-w-[50%]">{t.date} · {t.copyright}</span>
+                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs flex items-center gap-1 shrink-0">
                             Architect:&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-[#D8C3A5] hover:text-white underline underline-offset-2 transition-colors truncate">Prof. Shihmin Lo</a>
                         </span>
-                        <button onClick={scrollToTop} className="text-[#D8C3A5] hover:text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 uppercase tracking-wider transition-colors group">
-                            Top <Icon name="arrowUp" size={14} className="group-hover:-translate-y-0.5 transition-transform" />
-                        </button>
                     </div>
+                    <button onClick={scrollToTop} className="text-[#D8C3A5] hover:text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 uppercase tracking-wider transition-colors shrink-0 group">
+                        Top <Icon name="arrowUp" size={14} className="group-hover:-translate-y-0.5 transition-transform" />
+                    </button>
                 </div>
             </footer>
         </div>
