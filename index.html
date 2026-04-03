@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>HW/SW Product Management | PMA</title>
+<title>PM Align 硬體/軟體產品管理架構校準 | PMA</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -80,7 +80,7 @@ const TOTAL_MODULES = 10;
 const contentData = {
     zh: {
         brand: "PMA",
-        headerTitle: "HW/SW Product Management",
+        headerTitle: "PM Align - 硬體/軟體產品管理架構校準",
         docTitle: "軟硬體專案管理架構深度對齊",
         subtitle: "組織設計與跨領域方法論統整",
         date: "2026年04月03日",
@@ -204,7 +204,7 @@ const contentData = {
     },
     en: {
         brand: "PMA",
-        headerTitle: "HW/SW Product Management",
+        headerTitle: "PM Align - HW/SW Product Management",
         docTitle: "HW/SW PM Architecture Alignment",
         subtitle: "Organizational Design & Methodologies",
         date: "April 03, 2026",
@@ -336,12 +336,26 @@ const App = () => {
     const [visited, setVisited] = useState(Array(TOTAL_MODULES).fill(false));
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [ttsState, setTtsState] = useState('idle'); // 'idle', 'playing', 'paused'
+    const [voicesLoaded, setVoicesLoaded] = useState(false);
     
     const contentRef = useRef(null);
     const menuRef = useRef(null);
 
     const t = contentData[lang];
     const m = t.modules[module];
+
+    // Initialize TTS Voices
+    useEffect(() => {
+        const loadVoices = () => {
+            if(window.speechSynthesis.getVoices().length > 0) {
+                setVoicesLoaded(true);
+            }
+        };
+        loadVoices();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+    }, []);
 
     // Theme initialization
     useEffect(() => {
@@ -387,6 +401,19 @@ const App = () => {
     const toggleLang = () => setLang(lang === 'zh' ? 'en' : 'zh');
 
     // --- Web Speech API (TTS) ---
+    const getPreferredVoice = (langCode) => {
+        const voices = window.speechSynthesis.getVoices();
+        if (langCode === 'zh') {
+            return voices.find(v => v.lang.includes('zh-TW') && (v.name.includes('Yating') || v.name.includes('Ya-Ting'))) ||
+                   voices.find(v => v.lang === 'zh-TW') ||
+                   voices.find(v => v.lang.includes('zh'));
+        } else {
+            return voices.find(v => v.lang === 'en-GB' && (v.name.includes('Male') || v.name.includes('George'))) ||
+                   voices.find(v => v.lang === 'en-GB') ||
+                   voices.find(v => v.lang.includes('en'));
+        }
+    };
+
     const generateFullText = (mod) => {
         let parts = [mod.title, mod.desc];
         if (mod.content) parts.push(mod.content);
@@ -413,6 +440,7 @@ const App = () => {
             mod.links.forEach(l => parts.push(`${l.title}。${l.desc}`));
         }
         if (mod.progressTitle) parts.push(mod.progressTitle);
+        // Returns purely concatenated string without any HTML or Icons
         return parts.join(' ');
     };
 
@@ -434,7 +462,8 @@ const App = () => {
             window.speechSynthesis.cancel();
             const text = generateFullText(m);
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = lang === 'zh' ? 'zh-TW' : 'en-US';
+            utterance.voice = getPreferredVoice(lang);
+            utterance.lang = lang === 'zh' ? 'zh-TW' : 'en-GB';
             utterance.rate = 1.0;
             utterance.onend = handleTtsEnd;
             utterance.onerror = handleTtsEnd;
@@ -897,14 +926,16 @@ const App = () => {
             <footer className="fixed bottom-0 left-0 right-0 h-12 bg-[#004030] dark:bg-slate-950 border-t border-[#D8C3A5] z-50">
                 <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center gap-2">
                     <div className="flex items-center gap-3 overflow-hidden">
-                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs truncate max-w-[50%]">{t.date} · {t.copyright}</span>
-                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs flex items-center gap-1 shrink-0">
+                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs truncate">{t.date} · {t.copyright}</span>
+                    </div>
+                    <div className="flex items-center gap-4 shrink-0">
+                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs hidden sm:flex items-center gap-1">
                             Architect:&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-[#D8C3A5] hover:text-white underline underline-offset-2 transition-colors truncate">Prof. Shihmin Lo</a>
                         </span>
+                        <button onClick={scrollToTop} className="text-[#D8C3A5] hover:text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 uppercase tracking-wider transition-colors group">
+                            Top <Icon name="arrowUp" size={14} className="group-hover:-translate-y-0.5 transition-transform" />
+                        </button>
                     </div>
-                    <button onClick={scrollToTop} className="text-[#D8C3A5] hover:text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 uppercase tracking-wider transition-colors shrink-0 group">
-                        Top <Icon name="arrowUp" size={14} className="group-hover:-translate-y-0.5 transition-transform" />
-                    </button>
                 </div>
             </footer>
         </div>
