@@ -3,27 +3,20 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>軟硬體專案管理架構深度對齊 | PM-ALIGN</title>
+<title>軟硬體專案管理架構深度對齊 | PMA</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script>
-tailwind.config={
-    darkMode:'class',
-    theme:{
-        extend:{
-            fontFamily:{
-                sans:['Inter','Source Han Sans TW','Noto Sans TC','sans-serif'],
-                serif:['Merriweather','serif']
-            },
-            colors: {
-                brand: {
-                    dark: '#004030',
-                    gold: '#D8C3A5',
-                    light: '#F5F5F0'
-                }
+tailwind.config = {
+    darkMode: 'class',
+    theme: {
+        extend: {
+            fontFamily: {
+                sans: ['Inter', 'Source Han Sans TW', 'Noto Sans TC', 'sans-serif'],
+                serif: ['Merriweather', 'serif']
             }
         }
     }
@@ -38,13 +31,13 @@ tailwind.config={
 .rotate-y-180 { transform: rotateY(180deg); }
 .flip-card-inner { transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
 .flip-card:hover .flip-card-inner, .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
-::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 .dark ::-webkit-scrollbar-thumb { background: #475569; }
 </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300 overflow-hidden">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300">
 <div id="root"></div>
 
 <script type="text/babel">
@@ -84,7 +77,7 @@ const Icon = ({ name, size = 20, className = "" }) => {
 const TOTAL_MODULES = 10;
 const contentData = {
     zh: {
-        brand: "PM-ALIGN",
+        brand: "PMA",
         docTitle: "軟硬體專案管理架構深度對齊",
         subtitle: "組織設計與跨領域方法論統整",
         date: "2026年04月03日",
@@ -92,7 +85,7 @@ const contentData = {
         architect_url: "#",
         nav_prev: "上一篇",
         nav_next: "下一篇",
-        audio_play: "播放語音導覽",
+        audio_play: "播放導覽",
         audio_stop: "停止播放",
         nav: [
             { id: "exec", title: "0. 執行摘要", icon: "star" },
@@ -117,7 +110,7 @@ const contentData = {
                 title: "1. 新產品開發流程 (NPD Stage-Gate)",
                 desc: "新產品開發 (NPD) 遵循階段-關卡模型，確保在進入下一階段前，符合商業、技術與資源標準。",
                 image: "NPD_Stage-Gate Model_Coggle_SML 20240312.png",
-                imageAlt: "",
+                imageAlt: "新產品開發流程階段關卡模型圖",
                 points: [
                     { title: "階段一：規劃與提案 (Plan & Proposal)", text: "涵蓋市場行銷與可行性分析，由 PM 與行銷業務主導，評估技術與財務風險，決定產品概念。" },
                     { title: "階段二：設計與執行 (Design & Execute)", text: "涵蓋產品設計與模具/工具製作，此時 PL 與研發工程師 (RD) 成為核心，進行規格展開與架構設計。" },
@@ -129,7 +122,7 @@ const contentData = {
                 title: "2. 專案管理與 PM 職能",
                 desc: "整合觀點：從產品開發流程，推導至產品經理所需具備的七大核心職能。",
                 image: "PM產品經理_Coggle_20240502.png",
-                imageAlt: "",
+                imageAlt: "PM產品經理職能心智圖",
                 table: {
                     headers: ["開發階段", "對應核心職能", "教育構面"],
                     rows: [
@@ -181,7 +174,7 @@ const contentData = {
                     { type: "硬體 PL", focus: "可行性驅動 (Feasibility)", detail: "受限於零件交期，追求「做得出來」，以成本與技術優先。" }
                 ],
                 quote: "PM 決定產品成功的方向 (Strategy)，PO/PL 決定產品如何被做出來 (Execution)。當執行遭遇無法克服的衝突時，升級至策略層由 PM 進行總體價值拍板。",
-                tts: "第六章、驅力與組織運作綜整。軟體開發以價值驅動，追求做對東西；硬體開發以可行性驅動，確保做得出來。跨領域的通用公式是：產品經理決定成功的方向，PO或PL決定如何實作；當發生重大衝突時，統一升級交由產品經理進行商業拍板。"
+                tts: "第六章、驅力與組織運作綜整。軟體開發以價值驅動，追求做對東西；硬體開發以可行性驅動，確保做得出來。跨領域的通用公式是：產品經理決定成功的方向，PO或PL決定如何實作；當發生重大衝突時，統一升級交由產品經理進行總體商業拍板。"
             },
             {
                 title: "7. 互動實驗室",
@@ -194,7 +187,7 @@ const contentData = {
                         { title: "C. 導入 Agile 流程，重新修改需求", correct: false, feedback: "錯誤。硬體物料採購具有嚴格的 Lead Time，隨意變更會導致產線停擺，無法單純用軟體敏捷思維來解套。" }
                     ]
                 },
-                tts: "第七章、互動實驗室。情境題：當採購部門與研發部門因為成本與技術風險發生嚴重衝突，且互不相讓時，該怎麼辦？正確的作法是：將衝突升級，交由具備全域視角的產品經理，依據整體商業策略進行最終拍板。"
+                tts: "第七章、互動實驗室。情境題：當採購部門與研發部門因為成本與技術風險發生嚴重衝突，且互不相讓時，該怎麼辦？正確的作法是：將衝突升級，交由具備全域視角的產品經理，依據總體商業策略進行最終拍板。"
             },
             {
                 title: "8. 外部資源",
@@ -215,15 +208,15 @@ const contentData = {
         ]
     },
     en: {
-        brand: "PM-ALIGN",
+        brand: "PMA",
         docTitle: "HW/SW PM Architecture Alignment",
-        subtitle: "Organizational Design & Cross-Domain Methodologies",
+        subtitle: "Organizational Design & Methodologies",
         date: "April 03, 2026",
         copyright: "All Rights Reserved",
         architect_url: "#",
         nav_prev: "Previous",
         nav_next: "Next",
-        audio_play: "Play Audio Guide",
+        audio_play: "Play Audio",
         audio_stop: "Stop Audio",
         nav: [
             { id: "exec", title: "0. Exec Summary", icon: "star" },
@@ -248,7 +241,7 @@ const contentData = {
                 title: "1. New Product Development (Stage-Gate)",
                 desc: "NPD follows the Stage-Gate model, ensuring business, technical, and resource criteria are met before proceeding.",
                 image: "NPD_Stage-Gate Model_Coggle_SML 20240312.png",
-                imageAlt: "",
+                imageAlt: "NPD Stage-Gate Model",
                 points: [
                     { title: "Phase 1: Plan & Proposal", text: "Covers marketing and feasibility. Led by PM and Sales to evaluate technical and financial risks." },
                     { title: "Phase 2: Design & Execute", text: "Product design and tooling. PL and R&D engineers unfold specifications and architectures." },
@@ -260,7 +253,7 @@ const contentData = {
                 title: "2. PM Competencies",
                 desc: "Integration: Deriving the seven core competencies of a Product Manager from the development process.",
                 image: "PM產品經理_Coggle_20240502.png",
-                imageAlt: "",
+                imageAlt: "PM Competencies Mindmap",
                 table: {
                     headers: ["Development Stage", "Core Competencies", "Education Domain"],
                     rows: [
@@ -355,7 +348,9 @@ const App = () => {
     const [visited, setVisited] = useState(Array(TOTAL_MODULES).fill(false));
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
+    
     const contentRef = useRef(null);
+    const menuRef = useRef(null);
 
     const t = contentData[lang];
     const m = t.modules[module];
@@ -366,6 +361,21 @@ const App = () => {
         else document.documentElement.classList.remove('dark');
     }, [theme]);
 
+    // Handle outside click for mobile menu
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsMobileMenuOpen(false);
+            }
+        };
+        if (isMobileMenuOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isMobileMenuOpen]);
+
     // Track progress & scroll top
     useEffect(() => {
         setVisited(prev => {
@@ -374,7 +384,7 @@ const App = () => {
             return next;
         });
         if(contentRef.current) contentRef.current.scrollTop = 0;
-        stopTTS(); // Stop audio when switching modules
+        stopTTS();
     }, [module, lang]);
 
     const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
@@ -417,7 +427,7 @@ const App = () => {
     const renderExec = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed">{m.desc}</p>
-            <div className="bg-brand-light dark:bg-slate-800 p-6 md:p-8 rounded-2xl border-l-4 border-brand-dark dark:border-brand-gold shadow-sm">
+            <div className="bg-[#D8C3A5]/20 dark:bg-slate-800 p-6 md:p-8 rounded-2xl border-l-4 border-[#004030] dark:border-[#D8C3A5] shadow-sm">
                 <p className="text-base text-slate-700 dark:text-slate-300 leading-loose">{m.content}</p>
             </div>
         </div>
@@ -428,14 +438,14 @@ const App = () => {
         <div className="animate-fade-in space-y-6">
             <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
             {m.image && (
-                <div className="bg-white dark:bg-slate-200 p-2 rounded-xl shadow-md border border-slate-200 overflow-hidden group">
+                <div className="mt-6 w-full bg-white dark:bg-slate-200 p-2 rounded-xl shadow-md border border-slate-200 overflow-hidden group">
                     <img src={m.image} alt={m.imageAlt} className="w-full h-auto object-contain max-h-[400px] transform transition duration-500 group-hover:scale-[1.02]" />
                 </div>
             )}
             <div className="grid gap-4 mt-6">
                 {m.points.map((pt, idx) => (
                     <div key={idx} className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col md:flex-row gap-4 items-start">
-                        <div className="bg-brand-dark text-brand-gold dark:bg-brand-gold dark:text-brand-dark font-bold text-xl w-10 h-10 flex items-center justify-center rounded-lg shrink-0">
+                        <div className="bg-[#004030] text-[#D8C3A5] dark:bg-[#D8C3A5] dark:text-[#004030] font-bold text-xl w-10 h-10 flex items-center justify-center rounded-lg shrink-0">
                             {idx + 1}
                         </div>
                         <div>
@@ -453,7 +463,7 @@ const App = () => {
         <div className="animate-fade-in space-y-6">
             <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
             {m.image && (
-                <div className="bg-white dark:bg-slate-200 p-2 rounded-xl shadow-md border border-slate-200 overflow-hidden group">
+                <div className="mt-6 w-full bg-white dark:bg-slate-200 p-2 rounded-xl shadow-md border border-slate-200 overflow-hidden group">
                     <img src={m.image} alt={m.imageAlt} className="w-full h-auto object-contain max-h-[400px] transform transition duration-500 group-hover:scale-[1.02]" />
                 </div>
             )}
@@ -469,7 +479,7 @@ const App = () => {
                     <tbody>
                         {m.table.rows.map((r, i) => (
                             <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-b dark:border-slate-700 last:border-0">
-                                <td className="p-4 font-bold text-brand-dark dark:text-brand-gold">{r.stage}</td>
+                                <td className="p-4 font-bold text-[#004030] dark:text-[#D8C3A5]">{r.stage}</td>
                                 <td className="p-4 text-slate-700 dark:text-slate-300">{r.comp}</td>
                                 <td className="p-4 italic text-slate-500 dark:text-slate-400">{r.domain}</td>
                             </tr>
@@ -480,11 +490,11 @@ const App = () => {
         </div>
     );
 
-    // Module 3 & 4: Frameworks (Agile / Waterfall)
+    // Module 3 & 4: Frameworks
     const renderFrameworks = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {m.points.map((pt, idx) => (
                     <div key={idx} className={`bg-white dark:bg-slate-800 p-6 rounded-xl border-t-4 shadow-sm ${module === 3 ? 'border-blue-500 dark:border-blue-400' : 'border-purple-500 dark:border-purple-400'}`}>
                         <h3 className="font-bold text-lg mb-3 dark:text-white flex items-center gap-2">
@@ -502,12 +512,12 @@ const App = () => {
     const renderSynRoles = () => (
         <div className="animate-fade-in space-y-8">
             <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
-            <div className="bg-white dark:bg-slate-800 p-6 sm:p-10 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 transform transition hover:scale-[1.02]">
-                <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/30 rounded-xl border border-blue-100 dark:border-blue-800 w-full md:w-auto">
+            <div className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-8 transform transition hover:scale-[1.01]">
+                <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/30 rounded-xl border border-blue-100 dark:border-blue-800 w-full lg:w-auto">
                     <div className="font-bold text-2xl text-blue-700 dark:text-blue-400">{m.equation.left}</div>
                 </div>
                 <div className="text-3xl font-black text-slate-400 dark:text-slate-500">{m.equation.equals}</div>
-                <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
                     <div className="text-center p-4 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl border border-emerald-100 dark:border-emerald-800 flex-1">
                         <div className="font-bold text-xl text-emerald-700 dark:text-emerald-400">{m.equation.right1}</div>
                         <div className="text-sm text-emerald-600 dark:text-emerald-500 mt-1">{m.equation.right1_sub}</div>
@@ -531,7 +541,7 @@ const App = () => {
                     <tbody>
                         {m.table.rows.map((r, i) => (
                             <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-b dark:border-slate-700 last:border-0 group">
-                                <td className="p-4 font-medium text-brand-dark dark:text-brand-gold">{r.level}</td>
+                                <td className="p-4 font-medium text-[#004030] dark:text-[#D8C3A5]">{r.level}</td>
                                 <td className="p-4 font-bold">{r.role}</td>
                                 <td className="p-4 italic text-slate-600 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{r.question}</td>
                                 <td className="p-4 text-slate-600 dark:text-slate-400">{r.scope}</td>
@@ -547,19 +557,26 @@ const App = () => {
     const renderSynDrivers = () => (
         <div className="animate-fade-in space-y-8">
             <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 perspective">
                 {m.comparisons.map((comp, idx) => (
-                    <div key={idx} className="group relative bg-white dark:bg-slate-800 rounded-2xl p-8 overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition-all">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 dark:bg-slate-700/30 rounded-bl-full -z-10 group-hover:scale-110 transition-transform duration-500"></div>
-                        <h3 className="text-2xl font-bold mb-2 dark:text-white">{comp.type}</h3>
-                        <div className="inline-block px-4 py-1 rounded-full text-sm font-semibold mb-6 bg-brand-dark text-brand-gold dark:bg-brand-gold dark:text-brand-dark">
-                            {comp.focus}
+                    <div key={idx} className="flip-card h-72 group cursor-pointer relative">
+                        <div className="flip-card-inner relative w-full h-full shadow-sm rounded-2xl border border-slate-200 dark:border-slate-700">
+                            <div className="absolute w-full h-full backface-hidden bg-white dark:bg-slate-800 rounded-2xl flex flex-col justify-center p-6 sm:p-8">
+                                <h3 className="text-2xl font-bold mb-4 dark:text-white">{comp.type}</h3>
+                                <div className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold mb-2 bg-[#004030] text-[#D8C3A5] dark:bg-[#D8C3A5] dark:text-[#004030] w-max">
+                                    {comp.focus}
+                                </div>
+                                <p className="mt-4 text-sm text-slate-400 dark:text-slate-500 animate-pulse">{lang === 'zh' ? '點擊翻轉查看詳細說明' : 'Click to flip for details'}</p>
+                            </div>
+                            <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-[#004030] dark:bg-slate-900 rounded-2xl border border-[#D8C3A5] flex flex-col justify-center p-6 sm:p-8 text-white">
+                                <h3 className="text-xl font-bold text-[#D8C3A5] mb-4">{comp.type}</h3>
+                                <p className="text-[#D8C3A5]/90 leading-relaxed text-base">{comp.detail}</p>
+                            </div>
                         </div>
-                        <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{comp.detail}</p>
                     </div>
                 ))}
             </div>
-            <blockquote className="relative p-8 bg-brand-light dark:bg-slate-800/80 rounded-2xl border-l-8 border-brand-dark dark:border-brand-gold shadow-sm mt-8">
+            <blockquote className="relative p-6 sm:p-8 bg-[#D8C3A5]/10 dark:bg-slate-800/80 rounded-2xl border-l-8 border-[#004030] dark:border-[#D8C3A5] shadow-sm mt-8">
                 <p className="text-lg md:text-xl font-serif leading-relaxed text-slate-800 dark:text-slate-200">
                     {m.quote}
                 </p>
@@ -571,10 +588,10 @@ const App = () => {
     const InteractiveLab = () => {
         const [selected, setSelected] = useState(null);
         return (
-            <div className="animate-fade-in space-y-6">
+            <div className="animate-fade-in space-y-6 w-full max-w-full">
                 <p className="text-lg text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
-                <div className="bg-brand-dark/5 dark:bg-slate-800/50 p-6 sm:p-8 rounded-2xl border border-brand-dark/10 dark:border-slate-700">
-                    <h3 className="text-xl font-bold text-brand-dark dark:text-brand-gold mb-6 leading-relaxed">
+                <div className="bg-[#004030]/5 dark:bg-slate-800/50 p-4 sm:p-6 md:p-8 rounded-2xl border border-[#004030]/10 dark:border-slate-700">
+                    <h3 className="text-lg sm:text-xl font-bold text-[#004030] dark:text-[#D8C3A5] mb-6 leading-relaxed">
                         {m.quiz.question}
                     </h3>
                     <div className="grid gap-4">
@@ -582,18 +599,18 @@ const App = () => {
                             <button
                                 key={i}
                                 onClick={() => setSelected(i)}
-                                className={`p-5 text-left rounded-xl border-2 transition-all duration-300 shadow-sm ${
+                                className={`p-4 sm:p-5 text-left rounded-xl border-2 transition-all duration-300 shadow-sm ${
                                     selected === i 
                                     ? (opt.correct 
                                         ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30' 
                                         : 'border-rose-500 bg-rose-50 dark:bg-rose-900/30') 
-                                    : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-brand-gold hover:shadow-md'
+                                    : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-[#D8C3A5] hover:shadow-md'
                                 }`}
                             >
                                 <div className="font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between">
                                     {opt.title}
                                     {selected === i && (
-                                        <Icon name={opt.correct ? "checkCircle" : "x"} className={opt.correct ? "text-emerald-500" : "text-rose-500"} />
+                                        <Icon name={opt.correct ? "checkCircle" : "x"} className={`shrink-0 ml-2 ${opt.correct ? "text-emerald-500" : "text-rose-500"}`} />
                                     )}
                                 </div>
                                 {selected === i && (
@@ -613,15 +630,15 @@ const App = () => {
     const ExternalResources = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
-            <ul className="grid gap-4 md:grid-cols-2">
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {m.links.map((link, i) => (
                     <li key={i}>
-                        <a href={link.url} target="_blank" rel="noreferrer" className="flex items-start p-5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-brand-gold/50 transition-all group h-full">
-                            <div className="mt-1 bg-brand-light dark:bg-slate-700 p-2 rounded-lg group-hover:bg-brand-gold/20 transition-colors">
-                                <Icon name="link" className="text-brand-dark dark:text-brand-gold" size={24} />
+                        <a href={link.url} target="_blank" rel="noreferrer" className="flex items-start p-5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-[#D8C3A5] transition-all group h-full">
+                            <div className="mt-1 bg-[#D8C3A5]/20 dark:bg-slate-700 p-2 rounded-lg group-hover:bg-[#D8C3A5]/40 transition-colors">
+                                <Icon name="link" className="text-[#004030] dark:text-[#D8C3A5]" size={24} />
                             </div>
                             <div className="ml-4 flex-1">
-                                <h4 className="font-bold text-lg text-slate-800 dark:text-slate-200 group-hover:text-brand-dark dark:group-hover:text-brand-gold transition-colors">{link.title}</h4>
+                                <h4 className="font-bold text-lg text-slate-800 dark:text-slate-200 group-hover:text-[#004030] dark:group-hover:text-[#D8C3A5] transition-colors">{link.title}</h4>
                                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{link.desc}</p>
                             </div>
                         </a>
@@ -641,12 +658,12 @@ const App = () => {
                 <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
                     <div className="flex justify-between items-end mb-3">
                         <span className="font-bold text-slate-700 dark:text-slate-300 text-lg">{m.progressTitle}</span>
-                        <span className="font-black text-3xl text-brand-dark dark:text-brand-gold">{progress}%</span>
+                        <span className="font-black text-3xl text-[#004030] dark:text-[#D8C3A5]">{progress}%</span>
                     </div>
                     <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-4 mb-8 overflow-hidden border border-slate-200 dark:border-slate-600">
-                        <div className="bg-brand-dark dark:bg-brand-gold h-full rounded-full transition-all duration-1000 ease-out" style={{ width: `${progress}%` }}></div>
+                        <div className="bg-[#004030] dark:bg-[#D8C3A5] h-full rounded-full transition-all duration-1000 ease-out" style={{ width: `${progress}%` }}></div>
                     </div>
-                    <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {t.nav.map((n, i) => (
                             <button 
                                 key={i}
@@ -684,102 +701,124 @@ const App = () => {
     };
 
     return (
-        <div className="h-screen flex flex-col font-sans">
-            {/* Header */}
-            <header className="shrink-0 bg-brand-dark border-b border-brand-gold shadow-md">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-16">
-                        <div className="flex items-center">
-                            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 rounded-md text-brand-gold hover:bg-white/10 mr-2 focus:outline-none">
-                                <Icon name={isMobileMenuOpen ? "x" : "menu"} size={24} />
-                            </button>
-                            <span className="font-serif font-bold text-xl text-brand-gold tracking-wider truncate mr-4">{t.brand}</span>
-                        </div>
-                        <div className="flex items-center space-x-2 md:space-x-4 shrink-0">
-                            <button onClick={toggleLang} className="flex items-center px-3 py-1.5 rounded-full bg-white/10 text-brand-gold hover:bg-white/20 transition-colors text-sm font-medium border border-brand-gold/30">
-                                <Icon name="globe" size={16} className="mr-2" />
-                                {lang === 'zh' ? 'EN' : '中文'}
-                            </button>
-                            <button onClick={toggleTheme} className="p-2 rounded-full text-brand-gold hover:bg-white/10 transition-colors border border-transparent hover:border-brand-gold/30">
-                                <Icon name={theme === 'dark' ? "sun" : "moon"} size={20} />
-                            </button>
-                        </div>
+        <div className="min-h-screen flex flex-col pt-16 font-sans">
+            {/* Header - Fixed & Never Moving */}
+            <header className="fixed top-0 left-0 right-0 h-16 z-50 bg-[#004030] shadow-md border-b border-[#D8C3A5]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex justify-between items-center">
+                    <div className="flex items-center">
+                        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 -ml-2 rounded-md text-[#D8C3A5] hover:bg-white/10 mr-2 focus:outline-none">
+                            <Icon name={isMobileMenuOpen ? "x" : "menu"} size={24} />
+                        </button>
+                        <span className="font-serif font-black text-xl text-[#D8C3A5] tracking-widest truncate">{t.brand}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 md:space-x-4 shrink-0">
+                        <button onClick={toggleLang} className="flex items-center px-3 py-1.5 rounded-full bg-white/10 text-[#D8C3A5] hover:bg-white/20 transition-colors text-sm font-medium border border-[#D8C3A5]/30">
+                            <Icon name="globe" size={16} className="mr-1.5" />
+                            {lang === 'zh' ? 'EN' : '中文'}
+                        </button>
+                        <button onClick={toggleTheme} className="p-2 rounded-full text-[#D8C3A5] hover:bg-white/10 transition-colors border border-transparent hover:border-[#D8C3A5]/30">
+                            <Icon name={theme === 'dark' ? "sun" : "moon"} size={20} />
+                        </button>
                     </div>
                 </div>
             </header>
 
-            {/* Page Title Banner */}
-            <div className="shrink-0 bg-brand-light dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">{t.docTitle}</h1>
-                    <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 flex items-center gap-2">
-                        <Icon name="layers" size={20} className="text-brand-dark dark:text-brand-gold opacity-70" />
-                        {t.subtitle}
-                    </p>
-                </div>
-            </div>
-
-            {/* Main App Layout */}
-            <div className="flex-1 flex overflow-hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 gap-6 relative">
+            {/* Main Application Area */}
+            <div className="flex-1 flex flex-col md:flex-row w-full max-w-7xl mx-auto relative">
                 
-                {/* Sidebar Navigation */}
-                <aside className={`md:w-72 flex-shrink-0 absolute md:relative z-30 h-full transition-transform transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-[150%] md:translate-x-0'} left-0 top-0 pt-2 md:pt-0 pl-4 md:pl-0`}>
-                    <div className="h-full bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-y-auto w-64 md:w-full">
-                        <nav className="p-3 space-y-1">
-                            {t.nav.map((item, idx) => {
-                                const isActive = module === idx;
-                                return (
-                                    <button
-                                        key={item.id}
-                                        onClick={() => { setModule(idx); setIsMobileMenuOpen(false); }}
-                                        className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
-                                            isActive 
-                                            ? 'bg-brand-dark text-brand-gold dark:bg-brand-gold dark:text-brand-dark shadow-md' 
-                                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-brand-dark dark:hover:text-white'
-                                        }`}
-                                    >
-                                        <Icon name={item.icon} size={18} className={`mr-3 shrink-0 ${isActive ? 'opacity-100' : 'opacity-70'} ${visited[idx] && !isActive ? 'text-emerald-500' : ''}`} />
-                                        <span className="truncate">{item.title}</span>
-                                        {isActive && <Icon name="chevronRight" size={16} className="ml-auto opacity-70 shrink-0" />}
-                                    </button>
-                                );
-                            })}
-                        </nav>
-                    </div>
+                {/* Mobile Dropdown Menu (z-[100] & max-height with overflow-y-auto) */}
+                {isMobileMenuOpen && (
+                    <div className="md:hidden fixed inset-0 z-[90] bg-black/50" onClick={() => setIsMobileMenuOpen(false)}></div>
+                )}
+                <div 
+                    ref={menuRef}
+                    className={`md:hidden fixed top-16 left-0 right-0 bg-white dark:bg-slate-800 z-[100] shadow-xl border-b border-slate-200 dark:border-slate-700 transition-all duration-300 max-h-[calc(100vh-5rem)] overflow-y-auto origin-top ${isMobileMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0 pointer-events-none'}`}
+                >
+                    <nav className="p-4 space-y-2">
+                        {t.nav.map((item, idx) => {
+                            const isActive = module === idx;
+                            return (
+                                <button
+                                    key={item.id}
+                                    onClick={() => { setModule(idx); setIsMobileMenuOpen(false); }}
+                                    className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-colors ${
+                                        isActive 
+                                        ? 'bg-[#004030] text-[#D8C3A5] dark:bg-[#D8C3A5] dark:text-[#004030]' 
+                                        : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                                    }`}
+                                >
+                                    <Icon name={item.icon} size={18} className={`mr-3 shrink-0 ${isActive ? 'opacity-100' : 'opacity-70'} ${visited[idx] && !isActive ? 'text-emerald-500' : ''}`} />
+                                    <span>{item.title}</span>
+                                </button>
+                            );
+                        })}
+                    </nav>
+                </div>
+
+                {/* Desktop Sidebar Navigation */}
+                <aside className="hidden md:block w-72 shrink-0 p-4 lg:p-6 sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
+                    <nav className="space-y-1">
+                        {t.nav.map((item, idx) => {
+                            const isActive = module === idx;
+                            return (
+                                <button
+                                    key={item.id}
+                                    onClick={() => setModule(idx)}
+                                    className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
+                                        isActive 
+                                        ? 'bg-[#004030] text-[#D8C3A5] dark:bg-[#D8C3A5] dark:text-[#004030] shadow-md' 
+                                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-[#004030] dark:hover:text-white'
+                                    }`}
+                                >
+                                    <Icon name={item.icon} size={18} className={`mr-3 shrink-0 ${isActive ? 'opacity-100' : 'opacity-70'} ${visited[idx] && !isActive ? 'text-emerald-500' : ''}`} />
+                                    <span className="truncate text-left">{item.title}</span>
+                                    {isActive && <Icon name="chevronRight" size={16} className="ml-auto opacity-70 shrink-0" />}
+                                </button>
+                            );
+                        })}
+                    </nav>
                 </aside>
 
-                {/* Content Area */}
-                <main ref={contentRef} className="flex-1 overflow-y-auto rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 relative scroll-smooth" onClick={() => isMobileMenuOpen && setIsMobileMenuOpen(false)}>
-                    <div className="p-5 sm:p-8 md:p-10 min-h-full flex flex-col relative">
+                {/* Main Content Area */}
+                <main ref={contentRef} className="flex-1 min-w-0 p-4 sm:p-6 md:p-8 scroll-smooth overflow-y-auto">
+                    
+                    {/* Header Text for the Page */}
+                    <div className="mb-6 md:mb-8 pb-4 border-b border-slate-200 dark:border-slate-700">
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white mb-2">{t.docTitle}</h1>
+                        <p className="text-sm md:text-base text-slate-600 dark:text-slate-400">{t.subtitle}</p>
+                    </div>
+
+                    {/* Content Card */}
+                    <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-4 sm:p-6 md:p-8 relative">
                         {/* Audio TTS Button */}
                         <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
                             <button 
                                 onClick={playTTS} 
-                                className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all shadow-sm border ${isPlaying ? 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400' : 'bg-slate-100 text-brand-dark border-slate-200 hover:bg-brand-gold/20 dark:bg-slate-700 dark:text-brand-gold dark:border-slate-600'}`}
+                                className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all shadow-sm border ${isPlaying ? 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400' : 'bg-slate-100 text-[#004030] border-slate-200 hover:bg-[#D8C3A5]/20 dark:bg-slate-700 dark:text-[#D8C3A5] dark:border-slate-600'}`}
                             >
                                 <Icon name={isPlaying ? "stop" : "volume"} size={16} />
                                 <span className="hidden sm:inline">{isPlaying ? t.audio_stop : t.audio_play}</span>
                             </button>
                         </div>
 
-                        <div className="flex-1 mt-6 sm:mt-0">
-                            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-slate-800 dark:text-white border-b-2 border-brand-gold inline-block pb-2 pr-4">{m.title}</h2>
+                        <div className="mt-8 sm:mt-0 pt-4 sm:pt-0">
+                            <h2 className="text-xl md:text-2xl font-bold mb-6 text-[#004030] dark:text-[#D8C3A5] border-b-2 border-[#D8C3A5] inline-block pb-2 pr-4">{m.title}</h2>
                             {renderContent()}
                         </div>
                         
                         {/* Footer Navigation (Next/Prev Buttons) */}
-                        <div className="mt-12 pt-6 border-t border-slate-200 dark:border-slate-700 flex justify-between shrink-0">
+                        <div className="mt-10 pt-6 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center shrink-0">
                             <button 
                                 onClick={() => setModule(Math.max(0, module - 1))} 
                                 disabled={module === 0} 
-                                className="px-4 sm:px-6 py-2.5 sm:py-3 text-slate-600 dark:text-brand-gold border border-slate-200 dark:border-brand-gold/30 hover:bg-slate-50 dark:hover:bg-brand-gold/10 rounded-lg disabled:opacity-0 uppercase text-xs sm:text-sm tracking-wider flex items-center transition-colors"
+                                className="px-4 sm:px-6 py-2.5 text-slate-600 dark:text-[#D8C3A5] border border-slate-200 dark:border-[#D8C3A5]/30 hover:bg-slate-50 dark:hover:bg-[#D8C3A5]/10 rounded-lg disabled:opacity-0 uppercase text-xs sm:text-sm tracking-wider flex items-center transition-colors"
                             >
                                 ← {t.nav_prev}
                             </button>
                             <button 
                                 onClick={() => setModule(Math.min(TOTAL_MODULES - 1, module + 1))} 
                                 disabled={module === TOTAL_MODULES - 1} 
-                                className="px-5 sm:px-8 py-2.5 sm:py-3 bg-brand-dark dark:bg-brand-gold text-white dark:text-brand-dark font-serif font-bold hover:bg-[#002b20] dark:hover:bg-white rounded-lg disabled:opacity-0 uppercase text-xs sm:text-sm tracking-wider shadow-md flex items-center transition-colors"
+                                className="px-5 sm:px-8 py-2.5 bg-[#004030] dark:bg-[#D8C3A5] text-[#D8C3A5] dark:text-[#004030] font-serif font-bold hover:bg-[#002b20] dark:hover:bg-white rounded-lg disabled:opacity-0 uppercase text-xs sm:text-sm tracking-wider shadow-md flex items-center transition-colors"
                             >
                                 {t.nav_next} <Icon name="arrowRight" size={16} className="ml-2"/>
                             </button>
@@ -788,12 +827,14 @@ const App = () => {
                 </main>
             </div>
 
-            {/* Application Footer */}
-            <footer className="h-8 bg-brand-dark flex items-center justify-between px-4 shrink-0 shadow-inner">
-                <span className="text-brand-gold/60 text-[10px] sm:text-xs truncate">{t.date} · {t.copyright}</span>
-                <span className="text-brand-gold/60 text-[10px] sm:text-xs flex items-center gap-3">
-                    <span className="flex items-center gap-1">Architect:&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-brand-gold hover:text-white underline underline-offset-2 transition-colors">Prof. Shihmin Lo</a></span>
-                </span>
+            {/* Application Footer - Ensures No Overflow on Mobile */}
+            <footer className="mt-auto bg-[#004030] dark:bg-slate-950 border-t border-[#D8C3A5]">
+                <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-2">
+                    <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs truncate max-w-[50%]">{t.date} · {t.copyright}</span>
+                    <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs flex items-center gap-1 shrink-0">
+                        Architect:&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-[#D8C3A5] hover:text-white underline underline-offset-2 transition-colors">Prof. Shihmin Lo</a>
+                    </span>
+                </div>
             </footer>
         </div>
     );
