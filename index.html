@@ -38,13 +38,18 @@ tailwind.config={
 .rotate-y-180 { transform: rotateY(180deg); }
 .flip-card-inner { transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
 .flip-card:hover .flip-card-inner, .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+/* Custom Scrollbar for a cleaner look */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+.dark ::-webkit-scrollbar-thumb { background: #475569; }
 </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300 overflow-hidden">
 <div id="root"></div>
 
 <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
 
 // --- Icons Component ---
 const Icon = ({ name, size = 20, className = "" }) => {
@@ -55,39 +60,50 @@ const Icon = ({ name, size = 20, className = "" }) => {
         moon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />,
         globe: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />,
         chevronRight: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />,
+        arrowRight: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />,
         users: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />,
         layers: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />,
         shield: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />,
         matrix: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />,
         zap: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />,
-        checkCircle: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        checkCircle: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />,
+        circle: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />,
+        flask: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />,
+        link: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />,
+        star: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
     };
     return (
         <svg className={className} width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            {icons[name]}
+            {icons[name] || icons['circle']}
         </svg>
     );
 };
 
 // --- Data & Translations ---
+const TOTAL_MODULES = 9;
 const contentData = {
     zh: {
         brand: "PM-ALIGN",
         docTitle: "軟硬體專案管理架構深度對齊",
         subtitle: "軟體工程 (Agile/Scrum) vs. 硬體工程 (NPD/Matrix)",
         date: "2026年04月03日",
-        author: "Shihmin Lo & AI Assistant",
         copyright: "版權所有",
+        architect_url: "#",
+        nav_prev: "上一篇",
+        nav_next: "下一篇",
         nav: [
             { id: "intro", title: "一、角色核心對應", icon: "users" },
             { id: "decision", title: "二、決策權分層設計", icon: "layers" },
             { id: "conflict", title: "三、衝突解決防守陣線", icon: "shield" },
             { id: "matrix", title: "四、矩陣組織運作", icon: "matrix" },
             { id: "driver", title: "五、驅動力本質差異", icon: "zap" },
-            { id: "conclusion", title: "六、跨領域通用公式", icon: "checkCircle" }
+            { id: "conclusion", title: "六、跨領域通用公式", icon: "checkCircle" },
+            { id: "lab", title: "七、互動實驗室", icon: "flask" },
+            { id: "resources", title: "八、外部資源", icon: "link" },
+            { id: "journey", title: "九、學習歷程", icon: "star" }
         ],
-        modules: {
-            intro: {
+        modules: [
+            {
                 title: "一、角色核心對應關係",
                 desc: "透過「職能板塊 (Functional Blocks)」的拆解，我們發現軟硬體執行層的架構存在以下映射關係：",
                 equation: { left: "軟體 PO", equals: "≈", right1: "硬體 PL", right1_sub: "(Owner 型)", right2: "硬體 PCC", right2_sub: "(協調支援)" },
@@ -96,7 +112,7 @@ const contentData = {
                     { title: "硬體的職能專業分工", text: "硬體因牽涉實體供應鏈、BOM 表與製造，複雜度極高。因此將執行職能拆分：由 PL 專注於技術與規格決策，行政協調重擔則由 PCC 負責。" }
                 ]
             },
-            decision: {
+            {
                 title: "二、決策權的分層設計",
                 desc: "決策並非全由單一角色掌握，而是依據影響範圍分為策略層與執行層：",
                 table: {
@@ -107,7 +123,7 @@ const contentData = {
                     ]
                 }
             },
-            conflict: {
+            {
                 title: "三、衝突解決與防守陣線",
                 desc: "當面臨外部需求插單與內部開發瓶頸時，組織的防守應分工如下。點擊卡片查看解析：",
                 cards: [
@@ -115,7 +131,7 @@ const contentData = {
                     { front: "當 RD 表示技術卡關做不完...", back: "PO/PL 搞定 RD！", backDesc: "將商業語言轉譯為技術規格。主導技術上的妥協方案 (Trade-off)，確保開發步調。" }
                 ]
             },
-            matrix: {
+            {
                 title: "四、矩陣組織下的多模組運作",
                 desc: "在大型系統開發中，組織會自然演化為高度矩陣化的「節點對節點」通訊模式：",
                 nodes: [
@@ -124,7 +140,7 @@ const contentData = {
                     { title: "總體最佳化裁決", desc: "當各單位 PCC 利益衝突時，由在場的 PM 依據總體商業價值與客戶承諾進行最終拍板。" }
                 ]
             },
-            driver: {
+            {
                 title: "五、驅動力的本質差異",
                 desc: "雖然決策範圍相似，但兩者在取捨 (Trade-off) 時的基準點有所不同：",
                 comparisons: [
@@ -132,30 +148,61 @@ const contentData = {
                     { type: "硬體 PL", focus: "可行性驅動 (Feasibility-driven)", detail: "修改成本極高（如開模），受限於物理零件交期。重點在於「做得出來」，以技術可行性與製造成本為優先。" }
                 ]
             },
-            conclusion: {
+            {
                 title: "六、結論：跨領域通用公式",
                 desc: "無論 Agile 或 V-model，高效開發組織的運作本質可總結為一條黃金準則：",
                 quote: "PM 決定產品成功的方向 (Strategy)，PO/PL 決定產品如何一步步被做出來 (Execution)。當執行遇到無法克服的資源或時程衝突時，升級至策略層由 PM 進行總體價值判斷。"
+            },
+            {
+                title: "七、互動實驗室",
+                desc: "情境模擬：在真實的專案戰場中，請針對突發狀況做出最佳的決策判斷。",
+                quiz: {
+                    question: "【情境題】產品試產前夕，主要大客戶臨時要求增加專屬的客製化散熱模組，否則揚言抽單轉單。請問在健康的組織架構下，這個難題第一時間該由誰來扛下並做出判斷？",
+                    options: [
+                        { title: "A. 硬體 PL (專案負責人)", correct: false, feedback: "不完全正確。PL 只能從「技術可行性」去評估散熱模組能不能做出來。但「要不要為單一客戶妥協」是商業層級的考量。" },
+                        { title: "B. PM (產品經理)", correct: true, feedback: "正確解答！「守住產品標準化底線」與「評估商業利弊」是 PM 的核心職責。正如黃金法則：PM 解決 Sales 與客戶端的商業壓力。" },
+                        { title: "C. 採購 PCC (專案協調員)", correct: false, feedback: "不正確。採購 PCC 可以幫忙確認客製化散熱片的「交期與成本」，但無權決定是否要為了客戶犧牲整體利潤或標準化策略。" }
+                    ]
+                }
+            },
+            {
+                title: "八、外部資源",
+                desc: "想要更深入了解不同領域的專案管理與組織架構設計，推薦參考以下權威指南：",
+                links: [
+                    { title: "敏捷軟體開發宣言 (Agile Manifesto)", desc: "了解軟體工程價值驅動的核心精神。", url: "https://agilemanifesto.org/iso/zhcht/manifesto.html" },
+                    { title: "Scrum 指南 (The Scrum Guide)", desc: "深入了解 PO (Product Owner) 的官方定義與職責邊界。", url: "https://scrumguides.org/" },
+                    { title: "PMI 專案管理知識體系 (PMBOK)", desc: "探討大型硬體開發常見的矩陣組織 (Matrix Organization) 與整合管理。", url: "https://www.pmi.org/" }
+                ]
+            },
+            {
+                title: "九、學習歷程",
+                desc: "追蹤您的學習進度，掌握完整的跨領域管理框架：",
+                progressTitle: "課程完成度"
             }
-        }
+        ]
     },
     en: {
         brand: "PM-ALIGN",
         docTitle: "Hardware & Software PM Architecture Alignment",
         subtitle: "Software Engineering (Agile) vs. Hardware (NPD/Matrix)",
         date: "April 03, 2026",
-        author: "Shihmin Lo & AI Assistant",
         copyright: "All Rights Reserved",
+        architect_url: "#",
+        nav_prev: "Previous",
+        nav_next: "Next",
         nav: [
             { id: "intro", title: "1. Core Role Mapping", icon: "users" },
             { id: "decision", title: "2. Tiered Decision Making", icon: "layers" },
             { id: "conflict", title: "3. Conflict Resolution", icon: "shield" },
             { id: "matrix", title: "4. Matrix Organization", icon: "matrix" },
             { id: "driver", title: "5. Core Drivers", icon: "zap" },
-            { id: "conclusion", title: "6. Universal Formula", icon: "checkCircle" }
+            { id: "conclusion", title: "6. Universal Formula", icon: "checkCircle" },
+            { id: "lab", title: "7. Interactive Lab", icon: "flask" },
+            { id: "resources", title: "8. External Resources", icon: "link" },
+            { id: "journey", title: "9. Learning Journey", icon: "star" }
         ],
-        modules: {
-            intro: {
+        modules: [
+            {
                 title: "1. Core Role Mapping",
                 desc: "By breaking down 'Functional Blocks', we find the following mapping in the execution layer:",
                 equation: { left: "Software PO", equals: "≈", right1: "Hardware PL", right1_sub: "(Owner)", right2: "Hardware PCC", right2_sub: "(Coordination)" },
@@ -164,7 +211,7 @@ const contentData = {
                     { title: "Hardware Functional Specialization", text: "Due to physical supply chains, BOMs, and manufacturing, hardware is highly complex. Execution is split: PL focuses on tech/spec decisions, while PCC handles administrative coordination." }
                 ]
             },
-            decision: {
+            {
                 title: "2. Tiered Decision Making",
                 desc: "Decisions are not held by a single role, but divided into strategic and tactical layers based on impact:",
                 table: {
@@ -175,7 +222,7 @@ const contentData = {
                     ]
                 }
             },
-            conflict: {
+            {
                 title: "3. Conflict Resolution & Defense Lines",
                 desc: "When facing external scope creep and internal dev bottlenecks, the defense is divided as follows. Click cards to reveal:",
                 cards: [
@@ -183,7 +230,7 @@ const contentData = {
                     { front: "When RD claims technical blocks & delays...", back: "PO/PL manages RD!", backDesc: "Translates business needs into tech specs. Leads technical trade-offs to ensure development rhythm." }
                 ]
             },
-            matrix: {
+            {
                 title: "4. Matrix Organization Operation",
                 desc: "In large-scale systems, the organization naturally evolves into a highly matrixed 'node-to-node' communication model:",
                 nodes: [
@@ -192,7 +239,7 @@ const contentData = {
                     { title: "Global Optimization Decision", desc: "When unit PCCs conflict, the PM steps in to make the final call based on global business value and client commitments." }
                 ]
             },
-            driver: {
+            {
                 title: "5. Core Drivers Differences",
                 desc: "Though decision scopes are similar, the baseline for trade-offs differs fundamentally:",
                 comparisons: [
@@ -200,12 +247,38 @@ const contentData = {
                     { type: "Hardware PL", focus: "Feasibility-driven", detail: "High modification cost (e.g., tooling), constrained by physical part lead times. Focuses on 'getting it built', prioritizing tech feasibility and manufacturing cost." }
                 ]
             },
-            conclusion: {
+            {
                 title: "6. Conclusion: Universal Formula",
                 desc: "Whether Agile or V-model, the essence of highly efficient development organizations boils down to a golden rule:",
                 quote: "The PM decides the direction of product success (Strategy), while the PO/PL decides how it gets built step-by-step (Execution). When execution hits insurmountable resource/schedule conflicts, escalate to the strategic layer for the PM to make the global value call."
+            },
+            {
+                title: "7. Interactive Lab",
+                desc: "Scenario Simulation: In a real project battlefield, make the best decision for unexpected situations.",
+                quiz: {
+                    question: "[Scenario] Right before pilot run, a major client demands a custom thermal module, threatening to cancel the order. In a healthy organization, who should be the first line of defense to make the call?",
+                    options: [
+                        { title: "A. Hardware PL (Project Leader)", correct: false, feedback: "Not quite. PL evaluates the 'technical feasibility' of the thermal module. However, compromising standard specs for a single client is a business decision." },
+                        { title: "B. PM (Product Manager)", correct: true, feedback: "Correct! 'Protecting the standardized product baseline' and 'weighing business pros/cons' are core PM duties. Remember the golden rule: PM handles Sales and client pressure." },
+                        { title: "C. Procurement PCC", correct: false, feedback: "Incorrect. The PCC can check the lead time and cost of the custom module, but has no authority to sacrifice overall profit margin or strategy for a single client." }
+                    ]
+                }
+            },
+            {
+                title: "8. External Resources",
+                desc: "To dive deeper into project management and organizational design across domains, we recommend these authoritative guides:",
+                links: [
+                    { title: "Agile Manifesto", desc: "Understand the core spirit of value-driven software engineering.", url: "https://agilemanifesto.org/" },
+                    { title: "The Scrum Guide", desc: "Deep dive into the official definition and boundaries of a Product Owner.", url: "https://scrumguides.org/" },
+                    { title: "PMI PMBOK Guide", desc: "Explore Matrix Organizations and integration management common in large hardware development.", url: "https://www.pmi.org/" }
+                ]
+            },
+            {
+                title: "9. Learning Journey",
+                desc: "Track your progress and master the complete cross-domain management framework:",
+                progressTitle: "Course Completion"
             }
-        }
+        ]
     }
 };
 
@@ -213,12 +286,15 @@ const contentData = {
 const App = () => {
     const [lang, setLang] = useState('zh');
     const [theme, setTheme] = useState('light');
-    const [activeModule, setActiveModule] = useState('intro');
+    const [module, setModule] = useState(0); // Changed to numeric index for Next/Prev
+    const [visited, setVisited] = useState(Array(TOTAL_MODULES).fill(false));
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const contentRef = useRef(null);
 
     const t = contentData[lang];
-    const m = t.modules[activeModule];
+    const m = t.modules[module];
 
+    // Theme initialization and toggling
     useEffect(() => {
         if (theme === 'dark') {
             document.documentElement.classList.add('dark');
@@ -227,6 +303,18 @@ const App = () => {
         }
     }, [theme]);
 
+    // Track learning progress
+    useEffect(() => {
+        setVisited(prev => {
+            const next = [...prev];
+            next[module] = true;
+            return next;
+        });
+        if(contentRef.current) {
+            contentRef.current.scrollTop = 0;
+        }
+    }, [module]);
+
     const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
     const toggleLang = () => setLang(lang === 'zh' ? 'en' : 'zh');
 
@@ -234,8 +322,6 @@ const App = () => {
     const renderIntro = () => (
         <div className="animate-fade-in space-y-8">
             <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
-            
-            {/* Interactive Equation */}
             <div className="bg-white dark:bg-slate-800 p-6 sm:p-10 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 transform transition hover:scale-[1.02]">
                 <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/30 rounded-xl border border-blue-100 dark:border-blue-800 w-full md:w-auto">
                     <div className="font-bold text-2xl text-blue-700 dark:text-blue-400">{m.equation.left}</div>
@@ -253,7 +339,6 @@ const App = () => {
                     </div>
                 </div>
             </div>
-
             <div className="grid md:grid-cols-2 gap-6">
                 {m.points.map((pt, idx) => (
                     <div key={idx} className="bg-white dark:bg-slate-800 p-6 rounded-xl border-l-4 border-brand-dark dark:border-brand-gold shadow-sm">
@@ -299,13 +384,11 @@ const App = () => {
                 {m.cards.map((card, idx) => (
                     <div key={idx} className="flip-card h-64 group cursor-pointer relative">
                         <div className="flip-card-inner relative w-full h-full shadow-md rounded-2xl">
-                            {/* Front */}
                             <div className="absolute w-full h-full backface-hidden bg-white dark:bg-slate-800 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center p-6 text-center">
                                 <div className="text-4xl mb-4">{idx === 0 ? '👔' : '💻'}</div>
                                 <h3 className="text-xl font-bold text-slate-700 dark:text-slate-200">{card.front}</h3>
                                 <p className="mt-4 text-sm text-slate-500 dark:text-slate-400 animate-pulse">{lang === 'zh' ? '點擊翻轉查看防守者' : 'Click to reveal defender'}</p>
                             </div>
-                            {/* Back */}
                             <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-brand-dark dark:bg-slate-900 rounded-2xl border border-brand-gold flex flex-col items-center justify-center p-8 text-center text-white">
                                 <h3 className="text-2xl font-black text-brand-gold mb-3">{card.back}</h3>
                                 <p className="text-brand-light/90 leading-relaxed">{card.backDesc}</p>
@@ -369,31 +452,134 @@ const App = () => {
         </div>
     );
 
+    // Module 7: Interactive Lab Component
+    const InteractiveLab = () => {
+        const [selected, setSelected] = useState(null);
+        return (
+            <div className="animate-fade-in space-y-6">
+                <p className="text-lg text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
+                <div className="bg-brand-dark/5 dark:bg-slate-800/50 p-6 sm:p-8 rounded-2xl border border-brand-dark/10 dark:border-slate-700">
+                    <h3 className="text-xl font-bold text-brand-dark dark:text-brand-gold mb-6 leading-relaxed">
+                        {m.quiz.question}
+                    </h3>
+                    <div className="grid gap-4">
+                        {m.quiz.options.map((opt, i) => (
+                            <button
+                                key={i}
+                                onClick={() => setSelected(i)}
+                                className={`p-5 text-left rounded-xl border-2 transition-all duration-300 shadow-sm ${
+                                    selected === i 
+                                    ? (opt.correct 
+                                        ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30' 
+                                        : 'border-rose-500 bg-rose-50 dark:bg-rose-900/30') 
+                                    : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-brand-gold hover:shadow-md'
+                                }`}
+                            >
+                                <div className="font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between">
+                                    {opt.title}
+                                    {selected === i && (
+                                        <Icon name={opt.correct ? "checkCircle" : "x"} className={opt.correct ? "text-emerald-500" : "text-rose-500"} />
+                                    )}
+                                </div>
+                                {selected === i && (
+                                    <div className={`text-sm mt-3 pt-3 border-t ${opt.correct ? 'border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300' : 'border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300'} animate-fade-in`}>
+                                        {opt.feedback}
+                                    </div>
+                                )}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    // Module 8: External Resources
+    const ExternalResources = () => (
+        <div className="animate-fade-in space-y-6">
+            <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
+            <ul className="grid gap-4 md:grid-cols-2">
+                {m.links.map((link, i) => (
+                    <li key={i}>
+                        <a href={link.url} target="_blank" rel="noreferrer" className="flex items-start p-5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-brand-gold/50 transition-all group h-full">
+                            <div className="mt-1 bg-brand-light dark:bg-slate-700 p-2 rounded-lg group-hover:bg-brand-gold/20 transition-colors">
+                                <Icon name="link" className="text-brand-dark dark:text-brand-gold" size={24} />
+                            </div>
+                            <div className="ml-4 flex-1">
+                                <h4 className="font-bold text-lg text-slate-800 dark:text-slate-200 group-hover:text-brand-dark dark:group-hover:text-brand-gold transition-colors">{link.title}</h4>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{link.desc}</p>
+                            </div>
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+
+    // Module 9: Learning Journey
+    const LearningJourney = () => {
+        const completedCount = visited.filter(v => v).length;
+        const progress = Math.round((completedCount / TOTAL_MODULES) * 100);
+        return (
+            <div className="animate-fade-in space-y-6">
+                <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
+                <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div className="flex justify-between items-end mb-3">
+                        <span className="font-bold text-slate-700 dark:text-slate-300 text-lg">{m.progressTitle}</span>
+                        <span className="font-black text-3xl text-brand-dark dark:text-brand-gold">{progress}%</span>
+                    </div>
+                    <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-4 mb-8 overflow-hidden border border-slate-200 dark:border-slate-600">
+                        <div className="bg-brand-dark dark:bg-brand-gold h-full rounded-full transition-all duration-1000 ease-out" style={{ width: `${progress}%` }}></div>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+                        {t.nav.map((n, i) => (
+                            <button 
+                                key={i}
+                                onClick={() => setModule(i)}
+                                className={`flex items-center p-3 rounded-lg border text-left transition-colors ${
+                                    visited[i] 
+                                    ? 'border-emerald-200 bg-emerald-50 dark:bg-emerald-900/20 dark:border-emerald-800' 
+                                    : 'border-slate-100 bg-slate-50 dark:bg-slate-800/50 dark:border-slate-700'
+                                }`}
+                            >
+                                <Icon name={visited[i] ? "checkCircle" : "circle"} className={`shrink-0 mr-3 ${visited[i] ? 'text-emerald-500' : 'text-slate-300 dark:text-slate-600'}`} size={20} />
+                                <span className={`text-sm font-medium truncate ${visited[i] ? 'text-slate-800 dark:text-slate-200' : 'text-slate-400 dark:text-slate-500'}`}>{n.title}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     const renderContent = () => {
-        switch(activeModule) {
-            case 'intro': return renderIntro();
-            case 'decision': return renderDecision();
-            case 'conflict': return renderConflict();
-            case 'matrix': return renderMatrix();
-            case 'driver': return renderDriver();
-            case 'conclusion': return renderConclusion();
+        switch(module) {
+            case 0: return renderIntro();
+            case 1: return renderDecision();
+            case 2: return renderConflict();
+            case 3: return renderMatrix();
+            case 4: return renderDriver();
+            case 5: return renderConclusion();
+            case 6: return <InteractiveLab />;
+            case 7: return <ExternalResources />;
+            case 8: return <LearningJourney />;
             default: return renderIntro();
         }
     };
 
     return (
-        <div className="min-h-screen flex flex-col font-sans">
-            {/* Top Navigation */}
-            <header className="sticky top-0 z-40 bg-brand-dark border-b border-brand-gold shadow-md">
+        <div className="h-screen flex flex-col font-sans">
+            {/* Header (Matching Reference App) */}
+            <header className="shrink-0 bg-brand-dark border-b border-brand-gold shadow-md">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
                         <div className="flex items-center">
                             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 rounded-md text-brand-gold hover:bg-white/10 mr-2 focus:outline-none">
                                 <Icon name={isMobileMenuOpen ? "x" : "menu"} size={24} />
                             </button>
-                            <span className="font-serif font-bold text-xl text-brand-gold tracking-wider">{t.brand}</span>
+                            <span className="font-serif font-bold text-xl text-brand-gold tracking-wider truncate mr-4">{t.brand}</span>
                         </div>
-                        <div className="flex items-center space-x-2 md:space-x-4">
+                        <div className="flex items-center space-x-2 md:space-x-4 shrink-0">
                             <button onClick={toggleLang} className="flex items-center px-3 py-1.5 rounded-full bg-white/10 text-brand-gold hover:bg-white/20 transition-colors text-sm font-medium border border-brand-gold/30">
                                 <Icon name="globe" size={16} className="mr-2" />
                                 {lang === 'zh' ? 'EN' : '中文'}
@@ -406,39 +592,39 @@ const App = () => {
                 </div>
             </header>
 
-            {/* Page Header */}
-            <div className="bg-brand-light dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">{t.docTitle}</h1>
-                    <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 flex items-center gap-2">
-                        <Icon name="layers" size={24} className="text-brand-dark dark:text-brand-gold opacity-70" />
+            {/* Page Title Banner */}
+            <div className="shrink-0 bg-brand-light dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">{t.docTitle}</h1>
+                    <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 flex items-center gap-2">
+                        <Icon name="layers" size={20} className="text-brand-dark dark:text-brand-gold opacity-70" />
                         {t.subtitle}
                     </p>
                 </div>
             </div>
 
-            {/* Main Layout */}
-            <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-8">
+            {/* Main App Layout */}
+            <div className="flex-1 flex overflow-hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 gap-6">
                 
-                {/* Sidebar */}
-                <aside className={`md:w-72 flex-shrink-0 ${isMobileMenuOpen ? 'block' : 'hidden'} md:block`}>
-                    <div className="sticky top-24 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                {/* Sidebar Navigation */}
+                <aside className={`md:w-72 flex-shrink-0 absolute md:relative z-30 h-full transition-transform transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-[150%] md:translate-x-0'} left-0 top-0 pt-2 md:pt-0 pl-4 md:pl-0`}>
+                    <div className="h-full bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-y-auto w-64 md:w-full">
                         <nav className="p-3 space-y-1">
-                            {t.nav.map((item) => {
-                                const isActive = activeModule === item.id;
+                            {t.nav.map((item, idx) => {
+                                const isActive = module === idx;
                                 return (
                                     <button
                                         key={item.id}
-                                        onClick={() => { setActiveModule(item.id); setIsMobileMenuOpen(false); }}
+                                        onClick={() => { setModule(idx); setIsMobileMenuOpen(false); }}
                                         className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
                                             isActive 
                                             ? 'bg-brand-dark text-brand-gold dark:bg-brand-gold dark:text-brand-dark shadow-md' 
                                             : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-brand-dark dark:hover:text-white'
                                         }`}
                                     >
-                                        <Icon name={item.icon} size={18} className={`mr-3 ${isActive ? 'opacity-100' : 'opacity-70'}`} />
+                                        <Icon name={item.icon} size={18} className={`mr-3 shrink-0 ${isActive ? 'opacity-100' : 'opacity-70'} ${visited[idx] && !isActive ? 'text-emerald-500' : ''}`} />
                                         <span className="truncate">{item.title}</span>
-                                        {isActive && <Icon name="chevronRight" size={16} className="ml-auto opacity-70" />}
+                                        {isActive && <Icon name="chevronRight" size={16} className="ml-auto opacity-70 shrink-0" />}
                                     </button>
                                 );
                             })}
@@ -447,27 +633,40 @@ const App = () => {
                 </aside>
 
                 {/* Content Area */}
-                <main className="flex-1 min-w-0">
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 md:p-10 min-h-[60vh]">
-                        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-slate-800 dark:text-white border-b-2 border-brand-gold inline-block pb-2">{m.title}</h2>
-                        {renderContent()}
+                <main ref={contentRef} className="flex-1 overflow-y-auto rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 relative scroll-smooth" onClick={() => isMobileMenuOpen && setIsMobileMenuOpen(false)}>
+                    <div className="p-5 sm:p-8 md:p-10 min-h-full flex flex-col">
+                        <div className="flex-1">
+                            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-slate-800 dark:text-white border-b-2 border-brand-gold inline-block pb-2">{m.title}</h2>
+                            {renderContent()}
+                        </div>
+                        
+                        {/* Footer Navigation (Next/Prev Buttons) - Matching Reference */}
+                        <div className="mt-12 pt-6 border-t border-slate-200 dark:border-slate-700 flex justify-between shrink-0">
+                            <button 
+                                onClick={() => setModule(Math.max(0, module - 1))} 
+                                disabled={module === 0} 
+                                className="px-4 sm:px-6 py-2.5 sm:py-3 text-slate-600 dark:text-brand-gold border border-slate-200 dark:border-brand-gold/30 hover:bg-slate-50 dark:hover:bg-brand-gold/10 rounded-lg disabled:opacity-0 uppercase text-xs sm:text-sm tracking-wider flex items-center transition-colors"
+                            >
+                                ← {t.nav_prev}
+                            </button>
+                            <button 
+                                onClick={() => setModule(Math.min(TOTAL_MODULES - 1, module + 1))} 
+                                disabled={module === TOTAL_MODULES - 1} 
+                                className="px-5 sm:px-8 py-2.5 sm:py-3 bg-brand-dark dark:bg-brand-gold text-white dark:text-brand-dark font-serif font-bold hover:bg-[#002b20] dark:hover:bg-white rounded-lg disabled:opacity-0 uppercase text-xs sm:text-sm tracking-wider shadow-md flex items-center transition-colors"
+                            >
+                                {t.nav_next} <Icon name="arrowRight" size={16} className="ml-2"/>
+                            </button>
+                        </div>
                     </div>
                 </main>
             </div>
 
-            {/* Footer */}
-            <footer className="bg-brand-dark dark:bg-slate-950 text-brand-gold/80 dark:text-slate-400 border-t border-brand-gold/30 mt-auto">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm">
-                    <div className="flex items-center gap-3">
-                        <span className="font-serif font-black text-brand-gold tracking-widest">{t.brand}</span>
-                        <span className="opacity-50">|</span>
-                        <span>{t.copyright} &copy; 2026</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <span className="hidden sm:inline">Author: {t.author}</span>
-                        <span className="bg-white/10 px-3 py-1 rounded-full text-xs">{t.date}</span>
-                    </div>
-                </div>
+            {/* Application Footer (Matching Reference Architecture) */}
+            <footer className="h-8 bg-brand-dark flex items-center justify-between px-4 shrink-0 shadow-inner">
+                <span className="text-brand-gold/60 text-[10px] sm:text-xs truncate">{t.date} · {t.copyright}</span>
+                <span className="text-brand-gold/60 text-[10px] sm:text-xs flex items-center gap-3">
+                    <span className="flex items-center gap-1">Architect:&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-brand-gold hover:text-white underline underline-offset-2 transition-colors">Prof. Shihmin Lo</a></span>
+                </span>
             </footer>
         </div>
     );
