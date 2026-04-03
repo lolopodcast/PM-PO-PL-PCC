@@ -30,7 +30,10 @@ tailwind.config = {
 .backface-hidden { backface-visibility: hidden; }
 .rotate-y-180 { transform: rotateY(180deg); }
 .flip-card-inner { transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
-.flip-card:hover .flip-card-inner, .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+.flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+@media (hover: hover) {
+    .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+}
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
@@ -66,7 +69,9 @@ const Icon = ({ name, size = 20, className = "" }) => {
         circle: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />,
         flask: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />,
         link: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />,
-        star: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+        star: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />,
+        refresh: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />,
+        download: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
     };
     return (
         <svg className={className} width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -83,8 +88,9 @@ const contentData = {
         headerTitle: "PM Align - 硬體/軟體產品管理架構校準",
         docTitle: "軟硬體專案管理架構深度對齊",
         subtitle: "組織設計與跨領域方法論統整",
-        date: "2026年04月03日",
+        date: "2026.04.03",
         copyright: "版權所有",
+        web_version: "網頁版本",
         architect_url: "https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo",
         nav_prev: "上一篇",
         nav_next: "下一篇",
@@ -94,6 +100,13 @@ const contentData = {
         audio_stop: "停止",
         quiz_title: "隨機知識檢定",
         flip_title: "關鍵專有名詞翻轉卡",
+        next_cards: "換一批圖卡 (Next Cards)",
+        next_quizzes: "換一批題目 (Next Quizzes)",
+        quiz_score: "答對 {correct} / 已答 {answered} / 全數 {total}",
+        flip_score: "已翻閱 {viewed} / 全數 {total}",
+        journey_title: "動態學習儀表板與匯出",
+        export_btn: "匯出 CSV 學習紀錄",
+        export_alert: "請完整填寫組別、學號與姓名！",
         nav: [
             { id: "exec", title: "0. 執行摘要", icon: "star" },
             { id: "npd", title: "1. 新產品開發流程", icon: "layers" },
@@ -131,7 +144,9 @@ const contentData = {
                     { front: "Stage-Gate Model", back: "階段-關卡模型：透過設立嚴格的審查關卡，降低新產品開發風險的流程管理框架。" },
                     { front: "Go/Kill Decision", back: "繼續/終止決策：在每個關卡中，高階主管基於商業與技術指標，決定專案是否繼續投入資源或直接終止。" },
                     { front: "Fuzzy Front End (FFE)", back: "模糊前端：NPD 的最早期階段，充滿不確定性，主要進行創意發想、市場評估與概念成型。" },
-                    { front: "Cross-functional Team", back: "跨部門團隊：由研發、行銷、製造、採購等不同專業人員組成，共同為新產品上市負責。" }
+                    { front: "Cross-functional Team", back: "跨部門團隊：由研發、行銷、製造、採購等不同專業人員組成，共同為新產品上市負責。" },
+                    { front: "Time-to-Market (TTM)", back: "上市時間：從產品概念形成到最終推向市場所需的總時間，為市場競爭的關鍵指標。" },
+                    { front: "Concurrent Engineering", back: "同步工程：打破傳統序列開發，讓研發、製造等部門同步參與設計，以縮短整體開發時間。" }
                 ],
                 quizBank: [
                     { question: "在 NPD 流程的「模糊前端 (FFE)」階段，哪一個角色扮演最關鍵的決策主導者？", options: [ {title: "PM (產品經理)", correct: true, feedback: "正確。FFE 階段充滿不確定性，PM 需主導市場評估與概念發想，過濾無效創意。"}, {title: "RD (研發工程師)", correct: false, feedback: "錯誤。此階段尚屬概念與市場評估，尚未進入實體設計開發。"}, {title: "PCC (專案協調員)", correct: false, feedback: "錯誤。協調員主要在專案進入實質開發後，協助跨部門進度追蹤。"} ] },
@@ -164,7 +179,9 @@ const contentData = {
                     { front: "Portfolio Management", back: "產品組合管理：平衡公司旗下多項產品的資源分配、風險與收益，以達成企業總體戰略目標。" },
                     { front: "Influence without Authority", back: "無權力影響：PM 通常不是研發團隊的直屬主管，必須透過願景、數據與溝通技巧來驅動團隊前進。" },
                     { front: "Market Research", back: "市場研究：透過量化數據與質化訪談，挖掘未被滿足的使用者需求，作為產品規格定義的基石。" },
-                    { front: "Business-Oriented", back: "商業導向：在產品決策時，優先考量投資報酬率 (ROI)、市佔率與商業模式的思維模式。" }
+                    { front: "Business-Oriented", back: "商業導向：在產品決策時，優先考量投資報酬率 (ROI)、市佔率與商業模式的思維模式。" },
+                    { front: "Return on Investment (ROI)", back: "投資報酬率：評估專案或功能開發所能帶來的商業利潤，是 PM 排序需求的重要指標。" },
+                    { front: "Product Roadmap", back: "產品路線圖：描繪產品未來發展方向、功能迭代與上市時程的高階策略藍圖。" }
                 ],
                 quizBank: [
                     { question: "根據上述模型，PM 在「市場/可行性分析」階段，最不需要動用哪一項職能？", options: [ {title: "市場研究 (Market Research)", correct: false, feedback: "錯誤。市場研究是此階段的核心。"}, {title: "策略定義 (Strategy)", correct: false, feedback: "錯誤。策略決定了產品的定位與走向。"}, {title: "產品設計開發工具 (PDD Tools)", correct: true, feedback: "正確。在早期的商業評估階段，尚未進入實質設計，對工程工具的掌握並非首要。"} ] },
@@ -179,7 +196,7 @@ const contentData = {
                 title: "3. 軟體工程 Agile/Scrum",
                 desc: "敏捷開發 (Agile) 是一種以使用者價值為核心，強調迭代、漸進式交付的軟體開發架構。",
                 deepDive: [
-                    "敏捷軟體開發宣言 (Agile Manifesto) 顛覆了傳統軟體工程。它強調「個人與互動重於流程與工具」、「可用的軟體重於詳盡的文件」、「與客戶合作重於合約協商」以及「回應變化重於遵循計畫」。這種典範轉移之所以能在軟體界成功，根本原因在於軟體代碼的「修改成本 (Cost of Change)」極低，允許團隊透過快速試錯來逼近完美。",
+                    "敏捷軟體開發宣言 (Agile Manifesto) 顛覆了傳統軟體工程。它強調「個人與互動重於流程與工具」、「可用的軟體重於詳盡的文件」、「與客戶合作重於合約協商」以及「回應變化重於遵循計畫」。這種典範轉移之所以能在軟體界成功，根本原因在於軟體程式碼的「修改成本 (Cost of Change)」極低，允許團隊透過快速試錯來逼近完美。",
                     "在 Scrum 框架中，經驗主義 (Empiricism) 是其三大支柱：透明性 (Transparency)、檢驗 (Inspection) 與調適 (Adaptation)。Product Owner (PO) 作為價值的守門員，負責動態排序 Product Backlog，確保開發團隊在每次短短 1-4 週的 Sprint (衝刺期) 中，都能產出具備最高商業價值的潛在可發布增量 (Increment)。",
                     "有別於硬體的 Waterfall 模型，Scrum 摒棄了厚重的期初規格書 (PRD)。PO 透過 User Story (使用者故事) 來描述需求，並在 Sprint Planning 會議中與開發團隊共同決定當期承諾。當遭遇技術瓶頸時，PO 擁有在 Sprint 內進行功能裁切 (Scope cut) 的絕對戰術決策權。"
                 ],
@@ -193,12 +210,13 @@ const contentData = {
                     { front: "Product Backlog", back: "產品待辦清單：由 PO 負責維護與排序的動態需求列表，是產品所有變更與新增功能的唯一來源。" },
                     { front: "User Story", back: "使用者故事：從終端使用者視角出發的需求描述格式，強調「誰」、「想要什麼」以及「為了達成什麼商業價值」。" },
                     { front: "Scrum Master", back: "敏捷教練：負責移除團隊開發障礙，確保 Scrum 框架被正確理解與執行的僕人式領導者。" },
-                    { front: "Increment", back: "潛在可發布增量：每個 Sprint 結束時，團隊交付的必須是經過測試、可獨立運作且能帶來價值的軟體版本。" }
+                    { front: "Increment", back: "潛在可發布增量：每個 Sprint 結束時，團隊交付的必須是經過測試、可獨立運作且能帶來價值的軟體版本。" },
+                    { front: "Daily Scrum", back: "每日站會：開發團隊每日進行的15分鐘簡短同步會議，用以檢視進度與提出開發障礙。" }
                 ],
                 quizBank: [
                     { question: "下列何者是 Scrum 框架中的三大支柱之一？", options: [ {title: "合約協商", correct: false, feedback: "錯誤。敏捷宣言強調客戶合作重於合約協商。"}, {title: "透明性 (Transparency)", correct: true, feedback: "正確。Scrum 基於經驗主義，三大支柱為透明性、檢驗與調適。"}, {title: "零缺陷保證", correct: false, feedback: "錯誤。這並非 Scrum 定義的框架支柱。"} ] },
                     { question: "在 Scrum 團隊中，誰負責對 Product Backlog (產品待辦清單) 進行優先順序的排列？", options: [ {title: "Scrum Master", correct: false, feedback: "錯誤。SM 負責流程與排除障礙。"}, {title: "Product Owner (PO)", correct: true, feedback: "正確。PO 是價值的守門員，全權負責 Backlog 的排序與投資報酬率。"}, {title: "開發團隊 (Developers)", correct: false, feedback: "錯誤。開發團隊負責估算工時與執行實作，不負責決定商業價值排序。"} ] },
-                    { question: "敏捷開發 (Agile) 為什麼在軟體工程中比在硬體工程中更容易成功落地？", options: [ {title: "因為軟體工程師技術較強", correct: false, feedback: "錯誤。這與工程師的技術能力無關。"}, {title: "因為軟體的修改成本 (Cost of Change) 極低，允許快速迭代試錯", correct: true, feedback: "正確。軟體不需開模且沒有零件交期，隨時可以修改程式碼以回應市場變更。"}, {title: "因為軟體開發不需要 QA 測試", correct: false, feedback: "錯誤。軟體開發同樣極度重視自動化測試與驗證。"} ] },
+                    { question: "敏捷開發 (Agile) 為什麼在軟體工程中比在硬體工程中更容易成功落地？", options: [ {title: "因為軟體工程師技術較強", correct: false, feedback: "錯誤。這與工程師的技術能力無關。"}, {title: "因為軟體程式碼的修改成本極低，允許快速迭代試錯", correct: true, feedback: "正確。軟體不需開模且沒有零件交期，隨時可以修改架構以回應市場變更。"}, {title: "因為軟體開發不需要 QA 測試", correct: false, feedback: "錯誤。軟體開發同樣極度重視自動化測試與驗證。"} ] },
                     { question: "每一個 Sprint (衝刺期) 結束時，團隊必須產出什麼？", options: [ {title: "厚重的系統規格書", correct: false, feedback: "錯誤。敏捷強調可用的軟體重於詳盡文件。"}, {title: "潛在可發布的產品增量 (Increment)", correct: true, feedback: "正確。每個 Sprint 的產出都必須是可獨立運作、隨時能上線的軟體版本。"}, {title: "下一季的行銷計畫", correct: false, feedback: "錯誤。這是 PM 或行銷單位的職責，非 Sprint 的開發產出。"} ] },
                     { question: "User Story (使用者故事) 的核心描述結構通常包含哪三個元素？", options: [ {title: "角色、需求、商業價值", correct: true, feedback: "正確。標準格式為：「身為 [角色]，我想要 [需求]，以便於 [商業價值]」。"}, {title: "資料庫、API、前端畫面", correct: false, feedback: "錯誤。這是技術規格，不是使用者故事。"}, {title: "成本、時程、風險", correct: false, feedback: "錯誤。這是傳統專案管理的鐵三角。"} ] },
                     { question: "當開發過程中發現這週絕對做不完承諾的 User Story 時，PO 通常會採取什麼戰術？", options: [ {title: "強迫工程師加班直到做完", correct: false, feedback: "錯誤。敏捷強調可持續的開發步調 (Sustainable pace)。"}, {title: "進行範圍裁切 (Scope cut)，保住最核心的商業價值 MVP", correct: true, feedback: "正確。PO 擁有戰術決策權，透過砍掉邊角功能來確保核心增量能如期交付。"}, {title: "直接取消整個 Sprint", correct: false, feedback: "錯誤。Sprint 取消是極端情況，通常僅在商業目標完全失效時發生。"} ] }
@@ -221,7 +239,9 @@ const contentData = {
                     { front: "EVT / DVT / PVT", back: "硬體驗證三階段：Engineering (工程/功能驗證)、Design (設計/安規驗證)、Production (生產/良率驗證)。" },
                     { front: "Lead Time (L/T)", back: "前置交期：從向供應商下達零組件訂單，到物料實際送達工廠產線所需等待的總時間。" },
                     { front: "MOQ", back: "最低訂購量 (Minimum Order Quantity)：供應商願意接受並啟動生產的最少零件購買數量，直接影響硬體庫存成本。" },
-                    { front: "Tooling / NRE", back: "開模與非重覆性工程費用：硬體製造前期投入的模具開發、治具設計等一次性高昂成本。" }
+                    { front: "Tooling / NRE", back: "開模與非重覆性工程費用：硬體製造前期投入的模具開發、治具設計等一次性高昂成本。" },
+                    { front: "Bill of Materials (BOM)", back: "物料清單：製造單一產品所需的所有零組件、原物料與其對應數量的精確明細表。" },
+                    { front: "Yield Rate", back: "良率：工廠產線在生產過程中，製造出合格且無瑕疵產品的比例，為 PVT 階段的核心指標。" }
                 ],
                 quizBank: [
                     { question: "硬體開發通常遵循 EVT、DVT、PVT 的驗證流程，其中 DVT 的全名與主要目的為何？", options: [ {title: "Design Verification Test (設計驗證)：著重於安規認證、可靠度與環境測試", correct: true, feedback: "正確。DVT 階段必須確保產品設計符合所有外在規範與極端環境要求。"}, {title: "Development Visual Test (開發視覺測試)：確認產品顏色與外觀", correct: false, feedback: "錯誤。外觀通常在更早期的模型階段確認，並非 DVT 的核心嚴謹測試。"}, {title: "Data Validation Test (數據驗證)：測試資料庫存取速度", correct: false, feedback: "錯誤。這是軟體後端工程的測試範疇。"} ] },
@@ -252,13 +272,15 @@ const contentData = {
                     { front: "Strategic Decision", back: "策略決策：由 PM 主導的宏觀決策，影響公司資源配置、市場定位與長遠商業成敗 (做對的事)。" },
                     { front: "Tactical Decision", back: "戰術決策：由 PO/PL 主導的微觀決策，在有限資源與技術限制下，決定實作的優先順序與範圍取捨 (把事做對)。" },
                     { front: "Scope Cut", back: "範圍裁切：為確保專案如期交付，前線指揮官 (PO/PL) 主動捨棄非核心功能的戰術性妥協。" },
-                    { front: "Defense Line", back: "防守陣線：PM 防守外部業務壓力，守住產品標準化；PO/PL 防守內部開發進度，解決工程瓶頸。" }
+                    { front: "Defense Line", back: "防守陣線：PM 防守外部業務壓力，守住產品標準化；PO/PL 防守內部開發進度，解決工程瓶頸。" },
+                    { front: "Matrix Organization", back: "矩陣組織：專案成員同時向功能部門主管與專案經理匯報的雙重管理結構，常見於大型硬體廠。" },
+                    { front: "Trade-off", back: "權衡取捨：在專案管理的鐵三角 (時間、成本、品質範圍) 之間，為達成最終目標而做出的必要妥協。" }
                 ],
                 quizBank: [
                     { question: "依據跨領域對齊公式，軟體的 PO (Product Owner) 職能在硬體組織中，通常被拆解為哪兩個角色？", options: [ {title: "PM 與 QA", correct: false, feedback: "錯誤。QA 負責品質驗證，PM 負責總體商業策略。"}, {title: "PL (專案負責人) 與 PCC (專案協調員)", correct: true, feedback: "正確。硬體將 PO 的技術決策權交給 PL，將繁瑣的跨部門進度追蹤交給 PCC。"}, {title: "RD 與 Sales", correct: false, feedback: "錯誤。這是純工程與純業務的極端。"} ] },
                     { question: "決定「產品定價與第一波目標上市市場」屬於哪一種決策層級？", options: [ {title: "執行層 (Tactical)", correct: false, feedback: "錯誤。這並非日常開發的技術取捨。"}, {title: "策略層 (Strategic)", correct: true, feedback: "正確。這是影響產品生命週期與獲利模式的高階商業決策，由 PM 負責。"}, {title: "驗證層 (Validation)", correct: false, feedback: "錯誤。這屬於測試除錯範疇。"} ] },
                     { question: "當遭遇技術難題需要臨時捨棄 (Scope Cut) 某個小功能以趕上這週的 Sprint 產出時，這屬於誰的職權？", options: [ {title: "PM (產品經理)", correct: false, feedback: "錯誤。如果 PM 介入這種微觀裁切，將淪為微觀管理 (Micro-management)。"}, {title: "PO / PL (前線指揮官)", correct: true, feedback: "正確。在不影響核心商業價值的前提下，PO/PL 擁有個體戰術上的絕對裁切權。"}, {title: "Sales (業務)", correct: false, feedback: "錯誤。業務無權介入工程開發的細部規格裁切。"} ] },
-                    { question: "「PM 解決 Sales，PO/PL 搞定 RD」這句黃金防守法則中，PM 擋住 Sales 的核心目的是什麼？", options: [ {title: "為了展現 PM 的辦公室政治權力", correct: false, feedback: "錯誤。專案管理不應以政治鬥爭為出發點。"}, {title: "為了保護 RD 不必寫程式", correct: false, feedback: "錯誤。RD 的職責本來就是開發。"}, {title: "為了守住產品「標準化」底線，避免淪為滿足單一客戶的客製化工廠", correct: true, feedback: "正確。PM 必須確保開發資源投入在能賣給 100 個客戶的功能上，而非單一短期訂單。"} ] },
+                    { question: "「PM 解決 Sales，PO/PL 搞定 RD」這句黃金防守法則中，PM 擋住 Sales 的核心目的是什麼？", options: [ {title: "為了展現 PM 的辦公室政治權力", correct: false, feedback: "錯誤。專案管理不應以政治鬥爭為出發點。"}, {title: "為了保護 RD 不必寫程式碼", correct: false, feedback: "錯誤。RD 的職責本來就是開發。"}, {title: "為了守住產品「標準化」底線，避免淪為滿足單一客戶的客製化工廠", correct: true, feedback: "正確。PM 必須確保開發資源投入在能賣給多數客戶的功能上，而非單一短期訂單。"} ] },
                     { question: "如果一個組織中，PM 同時包辦了看市場方向、寫 PRD、畫架構圖、催工程師進度、訂便當，這會造成什麼後果？", options: [ {title: "組織效率極大化，溝通零成本", correct: false, feedback: "錯誤。過度集權在一人身上，絕對會產生嚴重瓶頸。"}, {title: "PM 淪為決策瓶頸 (Bottleneck)，且失去總體商業策略焦點", correct: true, feedback: "正確。這就是為何需要分層架構 (分離 PM 與 PO/PL)，讓 PM 專注外部戰場。"}, {title: "RD 會變得更加自動自發", correct: false, feedback: "錯誤。RD 會因為缺乏明確的戰術指揮官而陷入混亂。"} ] },
                     { question: "在硬體 V-Model 的實務運作中，PCC (專案協調員) 最主要的職責是不斷追問哪一個問題？", options: [ {title: "「這個功能可以賣多少錢？」", correct: false, feedback: "錯誤。這是 PM 的商業提問。"}, {title: "「料件何時到工廠？各部門的進度是否會卡到試產排程？」", correct: true, feedback: "正確。PCC 的天職是跨部門協調與進度追蹤 (Execution Support)。"}, {title: "「這個晶片的底層演算法該怎麼寫？」", correct: false, feedback: "錯誤。這是 RD 與技術 PL 的職責。"} ] }
                 ]
@@ -281,12 +303,13 @@ const contentData = {
                     { front: "Feasibility-Driven", back: "可行性驅動：決策時受制於物理限制，優先考量技術實作難度、成本與供應鏈狀態 (常見於硬體)。" },
                     { front: "Local Optimization", back: "局部最佳化陷阱：各部門只專注於達成自身的 KPI (如壓低採購成本)，卻反過來損害了專案整體的利益。" },
                     { front: "Global Optimization", back: "總體最佳化：由 PM 從全域商業視角出發，為確保產品最終市場成功而做出的綜合性妥協與裁決。" },
-                    { front: "Escalation Path", back: "升級機制：當前線團隊遭遇無法自行排解的跨部門資源或利益衝突時，將決策權向上移交給具備全局視角的管理層。" }
+                    { front: "Escalation Path", back: "升級機制：當前線團隊遭遇無法自行排解的跨部門資源或利益衝突時，將決策權向上移交給具備全局視角的管理層。" },
+                    { front: "Cost of Change", back: "變更成本：隨著專案生命週期推移，修改設計或規格所需的金錢與時間代價呈指數上升。" }
                 ],
                 quizBank: [
                     { question: "為什麼軟體 PO 的決策通常偏向「價值驅動」，而硬體 PL 偏向「可行性驅動」？", options: [ {title: "因為硬體 PL 不需要考慮產品會不會賺錢", correct: false, feedback: "錯誤。PL 當然希望產品成功，但決策是被物理條件限制的。"}, {title: "因為軟體修改成本低，有空間追求價值最大化；硬體受限於實體供應鏈，必須優先確保能被製造出來", correct: true, feedback: "正確。兩者的驅動力差異來自於產業底層的「變更成本」與「物理限制」。"}, {title: "因為軟體 PO 的位階通常比硬體 PL 高出許多", correct: false, feedback: "錯誤。這與組織層級位階無關。"} ] },
                     { question: "在大型矩陣組織中，採購部門堅持採用低價次級料件以達成其部門降本 KPI，但這會導致研發部門面臨極高的品質風險。這屬於何種現象？", options: [ {title: "總體最佳化 (Global Optimization)", correct: false, feedback: "錯誤。這完全違背了總體最佳化。"}, {title: "局部最佳化陷阱 (Local Optimization)", correct: true, feedback: "正確。各部門各自為政，只看自身的 KPI，反而危害了專案整體的品質與進度。"}, {title: "價值驅動 (Value-driven)", correct: false, feedback: "錯誤。降本 KPI 屬於成本考量，並非創造使用者價值。"} ] },
-                    { question: "承上題，當採購與研發陷入「局部最佳化」的嚴重僵局，PL 無法擺平時，根據通用公式，最正確的解法為何？", options: [ {title: "啟動升級 (Escalation) 機制，交由 PM 基於產品總體商業利益進行最終拍板", correct: true, feedback: "正確。當衝突涉及成本、品質與最終上市風險的妥協時，必須由扛營收責任的 PM 來做總體決策。"}, {title: "丟硬幣決定聽誰的", correct: false, feedback: "錯誤。專案管理不能依賴運氣。"}, {title: "強迫採購人員去研發部門寫程式", correct: false, feedback: "錯誤。職能互換無法解決根本的利益衝突。"} ] },
+                    { question: "承上題，當採購與研發陷入「局部最佳化」的嚴重僵局，PL 無法擺平時，根據通用公式，最正確的解法為何？", options: [ {title: "啟動升級 (Escalation) 機制，交由 PM 基於產品總體商業利益進行最終拍板", correct: true, feedback: "正確。當衝突涉及成本、品質與最終上市風險的妥協時，必須由扛營收責任的 PM 來做總體決策。"}, {title: "丟硬幣決定聽誰的", correct: false, feedback: "錯誤。專案管理不能依賴運氣。"}, {title: "強迫採購人員去研發部門寫程式碼", correct: false, feedback: "錯誤。職能互換無法解決根本的利益衝突。"} ] },
                     { question: "PM 在「總體最佳化」的裁決中，可能會做出下列哪一種看似反直覺，但對公司整體最有利的決定？", options: [ {title: "為了省下 10 塊錢的零件成本，同意將產品延後半年上市", correct: false, feedback: "錯誤。延後半年通常會錯失龐大的市場先機，因小失大。"}, {title: "為了趕上最重要的耶誕節上市檔期，同意支付高昂的空運費用空運晶片", correct: true, feedback: "正確。這就是標準的「犧牲局部成本 (空運費)，保住總體商業利益 (旺季營收)」的戰略決策。"}, {title: "因為某個非核心小功能做不出來，決定取消整個產品專案", correct: false, feedback: "錯誤。這是極度缺乏戰術彈性的做法。"} ] },
                     { question: "「PM 決定方向，PO/PL 決定實作。當遭遇無法克服的衝突時，升級交由 PM 進行商業判斷。」這個通用公式的背後，彰顯了什麼管理哲學？", options: [ {title: "權責分立與分層決策的機制", correct: true, feedback: "正確。讓戰術指揮官專心打仗，讓戰略將軍專心看地圖與資源，並建立暢通的求救升級管道。"}, {title: "老闆說了算的一言堂", correct: false, feedback: "錯誤。這公式強調的是依據職能與影響範圍進行專業分工，而非盲目服從。"}, {title: "技術至上的工程師思維", correct: false, feedback: "錯誤。最終的仲裁權回歸到「商業判斷」，代表這並非技術至上。"} ] },
                     { question: "關於「升級 (Escalation) 機制」，下列觀念何者正確？", options: [ {title: "升級代表前線 PL 能力不足，應盡量避免，否則會被開除", correct: false, feedback: "錯誤。健康的組織鼓勵及早提出無法解決的系統性風險。"}, {title: "升級是專案管理中，用來解除跨部門資源互卡與層級權限不足的正常且必要的手段", correct: true, feedback: "正確。適時的 Escalation 才能讓高層及早介入，避免專案空轉。"}, {title: "一遇到 Bug 就應該立刻升級給 PM 處理", correct: false, feedback: "錯誤。日常技術 Bug 屬於執行層範圍，PL 應自行解決；只有動搖到商業指標時才需升級。"} ] }
@@ -294,15 +317,109 @@ const contentData = {
             },
             {
                 title: "7. 互動實驗室",
-                desc: "情境模擬：請根據學習到的軟硬體架構，針對突發狀況做出最佳決策判斷。",
-                quiz: {
-                    question: "【情境題】在大型硬體專案的矩陣組織中，採購部門 (PUR) 與研發部門 (RD) 因為「採用低價新料件的風險」發生嚴重爭執，雙方的 PCC 互不相讓，且技術上難以兩全。請問此時應啟動什麼機制？",
-                    options: [
-                        { title: "A. 交由專案負責人 (PL) 強制裁決", correct: false, feedback: "不完全正確。這已經超越單純的技術規格範圍，牽涉到「成本毛利 (PUR)」與「時程風險 (RD)」的商業妥協。" },
-                        { title: "B. 升級 (Escalate) 交由 PM 進行總體商業拍板", correct: true, feedback: "完全正確！各單位 PCC 看重局部 KPI，唯有 PM 具備全域視角，能依據最終的市場承諾與利潤策略做出「總體最佳化」的妥協決策。" },
-                        { title: "C. 導入 Agile 流程，重新修改需求", correct: false, feedback: "錯誤。硬體物料採購具有嚴格的 Lead Time，隨意變更會導致產線停擺，無法單純用軟體敏捷思維來解套。" }
-                    ]
-                }
+                desc: "情境模擬：請根據所學的「分層決策與升級機制」，親自指揮解決真實的跨部門危機。",
+                scenarios: [
+                    {
+                        name: "個案一：矩陣組織衝突",
+                        steps: [
+                            {
+                                context: "【前線衝突】專案進入 DVT (設計驗證) 階段，採購 (PUR) 堅持採用低價替代料件以達成其部門降本 KPI；但研發 (RD) 強烈反對，認為該料件有極高的過熱風險。雙方的 PCC 互不相讓，專案陷入空轉。",
+                                question: "身為專案管理的一環，此時最正確的處置機制是什麼？",
+                                options: [
+                                    { title: "A. 交由專案負責人 (PL) 強制裁決，要求 RD 吞下風險", correct: false, feedback: "錯誤。這牽涉到成本與品質風險的商業妥協，超越了單純的技術規格，PL 無法獨自承擔。" },
+                                    { title: "B. 啟動升級 (Escalate) 機制，交由 PM 進行總體商業拍板", correct: true, feedback: "正確！各單位正陷入「局部最佳化」陷阱。必須由掌握全域視角、背負產品營收的 PM 來決策。" }
+                                ]
+                            },
+                            {
+                                context: "【高階決策】PM 介入評估後發現：若不換料，產品成本超標將侵蝕 20% 毛利；若堅持換料，重新驗證散熱將導致產品錯失第四季 (Q4) 最重要的耶誕節上市檔期。",
+                                question: "基於「總體最佳化 (Global Optimization)」思維，PM 應該如何定奪？",
+                                options: [
+                                    { title: "A. 堅持換料降本，將產品延期至明年 Q1 上市", correct: false, feedback: "錯誤。錯失重大節慶檔期帶來的營收損失，往往遠大於省下的零件成本，因小失大。" },
+                                    { title: "B. 不換料以保住上市檔期，但要求 RD 進行軟體效能調校來平衡 (Trade-off)", correct: true, feedback: "正確！PM 犧牲局部的零件成本，保住總體戰略的檔期營收，並透過戰術性妥協解決瓶頸。" }
+                                ]
+                            },
+                            {
+                                context: "【決策成功】恭喜您成功化解了跨部門的矩陣衝突！",
+                                success: "這正是完美防守陣線的體現：「PM 負責防守外部市場與商業價值，PO/PL 負責解決內部技術與戰術妥協」。"
+                            }
+                        ]
+                    },
+                    {
+                        name: "個案二：敏捷範圍裁切",
+                        steps: [
+                            {
+                                context: "【進度落後】Sprint 倒數兩天，開發團隊回報「第三方金流 API 串接」遭遇技術瓶頸，絕對無法如期完成。但本次 Sprint 的核心商業目標是「讓使用者能完成基本的購物車結帳」。",
+                                question: "身為軟體 PO，你該如何確保 Sprint 目標達成？",
+                                options: [
+                                    { title: "A. 要求團隊加班，無論如何要把所有承諾的功能做完", correct: false, feedback: "錯誤。敏捷開發強調可持續的開發步調，強迫加班會導致後續技術債與團隊倦怠。" },
+                                    { title: "B. 進行範圍裁切 (Scope Cut)，先上線基本的「貨到付款與信用卡」功能，捨棄出問題的「第三方點數折抵」API", correct: true, feedback: "正確！PO 具備戰術決策權，透過捨棄非核心功能，保住本次 MVP 的核心商業價值。" }
+                                ]
+                            },
+                            {
+                                context: "【利害關係人溝通】你決定裁切點數功能後，行銷部門強烈抗議，表示已經對外發布了「點數折抵」的新聞稿，如果不上線會引發公關危機。",
+                                question: "身為 PO，你該如何回應？",
+                                options: [
+                                    { title: "A. 妥協並延後整個版本的上線時間，直到點數功能修好", correct: false, feedback: "錯誤。軟體開發應優先交付核心增量，延後發布違反了持續交付的敏捷精神。" },
+                                    { title: "B. 堅持如期發布核心版本，將「點數折抵」移至下一個 Sprint 的最優先級，並協助行銷擬定公關說法", correct: true, feedback: "正確！這展現了 PO 對商業價值交付節奏的絕對掌控，不讓邊角功能拖垮整個核心系統的上市。" }
+                                ]
+                            },
+                            {
+                                context: "【決策成功】恭喜您成功保住了 Sprint 的核心價值！",
+                                success: "這展現了軟體 PO 價值驅動 (Value-driven) 的核心：在時間盒 (Timebox) 限制下，勇敢裁切非核心範圍，確保最高價值的增量如期交付。"
+                            }
+                        ]
+                    },
+                    {
+                        name: "個案三：供應鏈交期危機",
+                        steps: [
+                            {
+                                context: "【供應鏈斷鏈】硬體專案剛進入細部設計，採購回報關鍵的主控 IC 交期 (Lead Time) 從 12 週暴增至 40 週，這將導致產品無法趕上明年初的消費電子展 (CES)。",
+                                question: "身為硬體專案的 PL，你第一時間應該採取什麼行動？",
+                                options: [
+                                    { title: "A. 繼續使用原設計，告訴公司只能延後半年上市", correct: false, feedback: "錯誤。身為前線指揮官，未積極尋找工程替代方案就輕易放棄檔期，是不合格的。" },
+                                    { title: "B. 啟動技術變更評估，尋找市面上交期正常的第二料源 (Second Source) 並重新設計周邊電路", correct: true, feedback: "正確！硬體開發高度「可行性驅動」，PL 必須立刻從工程端解套供應鏈的物理限制。" }
+                                ]
+                            },
+                            {
+                                context: "【跨部門權衡】RD 評估後表示，更換替代 IC 需要額外花費 200 萬的非重覆性工程費用 (NRE) 重新開發韌體，且測試期需延長 3 週。",
+                                question: "面對此成本與時程的重大衝擊，誰該做出最終決策？",
+                                options: [
+                                    { title: "A. 由研發主管決定是否要花這 200 萬", correct: false, feedback: "錯誤。研發主管掌管技術，但不為產品整體的市場獲利負責。" },
+                                    { title: "B. 升級至 PM 決策。PM 需精算「趕上 CES 的訂單利潤」是否大於「200萬 NRE + 3週測試成本」", correct: true, feedback: "正確！這是一個標準的總體最佳化 (Global Optimization) 商業決策，必須由 PM 拍板。" }
+                                ]
+                            },
+                            {
+                                context: "【決策成功】恭喜您化解了斷鏈危機，產品成功亮相 CES！",
+                                success: "硬體專案深受實體限制。當遭遇交期危機，PL 負責尋找技術替代方案 (可行性驅動)，PM 負責核算商業代價並拍板定案。"
+                            }
+                        ]
+                    },
+                    {
+                        name: "個案四：防守業務插單",
+                        steps: [
+                            {
+                                context: "【外部干擾】產品即將進入 DVT 驗證，業務部 (Sales) 突然帶著一個超級大客戶的需求，強烈要求在硬體外殼增加一組專屬的特殊 I/O 接口，並聲稱「不做這單會掉」。",
+                                question: "面對業務的強勢插單，防守的第一線應該是誰？",
+                                options: [
+                                    { title: "A. PL (專案負責人) 立刻帶領 RD 研究外殼開模的技術可行性", correct: false, feedback: "錯誤。在確認這項客製化的商業價值之前，不應輕易動用寶貴的研發資源。" },
+                                    { title: "B. PM (產品經理) 挺身而出，評估該需求的通用性與商業價值", correct: true, feedback: "正確！黃金法則「PM 解決 Sales」，PM 負責守住產品標準化的底線，擋住外部干擾。" }
+                                ]
+                            },
+                            {
+                                context: "【商業談判】PM 評估後發現，增加該接口需要重新開模，且全球只有這個客戶需要，完全不具備市場通用性，會拉低整體產品線毛利。",
+                                question: "PM 應該如何處置？",
+                                options: [
+                                    { title: "A. 為了不得罪大客戶，指示 RD 照做，當作做功德", correct: false, feedback: "錯誤。這會讓產品淪為單一客戶的客製化工廠，嚴重損害公司整體產品線的長遠利潤。" },
+                                    { title: "B. 拒絕變更標準品。改以「專案客製 (NRE)」另行報價，要求該客戶全額負擔開模費用與承諾最低訂購量 (MOQ)", correct: true, feedback: "正確！堅守標準化底線，透過商業手段將客製化成本轉嫁給提出需求的單一客戶。" }
+                                ]
+                            },
+                            {
+                                context: "【決策成功】恭喜您成功防守了產品的標準化！",
+                                success: "PM 的天職是防守外部商業干擾。透過堅定拒絕無效客製化，PM 成功保護了研發團隊的心血與公司的長遠利潤。"
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 title: "8. 外部資源",
@@ -315,8 +432,8 @@ const contentData = {
             },
             {
                 title: "9. 學習歷程",
-                desc: "追蹤您的學習進度，掌握完整的跨領域管理框架：",
-                progressTitle: "課程完成度"
+                desc: "追蹤您的學習進度，結算測驗成績，並匯出完整的跨領域學習紀錄。",
+                progressTitle: "模組完成度"
             }
         ]
     },
@@ -325,8 +442,9 @@ const contentData = {
         headerTitle: "PM Align - HW/SW Product Management",
         docTitle: "HW/SW PM Architecture Alignment",
         subtitle: "Organizational Design & Methodologies",
-        date: "April 03, 2026",
+        date: "2026.04.03",
         copyright: "All Rights Reserved",
+        web_version: "Version",
         architect_url: "https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo",
         nav_prev: "Previous",
         nav_next: "Next",
@@ -336,6 +454,13 @@ const contentData = {
         audio_stop: "Stop",
         quiz_title: "Knowledge Check",
         flip_title: "Key Terminology Cards",
+        next_cards: "Load Next Cards",
+        next_quizzes: "Load Next Quizzes",
+        quiz_score: "{correct} Correct / {answered} Answered / {total} Total",
+        flip_score: "{viewed} Viewed / {total} Total",
+        journey_title: "Dynamic Dashboard & Export",
+        export_btn: "Export CSV Record",
+        export_alert: "Please fill in Group, Student ID, and Name!",
         nav: [
             { id: "exec", title: "0. Exec Summary", icon: "star" },
             { id: "npd", title: "1. NPD Process", icon: "layers" },
@@ -373,7 +498,9 @@ const contentData = {
                     { front: "Stage-Gate Model", back: "A project management technique in which an initiative is divided into distinct stages, separated by decision points (gates)." },
                     { front: "Go/Kill Decision", back: "The critical choice made at each gate by senior management to either fund the next stage or terminate the project." },
                     { front: "Fuzzy Front End (FFE)", back: "The messy, early period of the NPD process where concepts are brainstormed and viability is assessed." },
-                    { front: "Cross-functional Team", back: "A group of people with different functional expertise (R&D, marketing, manufacturing) working toward a common goal." }
+                    { front: "Cross-functional Team", back: "A group of people with different functional expertise (R&D, marketing, manufacturing) working toward a common goal." },
+                    { front: "Time-to-Market (TTM)", back: "The length of time it takes from a product being conceived until its being available for sale." },
+                    { front: "Concurrent Engineering", back: "A work methodology where various stages of product development are carried out simultaneously to decrease TTM." }
                 ],
                 quizBank: [
                     { question: "In the 'Fuzzy Front End' (FFE) of the NPD process, which role acts as the primary decision-maker?", options: [ {title: "Product Manager (PM)", correct: true, feedback: "Correct. The PM navigates the uncertainty of the FFE, filtering ideas based on market viability."}, {title: "R&D Engineer", correct: false, feedback: "Incorrect. Technical design happens after the concept is proven viable."}, {title: "Project Coordinator (PCC)", correct: false, feedback: "Incorrect. The PCC manages execution timelines later in the process."} ] },
@@ -406,7 +533,9 @@ const contentData = {
                     { front: "Portfolio Management", back: "Balancing resource allocation, risks, and returns across a company's product lines to achieve strategic goals." },
                     { front: "Influence w/o Authority", back: "The ability to lead and motivate cross-functional teams without having direct reporting power over them." },
                     { front: "Market Research", back: "Gathering quantitative and qualitative data to uncover unmet user needs, serving as the foundation for product specs." },
-                    { front: "Business-Oriented", back: "A mindset that prioritizes ROI, market share, and business models in product decision-making." }
+                    { front: "Business-Oriented", back: "A mindset that prioritizes ROI, market share, and business models in product decision-making." },
+                    { front: "Return on Investment (ROI)", back: "A performance measure used to evaluate the efficiency or profitability of an investment or project." },
+                    { front: "Product Roadmap", back: "A high-level visual summary that maps out the vision and direction of a product offering over time." }
                 ],
                 quizBank: [
                     { question: "During the 'Marketing / Feasibility' stage, which competency is LEAST required for a PM?", options: [ {title: "Market Research", correct: false, feedback: "Incorrect. Market research is crucial here."}, {title: "Strategy", correct: false, feedback: "Incorrect. Strategy defines the product's direction."}, {title: "PDD Tools (Design Tools)", correct: true, feedback: "Correct. Deep engineering tool knowledge isn't the primary focus during early business evaluation."} ] },
@@ -435,7 +564,8 @@ const contentData = {
                     { front: "Product Backlog", back: "An ordered, dynamic list of everything that is known to be needed in the product, managed exclusively by the PO." },
                     { front: "User Story", back: "An informal, general explanation of a software feature written from the perspective of the end user." },
                     { front: "Scrum Master", back: "The servant-leader responsible for promoting Scrum, removing impediments, and facilitating team dynamics." },
-                    { front: "Increment", back: "The sum of all the Product Backlog items completed during a Sprint, which must be in a usable condition." }
+                    { front: "Increment", back: "The sum of all the Product Backlog items completed during a Sprint, which must be in a usable condition." },
+                    { front: "Daily Scrum", back: "A 15-minute daily event for the Developers to synchronize activities and create a plan for the next 24 hours." }
                 ],
                 quizBank: [
                     { question: "Which of the following is one of the three pillars of empirical process control in Scrum?", options: [ {title: "Contract Negotiation", correct: false, feedback: "Incorrect. Agile prioritizes collaboration over negotiation."}, {title: "Transparency", correct: true, feedback: "Correct. The three pillars are Transparency, Inspection, and Adaptation."}, {title: "Zero Defect Guarantee", correct: false, feedback: "Incorrect. This is not a Scrum pillar."} ] },
@@ -463,7 +593,9 @@ const contentData = {
                     { front: "EVT / DVT / PVT", back: "Hardware validation phases: Engineering (function), Design (safety/reliability), Production (yield)." },
                     { front: "Lead Time (L/T)", back: "The total latency between placing an order for a component and receiving it at the factory." },
                     { front: "MOQ", back: "Minimum Order Quantity: The smallest amount of stock a supplier is willing to produce/sell, impacting inventory risk." },
-                    { front: "Tooling / NRE", back: "Non-Recurring Engineering: The high, one-time upfront costs required to design and create molds for hardware." }
+                    { front: "Tooling / NRE", back: "Non-Recurring Engineering: The high, one-time upfront costs required to design and create molds for hardware." },
+                    { front: "Bill of Materials (BOM)", back: "A comprehensive list of parts, items, assemblies, and other materials required to create a product." },
+                    { front: "Yield Rate", back: "The percentage of non-defective items produced in a manufacturing process, a key PVT metric." }
                 ],
                 quizBank: [
                     { question: "Hardware development follows EVT, DVT, PVT. What is the primary focus of DVT?", options: [ {title: "Design Verification Test: Focusing on safety certifications and reliability under extreme environments", correct: true, feedback: "Correct. DVT ensures the design complies with external standards and physical stress tests."}, {title: "Development Visual Test: Confirming product colors", correct: false, feedback: "Incorrect. Visuals are locked much earlier; DVT is rigorous engineering testing."}, {title: "Data Validation Test: Database speed", correct: false, feedback: "Incorrect. This is a software backend concept."} ] },
@@ -494,7 +626,9 @@ const contentData = {
                     { front: "Strategic Decision", back: "Macro-decisions led by the PM affecting resource allocation, market fit, and long-term business success (Doing the right thing)." },
                     { front: "Tactical Decision", back: "Micro-decisions led by the PO/PL regarding priority and scope trade-offs under resource limits (Doing things right)." },
                     { front: "Scope Cut", back: "A tactical compromise where frontline leaders (PO/PL) drop non-core features to ensure on-time delivery." },
-                    { front: "Defense Line", back: "PMs block external sales pressure (standardization); PO/PLs block internal dev bottlenecks (execution)." }
+                    { front: "Defense Line", back: "PMs block external sales pressure (standardization); PO/PLs block internal dev bottlenecks (execution)." },
+                    { front: "Matrix Organization", back: "An organizational structure where employees have dual reporting relationships, common in large hardware firms." },
+                    { front: "Trade-off", back: "A situational decision that involves diminishing or losing one quality or aspect of a project in return for gains in other aspects." }
                 ],
                 quizBank: [
                     { question: "According to the alignment formula, the Software PO's functions are typically split into which two roles in Hardware?", options: [ {title: "PM and QA", correct: false, feedback: "Incorrect. QA tests, PM does strategy."}, {title: "PL (Project Leader) and PCC (Project Coordinator)", correct: true, feedback: "Correct. Hardware gives technical authority to the PL and tracking duties to the PCC."}, {title: "R&D and Sales", correct: false, feedback: "Incorrect. These are purely engineering and business execution roles."} ] },
@@ -523,7 +657,8 @@ const contentData = {
                     { front: "Feasibility-Driven", back: "Making decisions constrained by physics, supply chain availability, and manufacturing costs (Dominant in Hardware)." },
                     { front: "Local Optimization", back: "A trap where departments hyper-focus on their own KPIs (e.g., lowest part cost) at the expense of the overall project." },
                     { front: "Global Optimization", back: "The PM's holistic approach to making compromises that ensure the ultimate market success of the product." },
-                    { front: "Escalation Path", back: "The formal mechanism to push unresolved, cross-departmental conflicts up to the PM for a strategic business ruling." }
+                    { front: "Escalation Path", back: "The formal mechanism to push unresolved, cross-departmental conflicts up to the PM for a strategic business ruling." },
+                    { front: "Cost of Change", back: "The exponential financial and time burden required to alter a product's design as it advances through its lifecycle." }
                 ],
                 quizBank: [
                     { question: "Why is a Software PO's decision-making typically 'Value-driven', while a Hardware PL is 'Feasibility-driven'?", options: [ {title: "Because PLs don't care about profitability", correct: false, feedback: "Incorrect. PLs care, but are constrained by physics."}, {title: "Because software has a low Cost of Change, allowing value maximization; hardware is constrained by physical supply chains", correct: true, feedback: "Correct. The driver differences stem directly from the underlying physical cost of modification."}, {title: "Because POs outrank PLs", correct: false, feedback: "Incorrect. This has nothing to do with corporate hierarchy."} ] },
@@ -536,15 +671,109 @@ const contentData = {
             },
             {
                 title: "7. Interactive Lab",
-                desc: "Scenario Simulation: Make the best decision for unexpected situations.",
-                quiz: {
-                    question: "[Scenario] In a matrixed hardware project, the Procurement (PUR) and R&D departments strongly conflict over the risks of a cheaper component. Both PCCs refuse to yield. What is the next step?",
-                    options: [
-                        { title: "A. The PL forces a technical decision.", correct: false, feedback: "Incorrect. This is beyond specs; it involves 'margin (PUR)' vs. 'schedule risk (RD)'." },
-                        { title: "B. Escalate to the PM for a global business decision.", correct: true, feedback: "Correct! Department PCCs look at local KPIs. Only the PM has the global view to make a compromise based on final market commitments and profit strategy." },
-                        { title: "C. Switch to Agile to rewrite requirements.", correct: false, feedback: "Incorrect. Hardware lead times are strict. You cannot solve physical supply issues purely with software Agile thinking." }
-                    ]
-                }
+                desc: "Scenario Simulation: Step into the shoes of a cross-domain leader. Navigate the escalation path to resolve critical crises.",
+                scenarios: [
+                    {
+                        name: "Case 1: Matrix Conflict",
+                        steps: [
+                            {
+                                context: "[Frontline Conflict] During DVT, Procurement insists on a cheaper component to hit a KPI. R&D vehemently opposes, warning of overheating. PCCs deadlock.",
+                                question: "What is the most appropriate next step?",
+                                options: [
+                                    { title: "A. The PL forces R&D to accept the risk.", correct: false, feedback: "Incorrect. This is a business compromise between margin and quality. PL shouldn't bear this alone." },
+                                    { title: "B. Trigger Escalation to the PM for a global business ruling.", correct: true, feedback: "Correct! The PM owns the global P&L and must make a 'Global Optimization' decision." }
+                                ]
+                            },
+                            {
+                                context: "[Executive Decision] PM evaluates: keeping the expensive part erodes 20% margin. Swapping requires re-validation, missing the Q4 Holiday season.",
+                                question: "Using 'Global Optimization', what should the PM decide?",
+                                options: [
+                                    { title: "A. Force cost reduction, delaying launch to Q1.", correct: false, feedback: "Incorrect. Missing a massive holiday window causes revenue losses far exceeding component savings." },
+                                    { title: "B. Keep original part to protect launch, order R&D software optimization.", correct: true, feedback: "Correct! PM sacrifices local cost to secure strategic revenue, using tactical trade-offs." }
+                                ]
+                            },
+                            {
+                                context: "[Mission Success] You navigated a matrix deadlock.",
+                                success: "Defense line in action: PM defends the external market, PO/PL resolves internal tactics."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Case 2: Agile Scope Cut",
+                        steps: [
+                            {
+                                context: "[Behind Schedule] 2 days left in Sprint. Team reports the '3rd-party Payment API' has critical bugs. The Sprint Goal is 'Enable basic cart checkout'.",
+                                question: "As a PO, how do you secure the Sprint Goal?",
+                                options: [
+                                    { title: "A. Force overtime to finish everything.", correct: false, feedback: "Incorrect. Agile promotes sustainable pace; forced overtime leads to tech debt." },
+                                    { title: "B. Execute a Scope Cut: release basic 'Credit Card' checkout, drop the buggy API.", correct: true, feedback: "Correct! POs use tactical authority to cut scope, preserving the core MVP value." }
+                                ]
+                            },
+                            {
+                                context: "[Stakeholder Mgmt] Marketing complains they already promised the dropped API feature to users.",
+                                question: "How do you respond as the PO?",
+                                options: [
+                                    { title: "A. Delay the entire release until the API is fixed.", correct: false, feedback: "Incorrect. Delaying violates the Agile principle of continuous delivery." },
+                                    { title: "B. Release core on time, move the API to top of next Sprint, coordinate PR.", correct: true, feedback: "Correct! This shows PO control over delivery rhythm without letting minor features derail the launch." }
+                                ]
+                            },
+                            {
+                                context: "[Mission Success] You protected the Sprint Increment!",
+                                success: "Software POs are Value-driven: cutting non-core scope ensures high-value increments ship on time."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Case 3: Supply Chain Crisis",
+                        steps: [
+                            {
+                                context: "[Supply Chain Break] IC Lead Time jumps from 12 to 40 weeks, threatening the CES trade show launch.",
+                                question: "As the Hardware PL, what is your first move?",
+                                options: [
+                                    { title: "A. Accept the delay and tell management.", correct: false, feedback: "Incorrect. A frontline commander must seek engineering alternatives first." },
+                                    { title: "B. Initiate a technical review for a Second Source and board redesign.", correct: true, feedback: "Correct! Hardware is 'Feasibility-driven', PLs must immediately seek engineering workarounds." }
+                                ]
+                            },
+                            {
+                                context: "[Cross-Dept Trade-off] R&D says redesigning costs $2M NRE and extends testing by 3 weeks.",
+                                question: "Who makes the final call on this cost/time impact?",
+                                options: [
+                                    { title: "A. R&D Director.", correct: false, feedback: "Incorrect. R&D manages tech, not overall product profitability." },
+                                    { title: "B. Escalate to PM to calculate if CES orders outweigh the $2M NRE + 3-week delay.", correct: true, feedback: "Correct! This is a classic Global Optimization decision for the PM." }
+                                ]
+                            },
+                            {
+                                context: "[Mission Success] You saved the CES launch!",
+                                success: "When facing physical constraints, PLs find technical alternatives, while PMs calculate the business cost."
+                            }
+                        ]
+                    },
+                    {
+                        name: "Case 4: Defending Standardization",
+                        steps: [
+                            {
+                                context: "[External Interference] Right before DVT, Sales demands a custom I/O port for one massive client, saying 'We'll lose the deal'.",
+                                question: "Who is the first line of defense?",
+                                options: [
+                                    { title: "A. PL immediately orders R&D to check tooling feasibility.", correct: false, feedback: "Incorrect. Never consume R&D resources before proving business value." },
+                                    { title: "B. PM steps in to evaluate the universality and business value.", correct: true, feedback: "Correct! Golden Rule: 'PM handles Sales' to protect the product baseline." }
+                                ]
+                            },
+                            {
+                                context: "[Business Negotiation] PM finds the port requires new tooling and no other global clients want it. It hurts overall margin.",
+                                question: "How should the PM proceed?",
+                                options: [
+                                    { title: "A. Do it to please the big client.", correct: false, feedback: "Incorrect. This turns a product into a custom-job, killing long-term product line profit." },
+                                    { title: "B. Refuse standard changes. Quote it as an 'NRE Custom Project', requiring the client to pay tooling and commit to an MOQ.", correct: true, feedback: "Correct! Defend standardization by shifting the custom cost back to the requesting client." }
+                                ]
+                            },
+                            {
+                                context: "[Mission Success] You defended product standardization!",
+                                success: "A PM's duty is to block external interference, protecting R&D effort and long-term company margins."
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 title: "8. External Resources",
@@ -557,8 +786,8 @@ const contentData = {
             },
             {
                 title: "9. Learning Journey",
-                desc: "Track your progress and master the complete framework:",
-                progressTitle: "Course Completion"
+                desc: "Track your progress, review scores, and export your cross-domain learning record.",
+                progressTitle: "Module Completion"
             }
         ]
     }
@@ -571,11 +800,21 @@ const App = () => {
     const [module, setModule] = useState(0); 
     const [visited, setVisited] = useState(Array(TOTAL_MODULES).fill(false));
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [ttsState, setTtsState] = useState('idle'); // 'idle', 'playing', 'paused'
+    const [ttsState, setTtsState] = useState('idle');
     
-    // Quiz Randomization State for Modules 1-6
+    // Quiz & Flip Card Randomization & Tracking States
     const [quizIndices, setQuizIndices] = useState([]);
     const [quizAnswers, setQuizAnswers] = useState({});
+    const [flipIndices, setFlipIndices] = useState([]);
+    
+    // Global tracking across sessions (State only, resets on reload)
+    const [globalQuizHistory, setGlobalQuizHistory] = useState({}); 
+    const [globalFlipHistory, setGlobalFlipHistory] = useState({}); 
+    
+    // Export Form State
+    const [exportData, setExportData] = useState({ group: 'G1', studentId: '', name: '' });
+    // Active Scenario in Lab
+    const [labScenarioIdx, setLabScenarioIdx] = useState(0);
 
     const contentRef = useRef(null);
     const menuRef = useRef(null);
@@ -583,36 +822,45 @@ const App = () => {
     const t = contentData[lang];
     const m = t.modules[module];
 
-    // Theme initialization
+    // Helper: Random Index Generator
+    const getRandomIndices = (max, count, exclude = []) => {
+        if (max === 0) return [];
+        const indices = [];
+        let attempts = 0;
+        while(indices.length < count && attempts < 50) {
+            const r = Math.floor(Math.random() * max);
+            if(!indices.includes(r) && !exclude.includes(r)) indices.push(r);
+            attempts++;
+        }
+        if(indices.length < count) {
+            while(indices.length < count) {
+                const r = Math.floor(Math.random() * max);
+                if(!indices.includes(r)) indices.push(r);
+            }
+        }
+        return indices;
+    };
+
     useEffect(() => {
         if (theme === 'dark') document.documentElement.classList.add('dark');
         else document.documentElement.classList.remove('dark');
     }, [theme]);
 
-    // Handle outside click for mobile menu
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 setIsMobileMenuOpen(false);
             }
         };
-        if (isMobileMenuOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        }
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
+        if (isMobileMenuOpen) document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [isMobileMenuOpen]);
 
-    // Scroll to Top Utility
     const scrollToTop = () => {
-        if (contentRef.current) {
-            contentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        if (contentRef.current) contentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // Track progress & scroll top on module change + Handle Quiz Randomization
     useEffect(() => {
         setVisited(prev => {
             const next = [...prev];
@@ -622,26 +870,90 @@ const App = () => {
         scrollToTop();
         stopTTS();
 
-        // Randomize Quizzes for Modules 1-6
-        if (module >= 1 && module <= 6 && t.modules[module].quizBank) {
-            const indices = [];
-            const bankSize = t.modules[module].quizBank.length;
-            while(indices.length < 2 && indices.length < bankSize) {
-                const r = Math.floor(Math.random() * bankSize);
-                if(!indices.includes(r)) indices.push(r);
-            }
-            setQuizIndices(indices);
-            setQuizAnswers({}); // Reset answers for the new module
+        if (module >= 1 && module <= 6 && t.modules[module].quizBank && t.modules[module].flipCards) {
+            setQuizIndices(getRandomIndices(6, 2));
+            setFlipIndices(getRandomIndices(6, 2));
+            setQuizAnswers({});
         } else {
             setQuizIndices([]);
+            setFlipIndices([]);
             setQuizAnswers({});
         }
-    }, [module]); // Deliberately omit 'lang' so questions don't change when toggling language
+
+        if (module !== 7) setLabScenarioIdx(0);
+    }, [module]);
+
+    const loadNextQuizzes = () => {
+        setQuizIndices(getRandomIndices(6, 2, quizIndices));
+        setQuizAnswers({});
+    };
+
+    const loadNextFlips = () => {
+        setFlipIndices(getRandomIndices(6, 2, flipIndices));
+    };
 
     const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
-    const toggleLang = () => {
-        stopTTS();
-        setLang(lang === 'zh' ? 'en' : 'zh');
+    const toggleLang = () => { stopTTS(); setLang(lang === 'zh' ? 'en' : 'zh'); };
+
+    // Handlers to track flip and quiz completion
+    const handleQuizSelection = (qIdx, oIdx, isCorrect) => {
+        setQuizAnswers(prev => ({...prev, [qIdx]: oIdx}));
+        setGlobalQuizHistory(prev => {
+            const modHistory = prev[module] || {};
+            if (modHistory[qIdx] === undefined) {
+                return { ...prev, [module]: { ...modHistory, [qIdx]: isCorrect } };
+            }
+            return prev;
+        });
+    };
+
+    const handleFlipView = (cIdx) => {
+        setGlobalFlipHistory(prev => {
+            const modArr = prev[module] || [];
+            if (!modArr.includes(cIdx)) {
+                return { ...prev, [module]: [...modArr, cIdx] };
+            }
+            return prev;
+        });
+    };
+
+    const handleExportCSV = () => {
+        if(!exportData.group || !exportData.studentId || !exportData.name) {
+            alert(t.export_alert);
+            return;
+        }
+        const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
+        const filename = `${t.brand}_${exportData.group}_${exportData.name}_${dateStr}.csv`;
+
+        let csvContent = "\uFEFF"; // UTF-8 BOM
+        csvContent += (lang === 'zh' ? "組別,學號,姓名,日期\n" : "Group,Student ID,Name,Date\n");
+        csvContent += `${exportData.group},${exportData.studentId},${exportData.name},${dateStr}\n\n`;
+
+        csvContent += (lang === 'zh' ? "模組,總題數,已答題數,答對題數,正確率\n" : "Module,Total,Answered,Correct,Accuracy\n");
+
+        let totalQ = 0, totalA = 0, totalC = 0;
+        for(let i=1; i<=6; i++) {
+            const bank = t.modules[i].quizBank;
+            const hist = globalQuizHistory[i] || {};
+            const tQ = bank ? bank.length : 0;
+            const tA = Object.keys(hist).length;
+            const tC = Object.values(hist).filter(v=>v).length;
+            const acc = tA > 0 ? Math.round((tC/tA)*100) + '%' : '0%';
+            csvContent += `"${t.modules[i].title}",${tQ},${tA},${tC},${acc}\n`;
+            totalQ += tQ; totalA += tA; totalC += tC;
+        }
+        const totalAcc = totalA > 0 ? Math.round((totalC/totalA)*100) + '%' : '0%';
+        csvContent += `\n${lang==='zh'?'總計':'Total'},${totalQ},${totalA},${totalC},${totalAcc}\n`;
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     // --- Web Speech API (TTS) ---
@@ -672,23 +984,31 @@ const App = () => {
                 parts.push(`${k}，負責角色為${v}。涵蓋範疇：${s}。`);
             });
         }
-        if (mod.equation) {
-            parts.push(`${mod.equation.left} 等同於 ${mod.equation.right1} 加上 ${mod.equation.right2}`);
-        }
-        if (mod.cards) mod.cards.forEach(c => parts.push(`情境：${c.front}。應對：${c.back}，${c.backDesc}`));
+        if (mod.equation) parts.push(`${mod.equation.left} 等同於 ${mod.equation.right1} 加上 ${mod.equation.right2}`);
         if (mod.nodes) mod.nodes.forEach(n => parts.push(`${n.title}。${n.desc}`));
         if (mod.comparisons) mod.comparisons.forEach(c => parts.push(`${c.type}，主要考量為${c.focus}。${c.detail}`));
         if (mod.quote) parts.push(`總結論點：${mod.quote}`);
         
-        // Render Flip Cards text for TTS
-        if (mod.flipCards) {
-            parts.push(lang === 'zh' ? '關鍵專有名詞翻轉卡：' : 'Key Terminology Flashcards:');
-            mod.flipCards.forEach(c => parts.push(`${c.front}。定義：${c.back}`));
+        if (mod.flipCards && flipIndices.length > 0) {
+            parts.push(lang === 'zh' ? '關鍵專有名詞：' : 'Key Terminology:');
+            flipIndices.forEach(idx => {
+                const c = mod.flipCards[idx];
+                parts.push(`${c.front}。定義：${c.back}`);
+            });
         }
 
-        // Render Random Quiz text for TTS
         if (mod.quizBank && quizIndices.length > 0) {
             parts.push(lang === 'zh' ? '隨機知識檢定：' : 'Random Knowledge Check:');
+            const qModHist = globalQuizHistory[module] || {};
+            const qAnswered = Object.keys(qModHist).length;
+            const qCorrect = Object.values(qModHist).filter(v=>v).length;
+            const qTotal = mod.quizBank.length;
+            if (lang === 'zh') {
+                parts.push(`目前測驗得分：答對 ${qCorrect} 題，已答 ${qAnswered} 題，共 ${qTotal} 題。`);
+            } else {
+                parts.push(`Current Score: ${qCorrect} correct, ${qAnswered} answered, out of ${qTotal} total.`);
+            }
+
             quizIndices.forEach((qIdx, i) => {
                 const q = mod.quizBank[qIdx];
                 parts.push(`第${i+1}題：${q.question}`);
@@ -696,10 +1016,17 @@ const App = () => {
             });
         }
 
-        // Module 7 standalone quiz
-        if (mod.quiz && !mod.quizBank) {
-            parts.push(`互動實驗室情境題：${mod.quiz.question}`);
-            mod.quiz.options.forEach((o, i) => parts.push(`選項 ${String.fromCharCode(65+i)}：${o.title}。`));
+        if (mod.scenarios) {
+            const currentScenario = mod.scenarios[labScenarioIdx];
+            parts.push(lang === 'zh' ? `互動實驗室情境模擬：${currentScenario.name}` : `Interactive Lab Scenario: ${currentScenario.name}`);
+            currentScenario.steps.forEach((s, idx) => {
+                parts.push(`階段 ${idx+1}：${s.context}`);
+                if (s.question) parts.push(`問題：${s.question}`);
+                if (s.options) {
+                    s.options.forEach((o, i) => parts.push(`選項 ${String.fromCharCode(65+i)}：${o.title}。`));
+                }
+                if (s.success) parts.push(`結論：${s.success}`);
+            });
         }
 
         if (mod.links) {
@@ -707,7 +1034,6 @@ const App = () => {
             mod.links.forEach(l => parts.push(`${l.title}。${l.desc}`));
         }
         if (mod.progressTitle) parts.push(mod.progressTitle);
-        // Returns purely concatenated string without any HTML or Icons
         return parts.join(' ');
     };
 
@@ -745,8 +1071,6 @@ const App = () => {
     };
 
     // --- Reusable Component Renderers ---
-    
-    // Renders the DeepDive paragraph array
     const renderDeepDive = (paragraphs) => {
         if (!paragraphs) return null;
         return (
@@ -760,62 +1084,92 @@ const App = () => {
         );
     };
 
-    // Renders the RWD Flip Cards
     const renderFlipCards = (cards) => {
-        if (!cards) return null;
+        if (!cards || flipIndices.length === 0) return null;
+        const viewedCount = (globalFlipHistory[module] || []).length;
+        const flipScoreText = t.flip_score.replace('{viewed}', viewedCount).replace('{total}', cards.length);
+
         return (
-            <div className="mt-10">
-                <h3 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5] mb-6 border-l-4 border-[#004030] dark:border-[#D8C3A5] pl-3">
-                    {t.flip_title}
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 perspective">
-                    {cards.map((card, idx) => (
-                        <div key={idx} className="flip-card h-48 group cursor-pointer relative">
-                            <div className="flip-card-inner relative w-full h-full shadow-sm rounded-2xl border border-slate-200 dark:border-slate-700">
-                                <div className="absolute w-full h-full backface-hidden bg-white dark:bg-slate-800 rounded-2xl flex flex-col items-center justify-center p-4 sm:p-6 text-center">
-                                    <h4 className="text-lg font-bold text-slate-800 dark:text-white break-words">{card.front}</h4>
-                                    <Icon name="play" size={16} className="mt-4 text-[#D8C3A5] animate-bounce" />
-                                </div>
-                                <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-[#004030] dark:bg-slate-900 rounded-2xl border border-[#D8C3A5] flex flex-col items-center justify-center p-4 sm:p-6 text-center text-white">
-                                    <p className="text-sm sm:text-base leading-relaxed break-words">{card.back}</p>
+            <div className="mt-12 bg-white dark:bg-slate-800 p-5 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-slate-200 dark:border-slate-700 pb-3">
+                    <div className="flex items-center gap-2">
+                        <Icon name="layers" size={24} className="text-[#004030] dark:text-[#D8C3A5]" />
+                        <h3 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5]">{t.flip_title}</h3>
+                    </div>
+                    <div className="text-sm font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700/50 px-3 py-1.5 rounded-full shrink-0 text-center">
+                        {flipScoreText}
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 perspective">
+                    {flipIndices.map((cIdx, idx) => {
+                        const card = cards[cIdx];
+                        return (
+                            <div key={idx} className="flip-card h-56 group cursor-pointer relative" onClick={() => handleFlipView(cIdx)}>
+                                <div className="flip-card-inner relative w-full h-full shadow-sm rounded-2xl border border-slate-200 dark:border-slate-600">
+                                    <div className="absolute w-full h-full backface-hidden bg-slate-50 dark:bg-slate-700/30 rounded-2xl flex flex-col items-center justify-center p-4 sm:p-6 text-center">
+                                        <h4 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5] break-words mb-2">{card.front}</h4>
+                                        <Icon name="play" size={16} className="mt-2 text-slate-400 animate-bounce" />
+                                    </div>
+                                    <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-[#004030] dark:bg-slate-900 rounded-2xl border border-[#D8C3A5] flex flex-col items-center justify-center p-4 sm:p-6 text-center text-white">
+                                        <p className="text-sm sm:text-base leading-relaxed break-words">{card.back}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
+                </div>
+                <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-end">
+                    <button 
+                        onClick={loadNextFlips} 
+                        className="w-full sm:w-auto px-6 py-3 bg-slate-100 dark:bg-slate-700/50 hover:bg-[#D8C3A5]/20 dark:hover:bg-slate-700 text-[#004030] dark:text-[#D8C3A5] rounded-xl text-sm font-bold shadow-sm transition-colors border border-slate-200 dark:border-slate-600 flex items-center justify-center gap-2 uppercase tracking-wider"
+                    >
+                        <Icon name="refresh" size={16} />
+                        {t.next_cards}
+                    </button>
                 </div>
             </div>
         );
     };
 
-    // Renders the Random Quizzes
     const renderRandomQuiz = (bank) => {
         if (!bank || quizIndices.length === 0) return null;
+        
+        const qModHist = globalQuizHistory[module] || {};
+        const qAnswered = Object.keys(qModHist).length;
+        const qCorrect = Object.values(qModHist).filter(v=>v).length;
+        const quizScoreText = t.quiz_score.replace('{correct}', qCorrect).replace('{answered}', qAnswered).replace('{total}', bank.length);
+
         return (
-            <div className="mt-12 bg-[#004030]/5 dark:bg-slate-800/40 p-6 rounded-2xl border border-[#004030]/10 dark:border-slate-700">
-                <div className="flex items-center gap-2 mb-6 border-b border-[#004030]/10 dark:border-slate-700 pb-3">
-                    <Icon name="flask" size={24} className="text-[#004030] dark:text-[#D8C3A5]" />
-                    <h3 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5]">{t.quiz_title}</h3>
+            <div className="mt-12 bg-[#004030]/5 dark:bg-slate-800/40 p-5 sm:p-8 rounded-2xl border border-[#004030]/10 dark:border-slate-700">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-[#004030]/10 dark:border-slate-700 pb-3">
+                    <div className="flex items-center gap-2">
+                        <Icon name="flask" size={24} className="text-[#004030] dark:text-[#D8C3A5]" />
+                        <h3 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5]">{t.quiz_title}</h3>
+                    </div>
+                    <div className="text-sm font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100/50 dark:bg-emerald-900/30 px-3 py-1.5 rounded-full shrink-0 text-center">
+                        {quizScoreText}
+                    </div>
                 </div>
                 <div className="space-y-8">
                     {quizIndices.map((qIdx, idx) => {
                         const q = bank[qIdx];
                         const selectedOption = quizAnswers[qIdx];
                         return (
-                            <div key={qIdx} className="space-y-4">
+                            <div key={qIdx} className="space-y-4 bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
                                 <h4 className="text-lg font-bold text-slate-800 dark:text-slate-200 leading-relaxed">
-                                    {idx + 1}. {q.question}
+                                    Q{idx + 1}. {q.question}
                                 </h4>
                                 <div className="grid gap-3">
                                     {q.options.map((opt, oIdx) => (
                                         <button
                                             key={oIdx}
-                                            onClick={() => setQuizAnswers(prev => ({...prev, [qIdx]: oIdx}))}
-                                            className={`p-4 text-left rounded-xl border-2 transition-all duration-300 shadow-sm ${
+                                            onClick={() => handleQuizSelection(qIdx, oIdx, opt.correct)}
+                                            className={`p-4 text-left rounded-xl border-2 transition-all duration-300 ${
                                                 selectedOption === oIdx 
                                                 ? (opt.correct 
                                                     ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30' 
                                                     : 'border-rose-500 bg-rose-50 dark:bg-rose-900/30') 
-                                                : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-[#D8C3A5] hover:shadow-md'
+                                                : 'border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 hover:border-[#D8C3A5] hover:bg-white dark:hover:bg-slate-800'
                                             }`}
                                         >
                                             <div className="font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
@@ -836,21 +1190,27 @@ const App = () => {
                         );
                     })}
                 </div>
+                <div className="mt-8 pt-4 border-t border-[#004030]/10 dark:border-slate-700 flex justify-end">
+                    <button 
+                        onClick={loadNextQuizzes} 
+                        className="w-full sm:w-auto px-6 py-3 bg-[#004030] dark:bg-[#D8C3A5] text-[#D8C3A5] dark:text-[#004030] rounded-xl text-sm font-bold shadow-md hover:bg-[#002b20] dark:hover:bg-white transition-colors flex items-center justify-center gap-2 uppercase tracking-wider"
+                    >
+                        <Icon name="refresh" size={16} />
+                        {t.next_quizzes}
+                    </button>
+                </div>
             </div>
         );
     };
 
     // --- Content Page Renderers ---
-    
-    // Module 0: Exec
     const renderExec = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed">{m.desc}</p>
             <div className="bg-[#D8C3A5]/20 dark:bg-slate-800 p-6 md:p-8 rounded-2xl border-l-4 border-[#004030] dark:border-[#D8C3A5] shadow-sm">
-                <p className="text-base text-slate-700 dark:text-slate-300 leading-loose">{m.content}</p>
+                <p className="text-base text-slate-700 dark:text-slate-300 leading-loose text-justify">{m.content}</p>
             </div>
             
-            {/* Quick Links to Modules 1-6 */}
             <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
                 <h3 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5] mb-4 flex items-center gap-2">
                     <Icon name="layers" size={24} />
@@ -874,7 +1234,6 @@ const App = () => {
         </div>
     );
 
-    // Module 1: NPD
     const renderNPD = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
@@ -892,7 +1251,7 @@ const App = () => {
                         </div>
                         <div>
                             <h3 className="font-bold text-lg mb-2 dark:text-white">{pt.title}</h3>
-                            <p className="text-slate-600 dark:text-slate-400">{pt.text}</p>
+                            <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-justify">{pt.text}</p>
                         </div>
                     </div>
                 ))}
@@ -902,7 +1261,6 @@ const App = () => {
         </div>
     );
 
-    // Module 2: PM Competencies
     const renderPMComp = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
@@ -925,7 +1283,7 @@ const App = () => {
                         {m.table.rows.map((r, i) => (
                             <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-b dark:border-slate-700 last:border-0">
                                 <td className="p-4 font-bold text-[#004030] dark:text-[#D8C3A5]">{r.stage}</td>
-                                <td className="p-4 text-slate-700 dark:text-slate-300">{r.comp}</td>
+                                <td className="p-4 text-slate-700 dark:text-slate-300 leading-relaxed">{r.comp}</td>
                                 <td className="p-4 italic text-slate-500 dark:text-slate-400">{r.domain}</td>
                             </tr>
                         ))}
@@ -937,7 +1295,6 @@ const App = () => {
         </div>
     );
 
-    // Module 3 & 4: Frameworks
     const renderFrameworks = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
@@ -949,7 +1306,7 @@ const App = () => {
                             <Icon name={module === 3 ? "zap" : "matrix"} size={20} className={module === 3 ? "text-blue-500" : "text-purple-500"} />
                             {pt.title}
                         </h3>
-                        <p className="text-slate-600 dark:text-slate-400">{pt.text}</p>
+                        <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-justify">{pt.text}</p>
                     </div>
                 ))}
             </div>
@@ -958,7 +1315,6 @@ const App = () => {
         </div>
     );
 
-    // Module 5: Synthesized Roles
     const renderSynRoles = () => (
         <div className="animate-fade-in space-y-8">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
@@ -995,7 +1351,7 @@ const App = () => {
                                 <td className="p-4 font-medium text-[#004030] dark:text-[#D8C3A5]">{r.level}</td>
                                 <td className="p-4 font-bold">{r.role}</td>
                                 <td className="p-4 italic text-slate-600 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{r.question}</td>
-                                <td className="p-4 text-slate-600 dark:text-slate-400">{r.scope}</td>
+                                <td className="p-4 text-slate-600 dark:text-slate-400 leading-relaxed">{r.scope}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -1006,31 +1362,11 @@ const App = () => {
         </div>
     );
 
-    // Module 6: Synthesized Drivers & Conclusion
     const renderSynDrivers = () => (
         <div className="animate-fade-in space-y-8">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
             {renderDeepDive(m.deepDive)}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 perspective">
-                {m.comparisons.map((comp, idx) => (
-                    <div key={idx} className="flip-card h-72 group cursor-pointer relative">
-                        <div className="flip-card-inner relative w-full h-full shadow-sm rounded-2xl border border-slate-200 dark:border-slate-700">
-                            <div className="absolute w-full h-full backface-hidden bg-white dark:bg-slate-800 rounded-2xl flex flex-col justify-center p-6 sm:p-8">
-                                <h3 className="text-2xl font-bold mb-4 dark:text-white">{comp.type}</h3>
-                                <div className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold mb-2 bg-[#004030] text-[#D8C3A5] dark:bg-[#D8C3A5] dark:text-[#004030] w-max">
-                                    {comp.focus}
-                                </div>
-                                <p className="mt-4 text-sm text-slate-400 dark:text-slate-500 animate-pulse">{lang === 'zh' ? '點擊翻轉查看詳細說明' : 'Click to flip for details'}</p>
-                            </div>
-                            <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-[#004030] dark:bg-slate-900 rounded-2xl border border-[#D8C3A5] flex flex-col justify-center p-6 sm:p-8 text-white">
-                                <h3 className="text-xl font-bold text-[#D8C3A5] mb-4">{comp.type}</h3>
-                                <p className="text-[#D8C3A5]/90 leading-relaxed text-base">{comp.detail}</p>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-            <blockquote className="relative p-6 sm:p-8 bg-[#D8C3A5]/10 dark:bg-slate-800/80 rounded-2xl border-l-8 border-[#004030] dark:border-[#D8C3A5] shadow-sm mt-8">
+            <blockquote className="relative p-6 sm:p-8 bg-[#D8C3A5]/10 dark:bg-slate-800/80 rounded-2xl border-l-8 border-[#004030] dark:border-[#D8C3A5] shadow-sm mb-8">
                 <p className="text-lg md:text-xl font-serif leading-relaxed text-slate-800 dark:text-slate-200">
                     {m.quote}
                 </p>
@@ -1040,42 +1376,129 @@ const App = () => {
         </div>
     );
 
-    // Module 7: Interactive Lab (Fallback if accessed directly)
+    // Module 7: Interactive Lab (Split Pane Case Study with Multi-Scenarios)
     const InteractiveLab = () => {
-        const [selected, setSelected] = useState(null);
+        const [labStep, setLabStep] = useState(0);
+        const [labSelected, setLabSelected] = useState(null);
+
+        useEffect(() => { setLabStep(0); setLabSelected(null); stopTTS(); }, [labScenarioIdx, lang]);
+
+        const currentScenario = m.scenarios[labScenarioIdx];
+        const steps = currentScenario.steps;
+        const currentData = steps[labStep];
+        const isLastStep = labStep === steps.length - 1;
+
+        const handleOptionClick = (oIdx, opt) => {
+            setLabSelected(oIdx);
+            if (opt.correct) {
+                setTimeout(() => {
+                    setLabStep(prev => prev + 1);
+                    setLabSelected(null);
+                }, 3000);
+            }
+        };
+
+        const resetLab = () => {
+            setLabStep(0);
+            setLabSelected(null);
+        };
+
         return (
             <div className="animate-fade-in space-y-6 w-full max-w-full">
                 <p className="text-lg text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
-                <div className="bg-[#004030]/5 dark:bg-slate-800/50 p-4 sm:p-6 md:p-8 rounded-2xl border border-[#004030]/10 dark:border-slate-700">
-                    <h3 className="text-lg sm:text-xl font-bold text-[#004030] dark:text-[#D8C3A5] mb-6 leading-relaxed">
-                        {m.quiz.question}
-                    </h3>
-                    <div className="grid gap-4">
-                        {m.quiz.options.map((opt, i) => (
-                            <button
-                                key={i}
-                                onClick={() => setSelected(i)}
-                                className={`p-4 sm:p-5 text-left rounded-xl border-2 transition-all duration-300 shadow-sm ${
-                                    selected === i 
-                                    ? (opt.correct 
-                                        ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30' 
-                                        : 'border-rose-500 bg-rose-50 dark:bg-rose-900/30') 
-                                    : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-[#D8C3A5] hover:shadow-md'
-                                }`}
-                            >
-                                <div className="font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between">
-                                    {opt.title}
-                                    {selected === i && (
-                                        <Icon name={opt.correct ? "checkCircle" : "x"} className={`shrink-0 ml-2 ${opt.correct ? "text-emerald-500" : "text-rose-500"}`} />
-                                    )}
+                
+                {/* Scenario Selector */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+                    {m.scenarios.map((sc, idx) => (
+                        <button 
+                            key={idx}
+                            onClick={() => setLabScenarioIdx(idx)}
+                            className={`p-3 rounded-xl border-2 text-sm font-bold transition-all shadow-sm ${
+                                labScenarioIdx === idx 
+                                ? 'border-[#004030] bg-[#004030] text-[#D8C3A5] dark:border-[#D8C3A5] dark:bg-[#D8C3A5] dark:text-[#004030]' 
+                                : 'border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 hover:border-[#D8C3A5]'
+                            }`}
+                        >
+                            {sc.name}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Progress Bar for Lab */}
+                <div className="flex gap-2 mb-4">
+                    {steps.map((_, i) => (
+                        <div key={i} className={`h-2 flex-1 rounded-full transition-all duration-500 ${i <= labStep ? 'bg-[#004030] dark:bg-[#D8C3A5]' : 'bg-slate-200 dark:bg-slate-700'}`}></div>
+                    ))}
+                </div>
+
+                <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Left: Context */}
+                    <div className="lg:w-2/5 bg-[#004030] text-[#D8C3A5] p-6 md:p-8 rounded-2xl shadow-sm h-full">
+                        <h3 className="text-xl font-bold mb-4 flex items-center gap-2 border-b border-[#D8C3A5]/30 pb-3">
+                            <Icon name="flask" size={24} />
+                            {lang === 'zh' ? '情境與條件' : 'Scenario Context'}
+                        </h3>
+                        <p className="text-base md:text-lg leading-loose text-justify">
+                            {currentData.context}
+                        </p>
+                    </div>
+                    
+                    {/* Right: Question & Options */}
+                    <div className="lg:w-3/5 bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-center">
+                        {currentData.question && (
+                            <h4 className="text-lg sm:text-xl font-bold text-slate-800 dark:text-slate-200 mb-6 leading-relaxed">
+                                {currentData.question}
+                            </h4>
+                        )}
+
+                        {currentData.options && currentData.options.length > 0 ? (
+                            <div className="grid gap-4">
+                                {currentData.options.map((opt, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => handleOptionClick(i, opt)}
+                                        disabled={labSelected !== null && currentData.options[labSelected].correct}
+                                        className={`p-4 sm:p-5 text-left rounded-xl border-2 transition-all duration-300 shadow-sm ${
+                                            labSelected === i 
+                                            ? (opt.correct 
+                                                ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30' 
+                                                : 'border-rose-500 bg-rose-50 dark:bg-rose-900/30') 
+                                            : 'border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 hover:border-[#D8C3A5] hover:shadow-md'
+                                        }`}
+                                    >
+                                        <div className="font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between">
+                                            {opt.title}
+                                            {labSelected === i && (
+                                                <Icon name={opt.correct ? "checkCircle" : "x"} className={`shrink-0 ml-2 ${opt.correct ? "text-emerald-500" : "text-rose-500"}`} />
+                                            )}
+                                        </div>
+                                        {labSelected === i && (
+                                            <div className={`text-sm mt-3 pt-3 border-t ${opt.correct ? 'border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300' : 'border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300'} animate-fade-in`}>
+                                                {opt.feedback}
+                                                {opt.correct && !isLastStep && (
+                                                    <div className="mt-3 text-xs font-bold text-emerald-600 dark:text-emerald-400 animate-pulse flex items-center gap-1">
+                                                        {lang === 'zh' ? '正在載入下一階段...' : 'Loading next stage...'} <Icon name="arrowRight" size={12}/>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="animate-fade-in text-center py-8">
+                                <div className="inline-flex p-6 bg-emerald-50 dark:bg-emerald-900/30 rounded-full border border-emerald-200 dark:border-emerald-800 mb-6">
+                                    <Icon name="checkCircle" size={64} className="text-emerald-500" />
                                 </div>
-                                {selected === i && (
-                                    <div className={`text-sm mt-3 pt-3 border-t ${opt.correct ? 'border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300' : 'border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300'} animate-fade-in`}>
-                                        {opt.feedback}
-                                    </div>
-                                )}
-                            </button>
-                        ))}
+                                <p className="text-xl font-bold text-emerald-800 dark:text-emerald-300 leading-relaxed mb-8">
+                                    {currentData.success}
+                                </p>
+                                <button onClick={resetLab} className="px-8 py-3 bg-[#004030] dark:bg-[#D8C3A5] text-[#D8C3A5] dark:text-[#004030] rounded-xl font-bold shadow-md hover:bg-[#002b20] dark:hover:bg-white transition-colors inline-flex items-center gap-2 uppercase tracking-wider">
+                                    <Icon name="refresh" size={18} />
+                                    {lang === 'zh' ? '重新體驗實驗室' : 'Restart Lab'}
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -1086,7 +1509,7 @@ const App = () => {
     const ExternalResources = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
                 {m.links.map((link, i) => (
                     <li key={i}>
                         <a href={link.url} target="_blank" rel="noreferrer" className="flex items-start p-5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-[#D8C3A5] transition-all group h-full">
@@ -1095,7 +1518,7 @@ const App = () => {
                             </div>
                             <div className="ml-4 flex-1">
                                 <h4 className="font-bold text-lg text-slate-800 dark:text-slate-200 group-hover:text-[#004030] dark:group-hover:text-[#D8C3A5] transition-colors">{link.title}</h4>
-                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{link.desc}</p>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">{link.desc}</p>
                             </div>
                         </a>
                     </li>
@@ -1104,37 +1527,102 @@ const App = () => {
         </div>
     );
 
-    // Module 9: Journey
+    // Module 9: Learning Journey & Export
     const LearningJourney = () => {
-        const completedCount = visited.filter(v => v).length;
-        const progress = Math.round((completedCount / TOTAL_MODULES) * 100);
+        const handleInputChange = (e) => {
+            const { name, value } = e.target;
+            setExportData(prev => ({...prev, [name]: value}));
+        };
+
         return (
-            <div className="animate-fade-in space-y-6">
+            <div className="animate-fade-in space-y-8">
                 <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
-                <div className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                    <div className="flex justify-between items-end mb-3">
-                        <span className="font-bold text-slate-700 dark:text-slate-300 text-lg">{m.progressTitle}</span>
-                        <span className="font-black text-3xl text-[#004030] dark:text-[#D8C3A5]">{progress}%</span>
+                
+                {/* Score Summary Table */}
+                <div className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <h3 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5] mb-6 border-b border-slate-200 dark:border-slate-700 pb-3 flex items-center gap-2">
+                        <Icon name="star" size={24} />
+                        {t.journey_title}
+                    </h3>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="bg-slate-100 dark:bg-slate-900 border-y border-slate-200 dark:border-slate-700">
+                                    <th className="p-3 text-sm font-bold text-slate-600 dark:text-slate-400 whitespace-nowrap">{lang==='zh'?'模組名稱':'Module'}</th>
+                                    <th className="p-3 text-sm font-bold text-center text-slate-600 dark:text-slate-400 whitespace-nowrap">{lang==='zh'?'總題數':'Total'}</th>
+                                    <th className="p-3 text-sm font-bold text-center text-slate-600 dark:text-slate-400 whitespace-nowrap">{lang==='zh'?'已答題數':'Answered'}</th>
+                                    <th className="p-3 text-sm font-bold text-center text-emerald-600 dark:text-emerald-400 whitespace-nowrap">{lang==='zh'?'答對題數':'Correct'}</th>
+                                    <th className="p-3 text-sm font-bold text-center text-slate-600 dark:text-slate-400 whitespace-nowrap">{lang==='zh'?'正確率':'Accuracy'}</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
+                                {[1,2,3,4,5,6].map(modIdx => {
+                                    const bank = t.modules[modIdx].quizBank;
+                                    const hist = globalQuizHistory[modIdx] || {};
+                                    const totalQ = bank ? bank.length : 0;
+                                    const answered = Object.keys(hist).length;
+                                    const correct = Object.values(hist).filter(v=>v).length;
+                                    const acc = answered > 0 ? Math.round((correct/answered)*100) : 0;
+                                    return (
+                                        <tr key={modIdx} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                            <td className="p-3 text-sm font-medium text-slate-700 dark:text-slate-300">{t.modules[modIdx].title}</td>
+                                            <td className="p-3 text-sm text-center text-slate-500 dark:text-slate-400">{totalQ}</td>
+                                            <td className="p-3 text-sm text-center text-slate-500 dark:text-slate-400">{answered}</td>
+                                            <td className="p-3 text-sm text-center font-bold text-emerald-600 dark:text-emerald-400">{correct}</td>
+                                            <td className="p-3 text-sm text-center text-slate-500 dark:text-slate-400">{acc}%</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
                     </div>
-                    <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-4 mb-8 overflow-hidden border border-slate-200 dark:border-slate-600">
-                        <div className="bg-[#004030] dark:bg-[#D8C3A5] h-full rounded-full transition-all duration-1000 ease-out" style={{ width: `${progress}%` }}></div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {t.nav.map((n, i) => (
-                            <button 
-                                key={i}
-                                onClick={() => setModule(i)}
-                                className={`flex items-center p-3 rounded-lg border text-left transition-colors ${
-                                    visited[i] 
-                                    ? 'border-emerald-200 bg-emerald-50 dark:bg-emerald-900/20 dark:border-emerald-800' 
-                                    : 'border-slate-100 bg-slate-50 dark:bg-slate-800/50 dark:border-slate-700'
-                                }`}
+                </div>
+
+                {/* Export Form */}
+                <div className="bg-[#004030]/5 dark:bg-slate-800/40 p-6 sm:p-8 rounded-2xl border border-[#004030]/10 dark:border-slate-700 shadow-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                        <div>
+                            <label className="block text-sm font-bold text-[#004030] dark:text-[#D8C3A5] mb-2">{lang==='zh'?'組別':'Group'}</label>
+                            <select 
+                                name="group" 
+                                value={exportData.group} 
+                                onChange={handleInputChange}
+                                className="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D8C3A5]"
                             >
-                                <Icon name={visited[i] ? "checkCircle" : "circle"} className={`shrink-0 mr-3 ${visited[i] ? 'text-emerald-500' : 'text-slate-300 dark:text-slate-600'}`} size={20} />
-                                <span className={`text-sm font-medium truncate ${visited[i] ? 'text-slate-800 dark:text-slate-200' : 'text-slate-400 dark:text-slate-500'}`}>{n.title}</span>
-                            </button>
-                        ))}
+                                {[...Array(12)].map((_, i) => <option key={i} value={`G${i+1}`}>G{i+1}</option>)}
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-[#004030] dark:text-[#D8C3A5] mb-2">{lang==='zh'?'學號':'Student ID'}</label>
+                            <input 
+                                type="text" 
+                                name="studentId" 
+                                value={exportData.studentId} 
+                                onChange={handleInputChange}
+                                placeholder="113212099" 
+                                className="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-700 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#D8C3A5]"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-[#004030] dark:text-[#D8C3A5] mb-2">{lang==='zh'?'姓名':'Name'}</label>
+                            <input 
+                                type="text" 
+                                name="name" 
+                                value={exportData.name} 
+                                onChange={handleInputChange}
+                                placeholder="Jimmy Lo" 
+                                className="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-700 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#D8C3A5]"
+                            />
+                        </div>
                     </div>
+                    <button 
+                        onClick={handleExportCSV}
+                        className="w-full sm:w-auto px-8 py-3 bg-[#004030] dark:bg-[#D8C3A5] text-[#D8C3A5] dark:text-[#004030] rounded-xl font-bold shadow-md hover:bg-[#002b20] dark:hover:bg-white transition-colors flex items-center justify-center gap-2 uppercase tracking-wider"
+                    >
+                        <Icon name="download" size={18} />
+                        {t.export_btn}
+                    </button>
                 </div>
             </div>
         );
@@ -1212,7 +1700,7 @@ const App = () => {
             {/* Main Application Area */}
             <div className="flex-1 flex flex-col md:flex-row w-full max-w-7xl mx-auto relative h-full">
                 
-                {/* Mobile Dropdown Menu (z-[100] & max-height with overflow-y-auto) */}
+                {/* Mobile Dropdown Menu */}
                 {isMobileMenuOpen && (
                     <div className="md:hidden fixed inset-0 z-[90] bg-black/50" onClick={() => setIsMobileMenuOpen(false)}></div>
                 )}
@@ -1303,15 +1791,19 @@ const App = () => {
             {/* Application Footer - Fixed RWD */}
             <footer className="fixed bottom-0 left-0 right-0 h-12 bg-[#004030] dark:bg-slate-950 border-t border-[#D8C3A5] z-50">
                 <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center gap-2">
-                    <div className="flex items-center gap-3 overflow-hidden">
-                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs truncate max-w-[50%]">{t.date} · {t.copyright}</span>
-                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs flex items-center gap-1 shrink-0">
-                            Architect:&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-[#D8C3A5] hover:text-white underline underline-offset-2 transition-colors truncate">Prof. Shihmin Lo</a>
-                        </span>
+                    <div className="flex items-center gap-2 overflow-hidden">
+                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs truncate">{t.web_version}: {t.date}</span>
+                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs hidden sm:inline">|</span>
+                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs truncate">{t.copyright}</span>
                     </div>
-                    <button onClick={scrollToTop} className="text-[#D8C3A5] hover:text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 uppercase tracking-wider transition-colors shrink-0 group">
-                        Top <Icon name="arrowUp" size={14} className="group-hover:-translate-y-0.5 transition-transform" />
-                    </button>
+                    <div className="flex items-center gap-4 shrink-0">
+                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs hidden sm:flex items-center gap-1">
+                            Architect:&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-[#D8C3A5] hover:text-white underline underline-offset-2 transition-colors truncate">Shihmin Lo</a>
+                        </span>
+                        <button onClick={scrollToTop} className="text-[#D8C3A5] hover:text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 uppercase tracking-wider transition-colors shrink-0 group">
+                            Top <Icon name="arrowUp" size={14} className="group-hover:-translate-y-0.5 transition-transform" />
+                        </button>
+                    </div>
                 </div>
             </footer>
         </div>
