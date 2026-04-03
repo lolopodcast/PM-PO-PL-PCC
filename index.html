@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>軟硬體專案管理架構深度對齊 | PMA</title>
+<title>HW/SW Product Management | PMA</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -53,7 +53,9 @@ const Icon = ({ name, size = 20, className = "" }) => {
         globe: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />,
         chevronRight: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />,
         arrowRight: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />,
-        volume: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10.5a2.5 2.5 0 000 5h2.5l5 5V3.5l-5 5H5z" />,
+        arrowUp: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />,
+        play: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />,
+        pause: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />,
         stop: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z M9 9h6v6H9z" />,
         users: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />,
         layers: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />,
@@ -78,15 +80,18 @@ const TOTAL_MODULES = 10;
 const contentData = {
     zh: {
         brand: "PMA",
+        headerTitle: "HW/SW Product Management",
         docTitle: "軟硬體專案管理架構深度對齊",
         subtitle: "組織設計與跨領域方法論統整",
         date: "2026年04月03日",
         copyright: "版權所有",
-        architect_url: "#",
+        architect_url: "https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo",
         nav_prev: "上一篇",
         nav_next: "下一篇",
         audio_play: "播放導覽",
-        audio_stop: "停止播放",
+        audio_pause: "暫停",
+        audio_resume: "繼續",
+        audio_stop: "停止",
         nav: [
             { id: "exec", title: "0. 執行摘要", icon: "star" },
             { id: "npd", title: "1. 新產品開發流程", icon: "layers" },
@@ -103,8 +108,7 @@ const contentData = {
             {
                 title: "0. 執行摘要 (Executive Summary)",
                 desc: "本紀錄系統化彙整了軟體工程與硬體工程在開發方法論與組織架構上的深度對齊。",
-                content: "當我們打破表面的職稱差異，探究其運作本質時，會發現硬體的複雜供應鏈衍生出了高度矩陣化的瀑布式組織（Waterfall & Matrix）；而軟體則因低修改成本，演化出以價值為驅動的敏捷式架構（Agile/Scrum）。本學習系統將引導您透徹理解這些方法論如何影響 PM、PO、PL 與 PCC 的權責與決策機制，為跨領域專案團隊提供一套強而有力的通用轉譯語言。",
-                tts: "零、執行摘要。本紀錄系統化彙整了軟體工程與硬體工程在開發方法論與組織架構上的深度對齊。探究其運作本質，硬體的複雜供應鏈衍生出瀑布式與矩陣化組織；而軟體則演化出以價值驅動的敏捷式架構。本系統將引導您理解這兩者對專案角色的影響，建立跨領域的通用管理語言。"
+                content: "當我們打破表面的職稱差異，探究其運作本質時，會發現硬體的複雜供應鏈衍生出了高度矩陣化的瀑布式組織（Waterfall & Matrix）；而軟體則因低修改成本，演化出以價值為驅動的敏捷式架構（Agile/Scrum）。本學習系統將引導您透徹理解這些方法論如何影響 PM、PO、PL 與 PCC 的權責與決策機制，為跨領域專案團隊提供一套強而有力的通用轉譯語言。"
             },
             {
                 title: "1. 新產品開發流程 (NPD Stage-Gate)",
@@ -115,13 +119,12 @@ const contentData = {
                     { title: "階段一：規劃與提案 (Plan & Proposal)", text: "涵蓋市場行銷與可行性分析，由 PM 與行銷業務主導，評估技術與財務風險，決定產品概念。" },
                     { title: "階段二：設計與執行 (Design & Execute)", text: "涵蓋產品設計與模具/工具製作，此時 PL 與研發工程師 (RD) 成為核心，進行規格展開與架構設計。" },
                     { title: "階段三：驗證與量產 (Validation & MP)", text: "工程驗證到最終上市，由專案協調員 (PCC) 協助跨部門資源整合，確保產線與品質達標。" }
-                ],
-                tts: "第一章、新產品開發流程。硬體專案遵循階段-關卡模型，分為三大階段。第一是規劃與提案，由產品經理主導市場評估。第二是設計與執行，專案負責人與研發團隊進行規格展開。第三是驗證與量產，透過專案協調員確保跨部門資源整合與上市準備。"
+                ]
             },
             {
                 title: "2. 專案管理與 PM 職能",
                 desc: "整合觀點：從產品開發流程，推導至產品經理所需具備的七大核心職能。",
-                image: "PM產品經理_Coggle_20240502.png",
+                image: "PM產品經理_Coggle_20250317.png",
                 imageAlt: "PM產品經理職能心智圖",
                 table: {
                     headers: ["開發階段", "對應核心職能", "教育構面"],
@@ -130,8 +133,7 @@ const contentData = {
                         { stage: "設計/工具製作", comp: "開發流程理解 (10%)、設計工具熟悉 (10%)", domain: "技術導向 (Technical-Oriented)" },
                         { stage: "工程/上市", comp: "團隊文化與領導力 (15%)、時程資源管理 (15%)", domain: "管理導向 (Management-Oriented)" }
                     ]
-                },
-                tts: "第二章、專案管理與產品經理職能。產品經理的職能隨著開發階段而變化。在市場分析期，著重於策略與商業導向；進入設計期，需要具備技術與流程理解力；在最終的工程與上市階段，則考驗團隊領導與時程資源的管理能力。"
+                }
             },
             {
                 title: "3. 軟體工程 Agile/Scrum",
@@ -140,8 +142,7 @@ const contentData = {
                     { title: "Scrum 核心角色", text: "Product Owner (PO) 決定產品價值與待辦清單順序；Scrum Master 確保流程順暢；開發團隊 (Developers) 負責實作產出。" },
                     { title: "反覆運算與交付", text: "透過 Sprint（衝刺期）進行短期且高頻的開發循環，每個 Sprint 結束皆需產出可用的潛在發布增量。" },
                     { title: "Agile vs. V-Model", text: "相較於傳統 V-Model 的嚴謹循序漸進與需求凍結，Agile 擁抱變更，透過持續回饋來修正方向，適用於需求變化快且修改成本低的軟體環境。" }
-                ],
-                tts: "第三章、軟體工程與敏捷開發。敏捷開發以使用者價值為核心。透過產品負責人 PO 決定待辦清單，開發團隊在短週期的衝刺中反覆交付增量。相較於傳統 V-Model，敏捷架構更能擁抱變更，非常適合修改成本較低的軟體開發環境。"
+                ]
             },
             {
                 title: "4. 硬體設計 Waterfall",
@@ -150,8 +151,7 @@ const contentData = {
                     { title: "線性且不可逆的流程", text: "從需求分析、系統設計、硬體實作、到各階段驗證（EVT、DVT、PVT）。一旦進入開模或打件階段，設計變更的代價極其高昂。" },
                     { title: "物理與供應鏈限制", text: "硬體開發深受物理世界的限制（如散熱、安規）以及供應鏈的制約（如零組件交期 Lead Time、起訂量 MOQ）。" },
                     { title: "驗證驅動", text: "與軟體的價值驅動不同，硬體在瀑布流的後期高度依賴嚴謹的可靠度測試與生產驗證，以確保進入量產後的良率。" }
-                ],
-                tts: "第四章、硬體設計與瀑布式開發。瀑布式開發是硬體的主流，從需求到驗證呈現線性流程。由於牽涉到實體開模與零件交期，設計變更的代價極高。因此，硬體開發深受物理限制與供應鏈制約，並且高度依賴嚴謹的驗證來確保量產良率。"
+                ]
             },
             {
                 title: "5. 角色與決策架構綜整",
@@ -163,8 +163,7 @@ const contentData = {
                         { level: "策略層", role: "PM (產品經理)", question: "做不做這個產品？", scope: "PM 解決 Sales：擋住外部商業干擾與客製化要求。" },
                         { level: "執行層", role: "PO / PL", question: "先做哪個功能？", scope: "PO/PL 搞定 RD：主導技術取捨，確保開發實作步調。" }
                     ]
-                },
-                tts: "第五章、角色與決策架構綜整。軟體的 PO 相當於硬體的 PL 加上 PCC。在決策上，策略層由產品經理主導，負責判斷商業價值並擋住業務端的壓力；執行層由 PO 或 PL 主導，負責技術取捨並帶領研發團隊克服實作困難。"
+                }
             },
             {
                 title: "6. 驅力與組織運作綜整",
@@ -173,8 +172,7 @@ const contentData = {
                     { type: "軟體 PO", focus: "價值驅動 (Value-driven)", detail: "追求「做對東西」，以商業影響優先。" },
                     { type: "硬體 PL", focus: "可行性驅動 (Feasibility)", detail: "受限於零件交期，追求「做得出來」，以成本與技術優先。" }
                 ],
-                quote: "PM 決定產品成功的方向 (Strategy)，PO/PL 決定產品如何被做出來 (Execution)。當執行遭遇無法克服的衝突時，升級至策略層由 PM 進行總體價值拍板。",
-                tts: "第六章、驅力與組織運作綜整。軟體開發以價值驅動，追求做對東西；硬體開發以可行性驅動，確保做得出來。跨領域的通用公式是：產品經理決定成功的方向，PO或PL決定如何實作；當發生重大衝突時，統一升級交由產品經理進行總體商業拍板。"
+                quote: "PM 決定產品成功的方向 (Strategy)，PO/PL 決定產品如何被做出來 (Execution)。當執行遭遇無法克服的衝突時，升級至策略層由 PM 進行總體價值拍板。"
             },
             {
                 title: "7. 互動實驗室",
@@ -186,8 +184,7 @@ const contentData = {
                         { title: "B. 升級 (Escalate) 交由 PM 進行總體商業拍板", correct: true, feedback: "完全正確！各單位 PCC 看重局部 KPI，唯有 PM 具備全域視角，能依據最終的市場承諾與利潤策略做出「總體最佳化」的妥協決策。" },
                         { title: "C. 導入 Agile 流程，重新修改需求", correct: false, feedback: "錯誤。硬體物料採購具有嚴格的 Lead Time，隨意變更會導致產線停擺，無法單純用軟體敏捷思維來解套。" }
                     ]
-                },
-                tts: "第七章、互動實驗室。情境題：當採購部門與研發部門因為成本與技術風險發生嚴重衝突，且互不相讓時，該怎麼辦？正確的作法是：將衝突升級，交由具備全域視角的產品經理，依據總體商業策略進行最終拍板。"
+                }
             },
             {
                 title: "8. 外部資源",
@@ -196,28 +193,29 @@ const contentData = {
                     { title: "敏捷軟體開發宣言 (Agile Manifesto)", desc: "了解軟體工程價值驅動的核心精神。", url: "https://agilemanifesto.org/iso/zhcht/manifesto.html" },
                     { title: "Scrum 指南 (The Scrum Guide)", desc: "深入了解 PO 與 Scrum 團隊的官方定義。", url: "https://scrumguides.org/" },
                     { title: "PMI 專案管理知識體系 (PMBOK)", desc: "探討大型開發常見的矩陣組織與整合管理。", url: "https://www.pmi.org/" }
-                ],
-                tts: "第八章、外部資源。系統為您整理了包括敏捷宣言、Scrum官方指南，以及PMI專案管理知識體系等權威資源，協助您進一步深化跨領域的專案管理知識。"
+                ]
             },
             {
                 title: "9. 學習歷程",
                 desc: "追蹤您的學習進度，掌握完整的跨領域管理框架：",
-                progressTitle: "課程完成度",
-                tts: "第九章、學習歷程。您可以在此確認每個章節的閱讀狀況。持續追蹤進度，有助於您徹底掌握軟硬體開發的底層邏輯與通用管理架構。"
+                progressTitle: "課程完成度"
             }
         ]
     },
     en: {
         brand: "PMA",
+        headerTitle: "HW/SW Product Management",
         docTitle: "HW/SW PM Architecture Alignment",
         subtitle: "Organizational Design & Methodologies",
         date: "April 03, 2026",
         copyright: "All Rights Reserved",
-        architect_url: "#",
+        architect_url: "https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo",
         nav_prev: "Previous",
         nav_next: "Next",
-        audio_play: "Play Audio",
-        audio_stop: "Stop Audio",
+        audio_play: "Play",
+        audio_pause: "Pause",
+        audio_resume: "Resume",
+        audio_stop: "Stop",
         nav: [
             { id: "exec", title: "0. Exec Summary", icon: "star" },
             { id: "npd", title: "1. NPD Process", icon: "layers" },
@@ -234,8 +232,7 @@ const contentData = {
             {
                 title: "0. Executive Summary",
                 desc: "This record systematically integrates the deep alignment of development methodologies and organizational structures between software and hardware engineering.",
-                content: "When we look past superficial job titles, we find that the complex hardware supply chain creates highly matrixed Waterfall organizations; whereas software evolves into value-driven Agile architectures due to low modification costs. This learning system will guide you through how these methodologies affect PM, PO, PL, and PCC responsibilities and decisions, providing a powerful universal translation language for cross-domain teams.",
-                tts: "Chapter zero. Executive Summary. This record integrates the methodologies and structures of software and hardware engineering. It explains how hardware relies on matrixed Waterfall processes, while software thrives on value-driven Agile architectures. This system bridges the gap, providing a universal management language for cross-domain projects."
+                content: "When we look past superficial job titles, we find that the complex hardware supply chain creates highly matrixed Waterfall organizations; whereas software evolves into value-driven Agile architectures due to low modification costs. This learning system will guide you through how these methodologies affect PM, PO, PL, and PCC responsibilities and decisions, providing a powerful universal translation language for cross-domain teams."
             },
             {
                 title: "1. New Product Development (Stage-Gate)",
@@ -246,13 +243,12 @@ const contentData = {
                     { title: "Phase 1: Plan & Proposal", text: "Covers marketing and feasibility. Led by PM and Sales to evaluate technical and financial risks." },
                     { title: "Phase 2: Design & Execute", text: "Product design and tooling. PL and R&D engineers unfold specifications and architectures." },
                     { title: "Phase 3: Validation & MP", text: "Engineering verification to launch. PCCs assist in cross-department integration to ensure quality and production capacity." }
-                ],
-                tts: "Chapter one. New Product Development. Hardware projects use the Stage-Gate model. Phase one focuses on planning and feasibility led by the PM. Phase two involves design and execution led by the Project Leader. Phase three covers validation and mass production, coordinated by project coordinators across departments."
+                ]
             },
             {
                 title: "2. PM Competencies",
                 desc: "Integration: Deriving the seven core competencies of a Product Manager from the development process.",
-                image: "PM產品經理_Coggle_20240502.png",
+                image: "PM產品經理_Coggle_20250317.png",
                 imageAlt: "PM Competencies Mindmap",
                 table: {
                     headers: ["Development Stage", "Core Competencies", "Education Domain"],
@@ -261,8 +257,7 @@ const contentData = {
                         { stage: "Product Design / Tooling", comp: "PI Process (10%), PDD Tools (10%)", domain: "Technical-Oriented" },
                         { stage: "Engineering / Launch", comp: "Culture & Leadership (15%), PI Management (15%)", domain: "Management-Oriented" }
                     ]
-                },
-                tts: "Chapter two. Product Manager Competencies. PM skills evolve with the project. The feasibility stage requires business and strategy focus. The design stage demands technical and process understanding. Finally, the engineering and launch stage tests leadership and resource management skills."
+                }
             },
             {
                 title: "3. Software Agile / Scrum",
@@ -271,8 +266,7 @@ const contentData = {
                     { title: "Core Scrum Roles", text: "The PO prioritizes the backlog. The Scrum Master ensures process flow. Developers execute the work." },
                     { title: "Iterative Delivery", text: "Short, high-frequency development cycles (Sprints) produce usable, potentially releasable increments." },
                     { title: "Agile vs. V-Model", text: "Unlike the rigid V-Model, Agile embraces change through continuous feedback, thriving in software where change costs are low." }
-                ],
-                tts: "Chapter three. Software Agile and Scrum. Agile focuses on user value and iterative delivery. The Product Owner prioritizes tasks, while Developers build increments during short Sprints. Unlike the rigid V-Model, Agile embraces changing requirements, taking advantage of software's low modification costs."
+                ]
             },
             {
                 title: "4. Hardware Waterfall",
@@ -281,8 +275,7 @@ const contentData = {
                     { title: "Linear & Irreversible", text: "From requirements to EVT/DVT/PVT. Once tooling or board placement begins, changes become extremely costly." },
                     { title: "Physical Constraints", text: "Heavily restricted by physics (e.g., thermals) and supply chain issues (e.g., component lead times, MOQ)." },
                     { title: "Verification Driven", text: "Unlike software's value-driven approach, hardware relies heavily on strict reliability and production validation to secure mass production yield rates." }
-                ],
-                tts: "Chapter four. Hardware Waterfall. Waterfall is standard for hardware due to its linear nature. Physical constraints and supply chain lead times make design changes highly expensive. Therefore, hardware relies heavily on rigorous validation phases to ensure successful mass production."
+                ]
             },
             {
                 title: "5. Synthesized Roles & Decisions",
@@ -294,8 +287,7 @@ const contentData = {
                         { level: "Strategic", role: "PM", question: "Build it or not?", scope: "PM handles Sales: blocks external interference and custom requests." },
                         { level: "Tactical", role: "PO / PL", question: "What to build first?", scope: "PO/PL manages RD: leads tech trade-offs to keep dev rhythm." }
                     ]
-                },
-                tts: "Chapter five. Synthesized Roles. A Software PO acts like a Hardware PL combined with a PCC. Strategically, the PM decides what to build and handles external pressures. Tactically, the PO or PL decides execution order and manages engineering trade-offs."
+                }
             },
             {
                 title: "6. Synthesized Matrix & Drivers",
@@ -304,8 +296,7 @@ const contentData = {
                     { type: "Software PO", focus: "Value-driven", detail: "Focuses on 'building the right thing', prioritizing business impact." },
                     { type: "Hardware PL", focus: "Feasibility-driven", detail: "Restricted by supply chains, focuses on 'getting it built' with cost/tech priority." }
                 ],
-                quote: "The PM decides the direction of product success (Strategy), while the PO/PL decides how it gets built step-by-step (Execution). When conflicts escalate, the PM makes the global value call.",
-                tts: "Chapter six. Synthesized Drivers. Software POs are value-driven, while hardware PLs are feasibility-driven. The universal formula is: the PM sets the strategic direction, and the PO or PL handles execution. Critical conflicts are escalated to the PM for a global business decision."
+                quote: "The PM decides the direction of product success (Strategy), while the PO/PL decides how it gets built step-by-step (Execution). When conflicts escalate, the PM makes the global value call."
             },
             {
                 title: "7. Interactive Lab",
@@ -317,8 +308,7 @@ const contentData = {
                         { title: "B. Escalate to the PM for a global business decision.", correct: true, feedback: "Correct! Department PCCs look at local KPIs. Only the PM has the global view to make a compromise based on final market commitments and profit strategy." },
                         { title: "C. Switch to Agile to rewrite requirements.", correct: false, feedback: "Incorrect. Hardware lead times are strict. You cannot solve physical supply issues purely with software Agile thinking." }
                     ]
-                },
-                tts: "Chapter seven. Interactive Lab. Scenario: When Procurement and R&D clash over cost versus technical risk, and refuse to compromise, what happens? The correct action is to escalate the issue to the Product Manager, who makes the final call based on overall business strategy and profit goals."
+                }
             },
             {
                 title: "8. External Resources",
@@ -327,14 +317,12 @@ const contentData = {
                     { title: "Agile Manifesto", desc: "Understand the core spirit of value-driven software engineering.", url: "https://agilemanifesto.org/" },
                     { title: "The Scrum Guide", desc: "Deep dive into PO definitions.", url: "https://scrumguides.org/" },
                     { title: "PMI PMBOK Guide", desc: "Explore Matrix Organizations and integration management.", url: "https://www.pmi.org/" }
-                ],
-                tts: "Chapter eight. External Resources. We have compiled authoritative resources including the Agile Manifesto, Scrum Guide, and PMI's Project Management Body of Knowledge to deepen your expertise."
+                ]
             },
             {
                 title: "9. Learning Journey",
                 desc: "Track your progress and master the complete framework:",
-                progressTitle: "Course Completion",
-                tts: "Chapter nine. Learning Journey. Track your reading progress here to ensure you fully master the underlying logic and universal management frameworks of cross-domain development."
+                progressTitle: "Course Completion"
             }
         ]
     }
@@ -347,7 +335,7 @@ const App = () => {
     const [module, setModule] = useState(0); 
     const [visited, setVisited] = useState(Array(TOTAL_MODULES).fill(false));
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [ttsState, setTtsState] = useState('idle'); // 'idle', 'playing', 'paused'
     
     const contentRef = useRef(null);
     const menuRef = useRef(null);
@@ -376,14 +364,22 @@ const App = () => {
         };
     }, [isMobileMenuOpen]);
 
-    // Track progress & scroll top
+    // Scroll to Top Utility
+    const scrollToTop = () => {
+        if (contentRef.current) {
+            contentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Track progress & scroll top on module change
     useEffect(() => {
         setVisited(prev => {
             const next = [...prev];
             next[module] = true;
             return next;
         });
-        if(contentRef.current) contentRef.current.scrollTop = 0;
+        scrollToTop();
         stopTTS();
     }, [module, lang]);
 
@@ -391,34 +387,65 @@ const App = () => {
     const toggleLang = () => setLang(lang === 'zh' ? 'en' : 'zh');
 
     // --- Web Speech API (TTS) ---
-    const playTTS = () => {
+    const generateFullText = (mod) => {
+        let parts = [mod.title, mod.desc];
+        if (mod.content) parts.push(mod.content);
+        if (mod.points) mod.points.forEach((p, i) => parts.push(`第${i+1}點：${p.title}。${p.text}`));
+        if (mod.table) {
+            parts.push(lang === 'zh' ? '表格重點整理：' : 'Table Summary:');
+            mod.table.rows.forEach(r => {
+                const k = r.level || r.stage;
+                const v = r.role || r.comp;
+                const s = r.scope || r.domain;
+                parts.push(`${k}，負責角色為${v}。涵蓋範疇：${s}。`);
+            });
+        }
+        if (mod.cards) mod.cards.forEach(c => parts.push(`情境：${c.front}。應對：${c.back}，${c.backDesc}`));
+        if (mod.nodes) mod.nodes.forEach(n => parts.push(`${n.title}。${n.desc}`));
+        if (mod.comparisons) mod.comparisons.forEach(c => parts.push(`${c.type}，主要考量為${c.focus}。${c.detail}`));
+        if (mod.quote) parts.push(`總結論點：${mod.quote}`);
+        if (mod.quiz) {
+            parts.push(`互動實驗室情境題：${mod.quiz.question}`);
+            mod.quiz.options.forEach((o, i) => parts.push(`選項 ${String.fromCharCode(65+i)}：${o.title}。`));
+        }
+        if (mod.links) {
+            parts.push(lang === 'zh' ? '推薦外部資源：' : 'External Resources:');
+            mod.links.forEach(l => parts.push(`${l.title}。${l.desc}`));
+        }
+        if (mod.progressTitle) parts.push(mod.progressTitle);
+        return parts.join(' ');
+    };
+
+    const handleTtsEnd = () => setTtsState('idle');
+
+    const playPauseTTS = () => {
         if (!('speechSynthesis' in window)) {
             alert(lang === 'zh' ? '您的瀏覽器不支援語音導覽功能。' : 'Your browser does not support Speech Synthesis.');
             return;
         }
-        window.speechSynthesis.cancel();
-        if (isPlaying) {
-            setIsPlaying(false);
-            return;
+        
+        if (ttsState === 'playing') {
+            window.speechSynthesis.pause();
+            setTtsState('paused');
+        } else if (ttsState === 'paused') {
+            window.speechSynthesis.resume();
+            setTtsState('playing');
+        } else {
+            window.speechSynthesis.cancel();
+            const text = generateFullText(m);
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang === 'zh' ? 'zh-TW' : 'en-US';
+            utterance.rate = 1.0;
+            utterance.onend = handleTtsEnd;
+            utterance.onerror = handleTtsEnd;
+            window.speechSynthesis.speak(utterance);
+            setTtsState('playing');
         }
-        
-        const textToRead = m.tts || m.desc; 
-        const utterance = new SpeechSynthesisUtterance(textToRead);
-        utterance.lang = lang === 'zh' ? 'zh-TW' : 'en-US';
-        utterance.rate = 1.0;
-        
-        utterance.onend = () => setIsPlaying(false);
-        utterance.onerror = () => setIsPlaying(false);
-        
-        setIsPlaying(true);
-        window.speechSynthesis.speak(utterance);
     };
 
     const stopTTS = () => {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-        }
-        setIsPlaying(false);
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        setTtsState('idle');
     };
 
     // --- Content Renderers ---
@@ -429,6 +456,28 @@ const App = () => {
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed">{m.desc}</p>
             <div className="bg-[#D8C3A5]/20 dark:bg-slate-800 p-6 md:p-8 rounded-2xl border-l-4 border-[#004030] dark:border-[#D8C3A5] shadow-sm">
                 <p className="text-base text-slate-700 dark:text-slate-300 leading-loose">{m.content}</p>
+            </div>
+            
+            {/* Quick Links to Modules 1-6 */}
+            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
+                <h3 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5] mb-4 flex items-center gap-2">
+                    <Icon name="layers" size={24} />
+                    {lang === 'zh' ? '主題分頁 1-6' : 'Theme Modules 1-6'}
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+                    {t.nav.slice(1, 7).map((item, idx) => (
+                        <button 
+                            key={item.id}
+                            onClick={() => { setModule(idx + 1); scrollToTop(); }}
+                            className="flex items-center p-3 sm:p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-[#004030] dark:hover:border-[#D8C3A5] hover:shadow-md transition-all text-left group"
+                        >
+                            <div className="bg-[#004030]/10 dark:bg-slate-700 p-2 rounded-lg mr-3 group-hover:bg-[#004030] group-hover:text-[#D8C3A5] transition-colors text-[#004030] dark:text-[#D8C3A5] shrink-0">
+                                <Icon name={item.icon} size={20} />
+                            </div>
+                            <span className="font-bold text-sm text-slate-700 dark:text-slate-200 group-hover:text-[#004030] dark:group-hover:text-[#D8C3A5] line-clamp-2">{item.title}</span>
+                        </button>
+                    ))}
+                </div>
             </div>
         </div>
     );
@@ -701,30 +750,60 @@ const App = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col pt-16 font-sans">
+        <div className="min-h-screen flex flex-col pt-16 pb-12 font-sans bg-slate-50 dark:bg-slate-900 relative">
             {/* Header - Fixed & Never Moving */}
             <header className="fixed top-0 left-0 right-0 h-16 z-50 bg-[#004030] shadow-md border-b border-[#D8C3A5]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex justify-between items-center">
-                    <div className="flex items-center">
-                        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 -ml-2 rounded-md text-[#D8C3A5] hover:bg-white/10 mr-2 focus:outline-none">
+                    {/* Left: Brand + Title mapped to scroll to top */}
+                    <div className="flex items-center min-w-0 flex-1">
+                        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 -ml-2 rounded-md text-[#D8C3A5] hover:bg-white/10 mr-2 focus:outline-none shrink-0">
                             <Icon name={isMobileMenuOpen ? "x" : "menu"} size={24} />
                         </button>
-                        <span className="font-serif font-black text-xl text-[#D8C3A5] tracking-widest truncate">{t.brand}</span>
+                        <div className="flex items-baseline cursor-pointer truncate hover:opacity-80 transition-opacity" onClick={scrollToTop} title={lang === 'zh' ? '回到頂端' : 'Scroll to Top'}>
+                            <span className="font-serif font-black text-xl text-[#D8C3A5] tracking-widest shrink-0">{t.brand}</span>
+                            <span className="ml-3 text-[#D8C3A5]/90 font-bold text-sm sm:text-base truncate hidden sm:inline">{t.headerTitle}</span>
+                        </div>
                     </div>
-                    <div className="flex items-center space-x-2 md:space-x-4 shrink-0">
-                        <button onClick={toggleLang} className="flex items-center px-3 py-1.5 rounded-full bg-white/10 text-[#D8C3A5] hover:bg-white/20 transition-colors text-sm font-medium border border-[#D8C3A5]/30">
-                            <Icon name="globe" size={16} className="mr-1.5" />
-                            {lang === 'zh' ? 'EN' : '中文'}
+                    
+                    {/* Right: TTS + Global Toggles */}
+                    <div className="flex items-center space-x-1 sm:space-x-3 shrink-0 pl-2">
+                        {/* Audio Guide Controls */}
+                        <div className="flex items-center space-x-1 mr-1">
+                            <button 
+                                onClick={playPauseTTS} 
+                                className={`flex items-center gap-1 sm:gap-1.5 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold transition-all shadow-sm border ${ttsState === 'playing' ? 'bg-[#D8C3A5]/20 text-[#D8C3A5] border-[#D8C3A5]/50' : 'bg-white/10 text-[#D8C3A5] border-[#D8C3A5]/30 hover:bg-white/20'}`}
+                                title={ttsState === 'playing' ? t.audio_pause : ttsState === 'paused' ? t.audio_resume : t.audio_play}
+                            >
+                                <Icon name={ttsState === 'playing' ? 'pause' : 'play'} size={14} />
+                                <span className="hidden lg:inline">
+                                    {ttsState === 'playing' ? t.audio_pause : ttsState === 'paused' ? t.audio_resume : t.audio_play}
+                                </span>
+                            </button>
+                            {ttsState !== 'idle' && (
+                                <button 
+                                    onClick={stopTTS} 
+                                    className="flex items-center gap-1 sm:gap-1.5 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold transition-all shadow-sm border bg-rose-500/20 text-rose-300 border-rose-500/50 hover:bg-rose-500/40"
+                                    title={t.audio_stop}
+                                >
+                                    <Icon name="stop" size={14} />
+                                    <span className="hidden lg:inline">{t.audio_stop}</span>
+                                </button>
+                            )}
+                        </div>
+
+                        <button onClick={toggleLang} className="flex items-center px-2 sm:px-3 py-1.5 rounded-full bg-white/10 text-[#D8C3A5] hover:bg-white/20 transition-colors text-xs sm:text-sm font-medium border border-[#D8C3A5]/30">
+                            <Icon name="globe" size={14} className="sm:mr-1.5" />
+                            <span className="hidden sm:inline">{lang === 'zh' ? 'EN' : '中'}</span>
                         </button>
-                        <button onClick={toggleTheme} className="p-2 rounded-full text-[#D8C3A5] hover:bg-white/10 transition-colors border border-transparent hover:border-[#D8C3A5]/30">
-                            <Icon name={theme === 'dark' ? "sun" : "moon"} size={20} />
+                        <button onClick={toggleTheme} className="p-1.5 sm:p-2 rounded-full text-[#D8C3A5] hover:bg-white/10 transition-colors border border-transparent hover:border-[#D8C3A5]/30">
+                            <Icon name={theme === 'dark' ? "sun" : "moon"} size={18} />
                         </button>
                     </div>
                 </div>
             </header>
 
             {/* Main Application Area */}
-            <div className="flex-1 flex flex-col md:flex-row w-full max-w-7xl mx-auto relative">
+            <div className="flex-1 flex flex-col md:flex-row w-full max-w-7xl mx-auto relative h-full">
                 
                 {/* Mobile Dropdown Menu (z-[100] & max-height with overflow-y-auto) */}
                 {isMobileMenuOpen && (
@@ -732,7 +811,7 @@ const App = () => {
                 )}
                 <div 
                     ref={menuRef}
-                    className={`md:hidden fixed top-16 left-0 right-0 bg-white dark:bg-slate-800 z-[100] shadow-xl border-b border-slate-200 dark:border-slate-700 transition-all duration-300 max-h-[calc(100vh-5rem)] overflow-y-auto origin-top ${isMobileMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0 pointer-events-none'}`}
+                    className={`md:hidden fixed top-16 left-0 right-0 bg-white dark:bg-slate-800 z-[100] shadow-xl border-b border-slate-200 dark:border-slate-700 transition-all duration-300 max-h-[calc(100vh-7rem)] overflow-y-auto origin-top ${isMobileMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0 pointer-events-none'}`}
                 >
                     <nav className="p-4 space-y-2">
                         {t.nav.map((item, idx) => {
@@ -756,7 +835,7 @@ const App = () => {
                 </div>
 
                 {/* Desktop Sidebar Navigation */}
-                <aside className="hidden md:block w-72 shrink-0 p-4 lg:p-6 sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
+                <aside className="hidden md:block w-72 shrink-0 p-4 lg:p-6 sticky top-16 h-[calc(100vh-7rem)] overflow-y-auto">
                     <nav className="space-y-1">
                         {t.nav.map((item, idx) => {
                             const isActive = module === idx;
@@ -780,7 +859,7 @@ const App = () => {
                 </aside>
 
                 {/* Main Content Area */}
-                <main ref={contentRef} className="flex-1 min-w-0 p-4 sm:p-6 md:p-8 scroll-smooth overflow-y-auto">
+                <main ref={contentRef} className="flex-1 min-w-0 p-4 sm:p-6 md:p-8 scroll-smooth overflow-y-auto h-[calc(100vh-7rem)]">
                     
                     {/* Header Text for the Page */}
                     <div className="mb-6 md:mb-8 pb-4 border-b border-slate-200 dark:border-slate-700">
@@ -790,21 +869,8 @@ const App = () => {
 
                     {/* Content Card */}
                     <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-4 sm:p-6 md:p-8 relative">
-                        {/* Audio TTS Button */}
-                        <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
-                            <button 
-                                onClick={playTTS} 
-                                className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all shadow-sm border ${isPlaying ? 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400' : 'bg-slate-100 text-[#004030] border-slate-200 hover:bg-[#D8C3A5]/20 dark:bg-slate-700 dark:text-[#D8C3A5] dark:border-slate-600'}`}
-                            >
-                                <Icon name={isPlaying ? "stop" : "volume"} size={16} />
-                                <span className="hidden sm:inline">{isPlaying ? t.audio_stop : t.audio_play}</span>
-                            </button>
-                        </div>
-
-                        <div className="mt-8 sm:mt-0 pt-4 sm:pt-0">
-                            <h2 className="text-xl md:text-2xl font-bold mb-6 text-[#004030] dark:text-[#D8C3A5] border-b-2 border-[#D8C3A5] inline-block pb-2 pr-4">{m.title}</h2>
-                            {renderContent()}
-                        </div>
+                        <h2 className="text-xl md:text-2xl font-bold mb-6 text-[#004030] dark:text-[#D8C3A5] border-b-2 border-[#D8C3A5] inline-block pb-2 pr-4">{m.title}</h2>
+                        {renderContent()}
                         
                         {/* Footer Navigation (Next/Prev Buttons) */}
                         <div className="mt-10 pt-6 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center shrink-0">
@@ -827,13 +893,18 @@ const App = () => {
                 </main>
             </div>
 
-            {/* Application Footer - Ensures No Overflow on Mobile */}
-            <footer className="mt-auto bg-[#004030] dark:bg-slate-950 border-t border-[#D8C3A5]">
-                <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-2">
-                    <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs truncate max-w-[50%]">{t.date} · {t.copyright}</span>
-                    <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs flex items-center gap-1 shrink-0">
-                        Architect:&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-[#D8C3A5] hover:text-white underline underline-offset-2 transition-colors">Prof. Shihmin Lo</a>
-                    </span>
+            {/* Application Footer - Fixed RWD */}
+            <footer className="fixed bottom-0 left-0 right-0 h-12 bg-[#004030] dark:bg-slate-950 border-t border-[#D8C3A5] z-50">
+                <div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center gap-2">
+                    <div className="flex items-center gap-3 overflow-hidden">
+                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs truncate max-w-[50%]">{t.date} · {t.copyright}</span>
+                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs flex items-center gap-1 shrink-0">
+                            Architect:&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-[#D8C3A5] hover:text-white underline underline-offset-2 transition-colors truncate">Prof. Shihmin Lo</a>
+                        </span>
+                    </div>
+                    <button onClick={scrollToTop} className="text-[#D8C3A5] hover:text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 uppercase tracking-wider transition-colors shrink-0 group">
+                        Top <Icon name="arrowUp" size={14} className="group-hover:-translate-y-0.5 transition-transform" />
+                    </button>
                 </div>
             </footer>
         </div>
