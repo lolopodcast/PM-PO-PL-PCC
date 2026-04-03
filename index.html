@@ -38,7 +38,6 @@ tailwind.config={
 .rotate-y-180 { transform: rotateY(180deg); }
 .flip-card-inner { transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
 .flip-card:hover .flip-card-inner, .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
-/* Custom Scrollbar for a cleaner look */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -61,6 +60,8 @@ const Icon = ({ name, size = 20, className = "" }) => {
         globe: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />,
         chevronRight: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />,
         arrowRight: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />,
+        volume: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10.5a2.5 2.5 0 000 5h2.5l5 5V3.5l-5 5H5z" />,
+        stop: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z M9 9h6v6H9z" />,
         users: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />,
         layers: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />,
         shield: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />,
@@ -80,203 +81,267 @@ const Icon = ({ name, size = 20, className = "" }) => {
 };
 
 // --- Data & Translations ---
-const TOTAL_MODULES = 9;
+const TOTAL_MODULES = 10;
 const contentData = {
     zh: {
         brand: "PM-ALIGN",
         docTitle: "軟硬體專案管理架構深度對齊",
-        subtitle: "軟體工程 (Agile/Scrum) vs. 硬體工程 (NPD/Matrix)",
+        subtitle: "組織設計與跨領域方法論統整",
         date: "2026年04月03日",
         copyright: "版權所有",
         architect_url: "#",
         nav_prev: "上一篇",
         nav_next: "下一篇",
+        audio_play: "播放語音導覽",
+        audio_stop: "停止播放",
         nav: [
-            { id: "intro", title: "一、角色核心對應", icon: "users" },
-            { id: "decision", title: "二、決策權分層設計", icon: "layers" },
-            { id: "conflict", title: "三、衝突解決防守陣線", icon: "shield" },
-            { id: "matrix", title: "四、矩陣組織運作", icon: "matrix" },
-            { id: "driver", title: "五、驅動力本質差異", icon: "zap" },
-            { id: "conclusion", title: "六、跨領域通用公式", icon: "checkCircle" },
-            { id: "lab", title: "七、互動實驗室", icon: "flask" },
-            { id: "resources", title: "八、外部資源", icon: "link" },
-            { id: "journey", title: "九、學習歷程", icon: "star" }
+            { id: "exec", title: "0. 執行摘要", icon: "star" },
+            { id: "npd", title: "1. 新產品開發流程", icon: "layers" },
+            { id: "pm_comp", title: "2. 產品經理職能", icon: "users" },
+            { id: "agile", title: "3. 軟體工程 Agile/Scrum", icon: "zap" },
+            { id: "waterfall", title: "4. 硬體設計 Waterfall", icon: "matrix" },
+            { id: "syn1", title: "5. 角色與決策架構綜整", icon: "shield" },
+            { id: "syn2", title: "6. 驅力與組織運作綜整", icon: "checkCircle" },
+            { id: "lab", title: "7. 互動實驗室", icon: "flask" },
+            { id: "resources", title: "8. 外部資源", icon: "link" },
+            { id: "journey", title: "9. 學習歷程", icon: "star" }
         ],
         modules: [
             {
-                title: "一、角色核心對應關係",
-                desc: "透過「職能板塊 (Functional Blocks)」的拆解，我們發現軟硬體執行層的架構存在以下映射關係：",
-                equation: { left: "軟體 PO", equals: "≈", right1: "硬體 PL", right1_sub: "(Owner 型)", right2: "硬體 PCC", right2_sub: "(協調支援)" },
+                title: "0. 執行摘要 (Executive Summary)",
+                desc: "本紀錄系統化彙整了軟體工程與硬體工程在開發方法論與組織架構上的深度對齊。",
+                content: "當我們打破表面的職稱差異，探究其運作本質時，會發現硬體的複雜供應鏈衍生出了高度矩陣化的瀑布式組織（Waterfall & Matrix）；而軟體則因低修改成本，演化出以價值為驅動的敏捷式架構（Agile/Scrum）。本學習系統將引導您透徹理解這些方法論如何影響 PM、PO、PL 與 PCC 的權責與決策機制，為跨領域專案團隊提供一套強而有力的通用轉譯語言。",
+                tts: "零、執行摘要。本紀錄系統化彙整了軟體工程與硬體工程在開發方法論與組織架構上的深度對齊。探究其運作本質，硬體的複雜供應鏈衍生出瀑布式與矩陣化組織；而軟體則演化出以價值驅動的敏捷式架構。本系統將引導您理解這兩者對專案角色的影響，建立跨領域的通用管理語言。"
+            },
+            {
+                title: "1. 新產品開發流程 (NPD Stage-Gate)",
+                desc: "新產品開發 (NPD) 遵循階段-關卡模型，確保在進入下一階段前，符合商業、技術與資源標準。",
+                image: "NPD_Stage-Gate Model_Coggle_SML 20240312.png",
+                imageAlt: "",
                 points: [
-                    { title: "軟體的職能集中化", text: "在 Scrum 模型中，執行決策（Tactical Decision）、進度協調與需求管理（Backlog）高度集中於 PO。" },
-                    { title: "硬體的職能專業分工", text: "硬體因牽涉實體供應鏈、BOM 表與製造，複雜度極高。因此將執行職能拆分：由 PL 專注於技術與規格決策，行政協調重擔則由 PCC 負責。" }
-                ]
+                    { title: "階段一：規劃與提案 (Plan & Proposal)", text: "涵蓋市場行銷與可行性分析，由 PM 與行銷業務主導，評估技術與財務風險，決定產品概念。" },
+                    { title: "階段二：設計與執行 (Design & Execute)", text: "涵蓋產品設計與模具/工具製作，此時 PL 與研發工程師 (RD) 成為核心，進行規格展開與架構設計。" },
+                    { title: "階段三：驗證與量產 (Validation & MP)", text: "工程驗證到最終上市，由專案協調員 (PCC) 協助跨部門資源整合，確保產線與品質達標。" }
+                ],
+                tts: "第一章、新產品開發流程。硬體專案遵循階段-關卡模型，分為三大階段。第一是規劃與提案，由產品經理主導市場評估。第二是設計與執行，專案負責人與研發團隊進行規格展開。第三是驗證與量產，透過專案協調員確保跨部門資源整合與上市準備。"
             },
             {
-                title: "二、決策權的分層設計",
-                desc: "決策並非全由單一角色掌握，而是依據影響範圍分為策略層與執行層：",
+                title: "2. 專案管理與 PM 職能",
+                desc: "整合觀點：從產品開發流程，推導至產品經理所需具備的七大核心職能。",
+                image: "PM產品經理_Coggle_20240502.png",
+                imageAlt: "",
                 table: {
-                    headers: ["決策層級", "主導角色", "核心提問", "決策範疇"],
+                    headers: ["開發階段", "對應核心職能", "教育構面"],
                     rows: [
-                        { level: "策略層 (Strategic)", role: "PM (Product Manager)", question: "做不做這個產品？", scope: "市場定位、商業模式、定價策略與總體 Roadmap。" },
-                        { level: "執行層 (Tactical)", role: "PO / PL", question: "先做哪個功能？", scope: "User Story 排序、MVP 範圍裁切與開發資源配置。" }
+                        { stage: "市場/可行性分析", comp: "策略 (20%)、產品組合管理 (20%)、市場研究 (10%)", domain: "商業導向 (Business-Oriented)" },
+                        { stage: "設計/工具製作", comp: "開發流程理解 (10%)、設計工具熟悉 (10%)", domain: "技術導向 (Technical-Oriented)" },
+                        { stage: "工程/上市", comp: "團隊文化與領導力 (15%)、時程資源管理 (15%)", domain: "管理導向 (Management-Oriented)" }
                     ]
-                }
+                },
+                tts: "第二章、專案管理與產品經理職能。產品經理的職能隨著開發階段而變化。在市場分析期，著重於策略與商業導向；進入設計期，需要具備技術與流程理解力；在最終的工程與上市階段，則考驗團隊領導與時程資源的管理能力。"
             },
             {
-                title: "三、衝突解決與防守陣線",
-                desc: "當面臨外部需求插單與內部開發瓶頸時，組織的防守應分工如下。點擊卡片查看解析：",
-                cards: [
-                    { front: "當 Sales 強勢要求插單...", back: "PM 解決 Sales！", backDesc: "擋住業務或行銷的短期客製化要求，守住產品標準化與總體策略底線。" },
-                    { front: "當 RD 表示技術卡關做不完...", back: "PO/PL 搞定 RD！", backDesc: "將商業語言轉譯為技術規格。主導技術上的妥協方案 (Trade-off)，確保開發步調。" }
-                ]
+                title: "3. 軟體工程 Agile/Scrum",
+                desc: "敏捷開發 (Agile) 是一種以使用者價值為核心，強調迭代、漸進式交付的軟體開發架構。",
+                points: [
+                    { title: "Scrum 核心角色", text: "Product Owner (PO) 決定產品價值與待辦清單順序；Scrum Master 確保流程順暢；開發團隊 (Developers) 負責實作產出。" },
+                    { title: "反覆運算與交付", text: "透過 Sprint（衝刺期）進行短期且高頻的開發循環，每個 Sprint 結束皆需產出可用的潛在發布增量。" },
+                    { title: "Agile vs. V-Model", text: "相較於傳統 V-Model 的嚴謹循序漸進與需求凍結，Agile 擁抱變更，透過持續回饋來修正方向，適用於需求變化快且修改成本低的軟體環境。" }
+                ],
+                tts: "第三章、軟體工程與敏捷開發。敏捷開發以使用者價值為核心。透過產品負責人 PO 決定待辦清單，開發團隊在短週期的衝刺中反覆交付增量。相較於傳統 V-Model，敏捷架構更能擁抱變更，非常適合修改成本較低的軟體開發環境。"
             },
             {
-                title: "四、矩陣組織下的多模組運作",
-                desc: "在大型系統開發中，組織會自然演化為高度矩陣化的「節點對節點」通訊模式：",
-                nodes: [
-                    { title: "個體執行節點", desc: "每個模組或子系統由專屬的 PO/PL 帶領，負責該範圍的戰術推進。" },
-                    { title: "跨部門協調網絡", desc: "由各單位的 PjM 或 PCC (如 TPM/RTE) 進行相依性管理。各單位 PCC 往往背負局部 KPI (如採購 Cost、生管產能)。" },
-                    { title: "總體最佳化裁決", desc: "當各單位 PCC 利益衝突時，由在場的 PM 依據總體商業價值與客戶承諾進行最終拍板。" }
-                ]
+                title: "4. 硬體設計 Waterfall",
+                desc: "瀑布式開發 (Waterfall) 是硬體領域的主流，特徵為嚴謹的線性流程與高度的相依性。",
+                points: [
+                    { title: "線性且不可逆的流程", text: "從需求分析、系統設計、硬體實作、到各階段驗證（EVT、DVT、PVT）。一旦進入開模或打件階段，設計變更的代價極其高昂。" },
+                    { title: "物理與供應鏈限制", text: "硬體開發深受物理世界的限制（如散熱、安規）以及供應鏈的制約（如零組件交期 Lead Time、起訂量 MOQ）。" },
+                    { title: "驗證驅動", text: "與軟體的價值驅動不同，硬體在瀑布流的後期高度依賴嚴謹的可靠度測試與生產驗證，以確保進入量產後的良率。" }
+                ],
+                tts: "第四章、硬體設計與瀑布式開發。瀑布式開發是硬體的主流，從需求到驗證呈現線性流程。由於牽涉到實體開模與零件交期，設計變更的代價極高。因此，硬體開發深受物理限制與供應鏈制約，並且高度依賴嚴謹的驗證來確保量產良率。"
             },
             {
-                title: "五、驅動力的本質差異",
-                desc: "雖然決策範圍相似，但兩者在取捨 (Trade-off) 時的基準點有所不同：",
+                title: "5. 角色與決策架構綜整",
+                desc: "將上述方法論對應至組織架構，我們總結出軟硬體在角色與決策上的通用法則。",
+                equation: { left: "軟體 PO", equals: "≈", right1: "硬體 PL", right1_sub: "(Owner 型)", right2: "硬體 PCC", right2_sub: "(協調支援)" },
+                table: {
+                    headers: ["決策層級", "主導角色", "核心提問", "防守陣線"],
+                    rows: [
+                        { level: "策略層", role: "PM (產品經理)", question: "做不做這個產品？", scope: "PM 解決 Sales：擋住外部商業干擾與客製化要求。" },
+                        { level: "執行層", role: "PO / PL", question: "先做哪個功能？", scope: "PO/PL 搞定 RD：主導技術取捨，確保開發實作步調。" }
+                    ]
+                },
+                tts: "第五章、角色與決策架構綜整。軟體的 PO 相當於硬體的 PL 加上 PCC。在決策上，策略層由產品經理主導，負責判斷商業價值並擋住業務端的壓力；執行層由 PO 或 PL 主導，負責技術取捨並帶領研發團隊克服實作困難。"
+            },
+            {
+                title: "6. 驅力與組織運作綜整",
+                desc: "從動機驅力到大型矩陣組織的協作，梳理出跨領域的通用核心公式。",
                 comparisons: [
-                    { type: "軟體 PO", focus: "價值驅動 (Value-driven)", detail: "修改成本低，重點在於「做對東西」，以使用者價值與商業影響為優先考量。" },
-                    { type: "硬體 PL", focus: "可行性驅動 (Feasibility-driven)", detail: "修改成本極高（如開模），受限於物理零件交期。重點在於「做得出來」，以技術可行性與製造成本為優先。" }
-                ]
+                    { type: "軟體 PO", focus: "價值驅動 (Value-driven)", detail: "追求「做對東西」，以商業影響優先。" },
+                    { type: "硬體 PL", focus: "可行性驅動 (Feasibility)", detail: "受限於零件交期，追求「做得出來」，以成本與技術優先。" }
+                ],
+                quote: "PM 決定產品成功的方向 (Strategy)，PO/PL 決定產品如何被做出來 (Execution)。當執行遭遇無法克服的衝突時，升級至策略層由 PM 進行總體價值拍板。",
+                tts: "第六章、驅力與組織運作綜整。軟體開發以價值驅動，追求做對東西；硬體開發以可行性驅動，確保做得出來。跨領域的通用公式是：產品經理決定成功的方向，PO或PL決定如何實作；當發生重大衝突時，統一升級交由產品經理進行商業拍板。"
             },
             {
-                title: "六、結論：跨領域通用公式",
-                desc: "無論 Agile 或 V-model，高效開發組織的運作本質可總結為一條黃金準則：",
-                quote: "PM 決定產品成功的方向 (Strategy)，PO/PL 決定產品如何一步步被做出來 (Execution)。當執行遇到無法克服的資源或時程衝突時，升級至策略層由 PM 進行總體價值判斷。"
-            },
-            {
-                title: "七、互動實驗室",
-                desc: "情境模擬：在真實的專案戰場中，請針對突發狀況做出最佳的決策判斷。",
+                title: "7. 互動實驗室",
+                desc: "情境模擬：請根據學習到的軟硬體架構，針對突發狀況做出最佳決策判斷。",
                 quiz: {
-                    question: "【情境題】產品試產前夕，主要大客戶臨時要求增加專屬的客製化散熱模組，否則揚言抽單轉單。請問在健康的組織架構下，這個難題第一時間該由誰來扛下並做出判斷？",
+                    question: "【情境題】在大型硬體專案的矩陣組織中，採購部門 (PUR) 與研發部門 (RD) 因為「採用低價新料件的風險」發生嚴重爭執，雙方的 PCC 互不相讓，且技術上難以兩全。請問此時應啟動什麼機制？",
                     options: [
-                        { title: "A. 硬體 PL (專案負責人)", correct: false, feedback: "不完全正確。PL 只能從「技術可行性」去評估散熱模組能不能做出來。但「要不要為單一客戶妥協」是商業層級的考量。" },
-                        { title: "B. PM (產品經理)", correct: true, feedback: "正確解答！「守住產品標準化底線」與「評估商業利弊」是 PM 的核心職責。正如黃金法則：PM 解決 Sales 與客戶端的商業壓力。" },
-                        { title: "C. 採購 PCC (專案協調員)", correct: false, feedback: "不正確。採購 PCC 可以幫忙確認客製化散熱片的「交期與成本」，但無權決定是否要為了客戶犧牲整體利潤或標準化策略。" }
+                        { title: "A. 交由專案負責人 (PL) 強制裁決", correct: false, feedback: "不完全正確。這已經超越單純的技術規格範圍，牽涉到「成本毛利 (PUR)」與「時程風險 (RD)」的商業妥協。" },
+                        { title: "B. 升級 (Escalate) 交由 PM 進行總體商業拍板", correct: true, feedback: "完全正確！各單位 PCC 看重局部 KPI，唯有 PM 具備全域視角，能依據最終的市場承諾與利潤策略做出「總體最佳化」的妥協決策。" },
+                        { title: "C. 導入 Agile 流程，重新修改需求", correct: false, feedback: "錯誤。硬體物料採購具有嚴格的 Lead Time，隨意變更會導致產線停擺，無法單純用軟體敏捷思維來解套。" }
                     ]
-                }
+                },
+                tts: "第七章、互動實驗室。情境題：當採購部門與研發部門因為成本與技術風險發生嚴重衝突，且互不相讓時，該怎麼辦？正確的作法是：將衝突升級，交由具備全域視角的產品經理，依據整體商業策略進行最終拍板。"
             },
             {
-                title: "八、外部資源",
-                desc: "想要更深入了解不同領域的專案管理與組織架構設計，推薦參考以下權威指南：",
+                title: "8. 外部資源",
+                desc: "推薦深入了解不同領域的專案管理與組織架構指南：",
                 links: [
                     { title: "敏捷軟體開發宣言 (Agile Manifesto)", desc: "了解軟體工程價值驅動的核心精神。", url: "https://agilemanifesto.org/iso/zhcht/manifesto.html" },
-                    { title: "Scrum 指南 (The Scrum Guide)", desc: "深入了解 PO (Product Owner) 的官方定義與職責邊界。", url: "https://scrumguides.org/" },
-                    { title: "PMI 專案管理知識體系 (PMBOK)", desc: "探討大型硬體開發常見的矩陣組織 (Matrix Organization) 與整合管理。", url: "https://www.pmi.org/" }
-                ]
+                    { title: "Scrum 指南 (The Scrum Guide)", desc: "深入了解 PO 與 Scrum 團隊的官方定義。", url: "https://scrumguides.org/" },
+                    { title: "PMI 專案管理知識體系 (PMBOK)", desc: "探討大型開發常見的矩陣組織與整合管理。", url: "https://www.pmi.org/" }
+                ],
+                tts: "第八章、外部資源。系統為您整理了包括敏捷宣言、Scrum官方指南，以及PMI專案管理知識體系等權威資源，協助您進一步深化跨領域的專案管理知識。"
             },
             {
-                title: "九、學習歷程",
+                title: "9. 學習歷程",
                 desc: "追蹤您的學習進度，掌握完整的跨領域管理框架：",
-                progressTitle: "課程完成度"
+                progressTitle: "課程完成度",
+                tts: "第九章、學習歷程。您可以在此確認每個章節的閱讀狀況。持續追蹤進度，有助於您徹底掌握軟硬體開發的底層邏輯與通用管理架構。"
             }
         ]
     },
     en: {
         brand: "PM-ALIGN",
-        docTitle: "Hardware & Software PM Architecture Alignment",
-        subtitle: "Software Engineering (Agile) vs. Hardware (NPD/Matrix)",
+        docTitle: "HW/SW PM Architecture Alignment",
+        subtitle: "Organizational Design & Cross-Domain Methodologies",
         date: "April 03, 2026",
         copyright: "All Rights Reserved",
         architect_url: "#",
         nav_prev: "Previous",
         nav_next: "Next",
+        audio_play: "Play Audio Guide",
+        audio_stop: "Stop Audio",
         nav: [
-            { id: "intro", title: "1. Core Role Mapping", icon: "users" },
-            { id: "decision", title: "2. Tiered Decision Making", icon: "layers" },
-            { id: "conflict", title: "3. Conflict Resolution", icon: "shield" },
-            { id: "matrix", title: "4. Matrix Organization", icon: "matrix" },
-            { id: "driver", title: "5. Core Drivers", icon: "zap" },
-            { id: "conclusion", title: "6. Universal Formula", icon: "checkCircle" },
+            { id: "exec", title: "0. Exec Summary", icon: "star" },
+            { id: "npd", title: "1. NPD Process", icon: "layers" },
+            { id: "pm_comp", title: "2. PM Competencies", icon: "users" },
+            { id: "agile", title: "3. SW Agile/Scrum", icon: "zap" },
+            { id: "waterfall", title: "4. HW Waterfall", icon: "matrix" },
+            { id: "syn1", title: "5. Synthesized Roles", icon: "shield" },
+            { id: "syn2", title: "6. Synthesized Drivers", icon: "checkCircle" },
             { id: "lab", title: "7. Interactive Lab", icon: "flask" },
-            { id: "resources", title: "8. External Resources", icon: "link" },
+            { id: "resources", title: "8. Resources", icon: "link" },
             { id: "journey", title: "9. Learning Journey", icon: "star" }
         ],
         modules: [
             {
-                title: "1. Core Role Mapping",
-                desc: "By breaking down 'Functional Blocks', we find the following mapping in the execution layer:",
-                equation: { left: "Software PO", equals: "≈", right1: "Hardware PL", right1_sub: "(Owner)", right2: "Hardware PCC", right2_sub: "(Coordination)" },
+                title: "0. Executive Summary",
+                desc: "This record systematically integrates the deep alignment of development methodologies and organizational structures between software and hardware engineering.",
+                content: "When we look past superficial job titles, we find that the complex hardware supply chain creates highly matrixed Waterfall organizations; whereas software evolves into value-driven Agile architectures due to low modification costs. This learning system will guide you through how these methodologies affect PM, PO, PL, and PCC responsibilities and decisions, providing a powerful universal translation language for cross-domain teams.",
+                tts: "Chapter zero. Executive Summary. This record integrates the methodologies and structures of software and hardware engineering. It explains how hardware relies on matrixed Waterfall processes, while software thrives on value-driven Agile architectures. This system bridges the gap, providing a universal management language for cross-domain projects."
+            },
+            {
+                title: "1. New Product Development (Stage-Gate)",
+                desc: "NPD follows the Stage-Gate model, ensuring business, technical, and resource criteria are met before proceeding.",
+                image: "NPD_Stage-Gate Model_Coggle_SML 20240312.png",
+                imageAlt: "",
                 points: [
-                    { title: "Software Functional Centralization", text: "In Scrum, tactical decisions, progress coordination, and backlog management are highly centralized in the PO." },
-                    { title: "Hardware Functional Specialization", text: "Due to physical supply chains, BOMs, and manufacturing, hardware is highly complex. Execution is split: PL focuses on tech/spec decisions, while PCC handles administrative coordination." }
-                ]
+                    { title: "Phase 1: Plan & Proposal", text: "Covers marketing and feasibility. Led by PM and Sales to evaluate technical and financial risks." },
+                    { title: "Phase 2: Design & Execute", text: "Product design and tooling. PL and R&D engineers unfold specifications and architectures." },
+                    { title: "Phase 3: Validation & MP", text: "Engineering verification to launch. PCCs assist in cross-department integration to ensure quality and production capacity." }
+                ],
+                tts: "Chapter one. New Product Development. Hardware projects use the Stage-Gate model. Phase one focuses on planning and feasibility led by the PM. Phase two involves design and execution led by the Project Leader. Phase three covers validation and mass production, coordinated by project coordinators across departments."
             },
             {
-                title: "2. Tiered Decision Making",
-                desc: "Decisions are not held by a single role, but divided into strategic and tactical layers based on impact:",
+                title: "2. PM Competencies",
+                desc: "Integration: Deriving the seven core competencies of a Product Manager from the development process.",
+                image: "PM產品經理_Coggle_20240502.png",
+                imageAlt: "",
                 table: {
-                    headers: ["Decision Tier", "Lead Role", "Core Question", "Decision Scope"],
+                    headers: ["Development Stage", "Core Competencies", "Education Domain"],
                     rows: [
-                        { level: "Strategic", role: "PM (Product Manager)", question: "Build it or not?", scope: "Market positioning, business model, pricing, and overall Roadmap." },
-                        { level: "Tactical", role: "PO / PL", question: "What to build first?", scope: "User Story prioritization, MVP scope cuts, and dev resource allocation." }
+                        { stage: "Marketing / Feasibility", comp: "Strategy (20%), Portfolio Mgt (20%), Market Research (10%)", domain: "Business-Oriented" },
+                        { stage: "Product Design / Tooling", comp: "PI Process (10%), PDD Tools (10%)", domain: "Technical-Oriented" },
+                        { stage: "Engineering / Launch", comp: "Culture & Leadership (15%), PI Management (15%)", domain: "Management-Oriented" }
                     ]
-                }
+                },
+                tts: "Chapter two. Product Manager Competencies. PM skills evolve with the project. The feasibility stage requires business and strategy focus. The design stage demands technical and process understanding. Finally, the engineering and launch stage tests leadership and resource management skills."
             },
             {
-                title: "3. Conflict Resolution & Defense Lines",
-                desc: "When facing external scope creep and internal dev bottlenecks, the defense is divided as follows. Click cards to reveal:",
-                cards: [
-                    { front: "When Sales forcefully demands a custom feature...", back: "PM handles Sales!", backDesc: "Blocks short-term custom requests from sales/marketing to protect product standardization and strategic baselines." },
-                    { front: "When RD claims technical blocks & delays...", back: "PO/PL manages RD!", backDesc: "Translates business needs into tech specs. Leads technical trade-offs to ensure development rhythm." }
-                ]
+                title: "3. Software Agile / Scrum",
+                desc: "Agile is a user-value-centric architecture emphasizing iterative and incremental delivery.",
+                points: [
+                    { title: "Core Scrum Roles", text: "The PO prioritizes the backlog. The Scrum Master ensures process flow. Developers execute the work." },
+                    { title: "Iterative Delivery", text: "Short, high-frequency development cycles (Sprints) produce usable, potentially releasable increments." },
+                    { title: "Agile vs. V-Model", text: "Unlike the rigid V-Model, Agile embraces change through continuous feedback, thriving in software where change costs are low." }
+                ],
+                tts: "Chapter three. Software Agile and Scrum. Agile focuses on user value and iterative delivery. The Product Owner prioritizes tasks, while Developers build increments during short Sprints. Unlike the rigid V-Model, Agile embraces changing requirements, taking advantage of software's low modification costs."
             },
             {
-                title: "4. Matrix Organization Operation",
-                desc: "In large-scale systems, the organization naturally evolves into a highly matrixed 'node-to-node' communication model:",
-                nodes: [
-                    { title: "Individual Execution Nodes", desc: "Each module/subsystem is led by a dedicated PO/PL responsible for tactical advancement." },
-                    { title: "Cross-departmental Coordination", desc: "Managed by unit PjMs/PCCs (e.g., TPM/RTE) for dependency management. Each PCC carries local KPIs (e.g., Procurement cost, Factory capacity)." },
-                    { title: "Global Optimization Decision", desc: "When unit PCCs conflict, the PM steps in to make the final call based on global business value and client commitments." }
-                ]
+                title: "4. Hardware Waterfall",
+                desc: "Waterfall is the mainstream methodology for hardware, characterized by strict linear processes and dependencies.",
+                points: [
+                    { title: "Linear & Irreversible", text: "From requirements to EVT/DVT/PVT. Once tooling or board placement begins, changes become extremely costly." },
+                    { title: "Physical Constraints", text: "Heavily restricted by physics (e.g., thermals) and supply chain issues (e.g., component lead times, MOQ)." },
+                    { title: "Verification Driven", text: "Unlike software's value-driven approach, hardware relies heavily on strict reliability and production validation to secure mass production yield rates." }
+                ],
+                tts: "Chapter four. Hardware Waterfall. Waterfall is standard for hardware due to its linear nature. Physical constraints and supply chain lead times make design changes highly expensive. Therefore, hardware relies heavily on rigorous validation phases to ensure successful mass production."
             },
             {
-                title: "5. Core Drivers Differences",
-                desc: "Though decision scopes are similar, the baseline for trade-offs differs fundamentally:",
+                title: "5. Synthesized Roles & Decisions",
+                desc: "Aligning the methodologies with organizational structures to define universal rules.",
+                equation: { left: "Software PO", equals: "≈", right1: "Hardware PL", right1_sub: "(Owner)", right2: "Hardware PCC", right2_sub: "(Coordination)" },
+                table: {
+                    headers: ["Decision Tier", "Lead Role", "Core Question", "Defense Line"],
+                    rows: [
+                        { level: "Strategic", role: "PM", question: "Build it or not?", scope: "PM handles Sales: blocks external interference and custom requests." },
+                        { level: "Tactical", role: "PO / PL", question: "What to build first?", scope: "PO/PL manages RD: leads tech trade-offs to keep dev rhythm." }
+                    ]
+                },
+                tts: "Chapter five. Synthesized Roles. A Software PO acts like a Hardware PL combined with a PCC. Strategically, the PM decides what to build and handles external pressures. Tactically, the PO or PL decides execution order and manages engineering trade-offs."
+            },
+            {
+                title: "6. Synthesized Matrix & Drivers",
+                desc: "From core motivations to matrix collaboration, formulating the universal formula.",
                 comparisons: [
-                    { type: "Software PO", focus: "Value-driven", detail: "Low modification cost. Focuses on 'building the right thing', prioritizing user value and business impact." },
-                    { type: "Hardware PL", focus: "Feasibility-driven", detail: "High modification cost (e.g., tooling), constrained by physical part lead times. Focuses on 'getting it built', prioritizing tech feasibility and manufacturing cost." }
-                ]
-            },
-            {
-                title: "6. Conclusion: Universal Formula",
-                desc: "Whether Agile or V-model, the essence of highly efficient development organizations boils down to a golden rule:",
-                quote: "The PM decides the direction of product success (Strategy), while the PO/PL decides how it gets built step-by-step (Execution). When execution hits insurmountable resource/schedule conflicts, escalate to the strategic layer for the PM to make the global value call."
+                    { type: "Software PO", focus: "Value-driven", detail: "Focuses on 'building the right thing', prioritizing business impact." },
+                    { type: "Hardware PL", focus: "Feasibility-driven", detail: "Restricted by supply chains, focuses on 'getting it built' with cost/tech priority." }
+                ],
+                quote: "The PM decides the direction of product success (Strategy), while the PO/PL decides how it gets built step-by-step (Execution). When conflicts escalate, the PM makes the global value call.",
+                tts: "Chapter six. Synthesized Drivers. Software POs are value-driven, while hardware PLs are feasibility-driven. The universal formula is: the PM sets the strategic direction, and the PO or PL handles execution. Critical conflicts are escalated to the PM for a global business decision."
             },
             {
                 title: "7. Interactive Lab",
-                desc: "Scenario Simulation: In a real project battlefield, make the best decision for unexpected situations.",
+                desc: "Scenario Simulation: Make the best decision for unexpected situations.",
                 quiz: {
-                    question: "[Scenario] Right before pilot run, a major client demands a custom thermal module, threatening to cancel the order. In a healthy organization, who should be the first line of defense to make the call?",
+                    question: "[Scenario] In a matrixed hardware project, the Procurement (PUR) and R&D departments strongly conflict over the risks of a cheaper component. Both PCCs refuse to yield. What is the next step?",
                     options: [
-                        { title: "A. Hardware PL (Project Leader)", correct: false, feedback: "Not quite. PL evaluates the 'technical feasibility' of the thermal module. However, compromising standard specs for a single client is a business decision." },
-                        { title: "B. PM (Product Manager)", correct: true, feedback: "Correct! 'Protecting the standardized product baseline' and 'weighing business pros/cons' are core PM duties. Remember the golden rule: PM handles Sales and client pressure." },
-                        { title: "C. Procurement PCC", correct: false, feedback: "Incorrect. The PCC can check the lead time and cost of the custom module, but has no authority to sacrifice overall profit margin or strategy for a single client." }
+                        { title: "A. The PL forces a technical decision.", correct: false, feedback: "Incorrect. This is beyond specs; it involves 'margin (PUR)' vs. 'schedule risk (RD)'." },
+                        { title: "B. Escalate to the PM for a global business decision.", correct: true, feedback: "Correct! Department PCCs look at local KPIs. Only the PM has the global view to make a compromise based on final market commitments and profit strategy." },
+                        { title: "C. Switch to Agile to rewrite requirements.", correct: false, feedback: "Incorrect. Hardware lead times are strict. You cannot solve physical supply issues purely with software Agile thinking." }
                     ]
-                }
+                },
+                tts: "Chapter seven. Interactive Lab. Scenario: When Procurement and R&D clash over cost versus technical risk, and refuse to compromise, what happens? The correct action is to escalate the issue to the Product Manager, who makes the final call based on overall business strategy and profit goals."
             },
             {
                 title: "8. External Resources",
-                desc: "To dive deeper into project management and organizational design across domains, we recommend these authoritative guides:",
+                desc: "Deep dive into cross-domain project management guides:",
                 links: [
                     { title: "Agile Manifesto", desc: "Understand the core spirit of value-driven software engineering.", url: "https://agilemanifesto.org/" },
-                    { title: "The Scrum Guide", desc: "Deep dive into the official definition and boundaries of a Product Owner.", url: "https://scrumguides.org/" },
-                    { title: "PMI PMBOK Guide", desc: "Explore Matrix Organizations and integration management common in large hardware development.", url: "https://www.pmi.org/" }
-                ]
+                    { title: "The Scrum Guide", desc: "Deep dive into PO definitions.", url: "https://scrumguides.org/" },
+                    { title: "PMI PMBOK Guide", desc: "Explore Matrix Organizations and integration management.", url: "https://www.pmi.org/" }
+                ],
+                tts: "Chapter eight. External Resources. We have compiled authoritative resources including the Agile Manifesto, Scrum Guide, and PMI's Project Management Body of Knowledge to deepen your expertise."
             },
             {
                 title: "9. Learning Journey",
-                desc: "Track your progress and master the complete cross-domain management framework:",
-                progressTitle: "Course Completion"
+                desc: "Track your progress and master the complete framework:",
+                progressTitle: "Course Completion",
+                tts: "Chapter nine. Learning Journey. Track your reading progress here to ensure you fully master the underlying logic and universal management frameworks of cross-domain development."
             }
         ]
     }
@@ -286,40 +351,155 @@ const contentData = {
 const App = () => {
     const [lang, setLang] = useState('zh');
     const [theme, setTheme] = useState('light');
-    const [module, setModule] = useState(0); // Changed to numeric index for Next/Prev
+    const [module, setModule] = useState(0); 
     const [visited, setVisited] = useState(Array(TOTAL_MODULES).fill(false));
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
     const contentRef = useRef(null);
 
     const t = contentData[lang];
     const m = t.modules[module];
 
-    // Theme initialization and toggling
+    // Theme initialization
     useEffect(() => {
-        if (theme === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
+        if (theme === 'dark') document.documentElement.classList.add('dark');
+        else document.documentElement.classList.remove('dark');
     }, [theme]);
 
-    // Track learning progress
+    // Track progress & scroll top
     useEffect(() => {
         setVisited(prev => {
             const next = [...prev];
             next[module] = true;
             return next;
         });
-        if(contentRef.current) {
-            contentRef.current.scrollTop = 0;
-        }
-    }, [module]);
+        if(contentRef.current) contentRef.current.scrollTop = 0;
+        stopTTS(); // Stop audio when switching modules
+    }, [module, lang]);
 
     const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
     const toggleLang = () => setLang(lang === 'zh' ? 'en' : 'zh');
 
-    // Content Renderers
-    const renderIntro = () => (
+    // --- Web Speech API (TTS) ---
+    const playTTS = () => {
+        if (!('speechSynthesis' in window)) {
+            alert(lang === 'zh' ? '您的瀏覽器不支援語音導覽功能。' : 'Your browser does not support Speech Synthesis.');
+            return;
+        }
+        window.speechSynthesis.cancel();
+        if (isPlaying) {
+            setIsPlaying(false);
+            return;
+        }
+        
+        const textToRead = m.tts || m.desc; 
+        const utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.lang = lang === 'zh' ? 'zh-TW' : 'en-US';
+        utterance.rate = 1.0;
+        
+        utterance.onend = () => setIsPlaying(false);
+        utterance.onerror = () => setIsPlaying(false);
+        
+        setIsPlaying(true);
+        window.speechSynthesis.speak(utterance);
+    };
+
+    const stopTTS = () => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+        }
+        setIsPlaying(false);
+    };
+
+    // --- Content Renderers ---
+    
+    // Module 0: Exec
+    const renderExec = () => (
+        <div className="animate-fade-in space-y-6">
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed">{m.desc}</p>
+            <div className="bg-brand-light dark:bg-slate-800 p-6 md:p-8 rounded-2xl border-l-4 border-brand-dark dark:border-brand-gold shadow-sm">
+                <p className="text-base text-slate-700 dark:text-slate-300 leading-loose">{m.content}</p>
+            </div>
+        </div>
+    );
+
+    // Module 1: NPD
+    const renderNPD = () => (
+        <div className="animate-fade-in space-y-6">
+            <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
+            {m.image && (
+                <div className="bg-white dark:bg-slate-200 p-2 rounded-xl shadow-md border border-slate-200 overflow-hidden group">
+                    <img src={m.image} alt={m.imageAlt} className="w-full h-auto object-contain max-h-[400px] transform transition duration-500 group-hover:scale-[1.02]" />
+                </div>
+            )}
+            <div className="grid gap-4 mt-6">
+                {m.points.map((pt, idx) => (
+                    <div key={idx} className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col md:flex-row gap-4 items-start">
+                        <div className="bg-brand-dark text-brand-gold dark:bg-brand-gold dark:text-brand-dark font-bold text-xl w-10 h-10 flex items-center justify-center rounded-lg shrink-0">
+                            {idx + 1}
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-lg mb-2 dark:text-white">{pt.title}</h3>
+                            <p className="text-slate-600 dark:text-slate-400">{pt.text}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+    // Module 2: PM Competencies
+    const renderPMComp = () => (
+        <div className="animate-fade-in space-y-6">
+            <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
+            {m.image && (
+                <div className="bg-white dark:bg-slate-200 p-2 rounded-xl shadow-md border border-slate-200 overflow-hidden group">
+                    <img src={m.image} alt={m.imageAlt} className="w-full h-auto object-contain max-h-[400px] transform transition duration-500 group-hover:scale-[1.02]" />
+                </div>
+            )}
+            <div className="overflow-x-auto rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 mt-6">
+                <table className="w-full text-left border-collapse bg-white dark:bg-slate-800">
+                    <thead>
+                        <tr className="bg-slate-100 dark:bg-slate-900">
+                            {m.table.headers.map((h, i) => (
+                                <th key={i} className="p-4 font-semibold text-slate-700 dark:text-slate-300 border-b dark:border-slate-700">{h}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {m.table.rows.map((r, i) => (
+                            <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border-b dark:border-slate-700 last:border-0">
+                                <td className="p-4 font-bold text-brand-dark dark:text-brand-gold">{r.stage}</td>
+                                <td className="p-4 text-slate-700 dark:text-slate-300">{r.comp}</td>
+                                <td className="p-4 italic text-slate-500 dark:text-slate-400">{r.domain}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+
+    // Module 3 & 4: Frameworks (Agile / Waterfall)
+    const renderFrameworks = () => (
+        <div className="animate-fade-in space-y-6">
+            <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
+            <div className="grid md:grid-cols-2 gap-6">
+                {m.points.map((pt, idx) => (
+                    <div key={idx} className={`bg-white dark:bg-slate-800 p-6 rounded-xl border-t-4 shadow-sm ${module === 3 ? 'border-blue-500 dark:border-blue-400' : 'border-purple-500 dark:border-purple-400'}`}>
+                        <h3 className="font-bold text-lg mb-3 dark:text-white flex items-center gap-2">
+                            <Icon name={module === 3 ? "zap" : "matrix"} size={20} className={module === 3 ? "text-blue-500" : "text-purple-500"} />
+                            {pt.title}
+                        </h3>
+                        <p className="text-slate-600 dark:text-slate-400">{pt.text}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+    // Module 5: Synthesized Roles
+    const renderSynRoles = () => (
         <div className="animate-fade-in space-y-8">
             <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
             <div className="bg-white dark:bg-slate-800 p-6 sm:p-10 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 transform transition hover:scale-[1.02]">
@@ -339,20 +519,6 @@ const App = () => {
                     </div>
                 </div>
             </div>
-            <div className="grid md:grid-cols-2 gap-6">
-                {m.points.map((pt, idx) => (
-                    <div key={idx} className="bg-white dark:bg-slate-800 p-6 rounded-xl border-l-4 border-brand-dark dark:border-brand-gold shadow-sm">
-                        <h3 className="font-bold text-lg mb-3 dark:text-white">{pt.title}</h3>
-                        <p className="text-slate-600 dark:text-slate-400">{pt.text}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-
-    const renderDecision = () => (
-        <div className="animate-fade-in space-y-6">
-            <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
             <div className="overflow-x-auto rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
                 <table className="w-full text-left border-collapse bg-white dark:bg-slate-800">
                     <thead>
@@ -377,48 +543,9 @@ const App = () => {
         </div>
     );
 
-    const renderConflict = () => (
-        <div className="animate-fade-in space-y-6">
-            <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
-            <div className="grid md:grid-cols-2 gap-8 perspective">
-                {m.cards.map((card, idx) => (
-                    <div key={idx} className="flip-card h-64 group cursor-pointer relative">
-                        <div className="flip-card-inner relative w-full h-full shadow-md rounded-2xl">
-                            <div className="absolute w-full h-full backface-hidden bg-white dark:bg-slate-800 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center p-6 text-center">
-                                <div className="text-4xl mb-4">{idx === 0 ? '👔' : '💻'}</div>
-                                <h3 className="text-xl font-bold text-slate-700 dark:text-slate-200">{card.front}</h3>
-                                <p className="mt-4 text-sm text-slate-500 dark:text-slate-400 animate-pulse">{lang === 'zh' ? '點擊翻轉查看防守者' : 'Click to reveal defender'}</p>
-                            </div>
-                            <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-brand-dark dark:bg-slate-900 rounded-2xl border border-brand-gold flex flex-col items-center justify-center p-8 text-center text-white">
-                                <h3 className="text-2xl font-black text-brand-gold mb-3">{card.back}</h3>
-                                <p className="text-brand-light/90 leading-relaxed">{card.backDesc}</p>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-
-    const renderMatrix = () => (
-        <div className="animate-fade-in space-y-6">
-            <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
-            <div className="relative border-l-2 border-brand-dark/20 dark:border-brand-gold/20 ml-4 md:ml-8 space-y-8 py-4">
-                {m.nodes.map((node, idx) => (
-                    <div key={idx} className="relative pl-8">
-                        <div className="absolute -left-[11px] top-1 h-5 w-5 rounded-full bg-brand-dark dark:bg-brand-gold border-4 border-white dark:border-slate-900"></div>
-                        <div className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow">
-                            <h3 className="font-bold text-lg text-brand-dark dark:text-brand-gold mb-2">{node.title}</h3>
-                            <p className="text-slate-600 dark:text-slate-400">{node.desc}</p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-
-    const renderDriver = () => (
-        <div className="animate-fade-in space-y-6">
+    // Module 6: Synthesized Drivers & Conclusion
+    const renderSynDrivers = () => (
+        <div className="animate-fade-in space-y-8">
             <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
             <div className="grid md:grid-cols-2 gap-6">
                 {m.comparisons.map((comp, idx) => (
@@ -432,27 +559,15 @@ const App = () => {
                     </div>
                 ))}
             </div>
-        </div>
-    );
-
-    const renderConclusion = () => (
-        <div className="animate-fade-in flex flex-col items-center justify-center min-h-[50vh] text-center space-y-8">
-            <div className="w-20 h-20 bg-brand-dark dark:bg-brand-gold rounded-full flex items-center justify-center shadow-lg">
-                <Icon name="checkCircle" size={40} className="text-brand-gold dark:text-brand-dark" />
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white">{m.title}</h2>
-            <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl">{m.desc}</p>
-            <blockquote className="relative p-8 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 max-w-3xl">
-                <div className="absolute top-4 left-4 text-6xl text-slate-200 dark:text-slate-700 font-serif leading-none">"</div>
-                <p className="relative z-10 text-xl md:text-2xl font-serif leading-relaxed text-brand-dark dark:text-brand-gold italic">
+            <blockquote className="relative p-8 bg-brand-light dark:bg-slate-800/80 rounded-2xl border-l-8 border-brand-dark dark:border-brand-gold shadow-sm mt-8">
+                <p className="text-lg md:text-xl font-serif leading-relaxed text-slate-800 dark:text-slate-200">
                     {m.quote}
                 </p>
-                <div className="absolute bottom-[-10px] right-4 text-6xl text-slate-200 dark:text-slate-700 font-serif leading-none rotate-180">"</div>
             </blockquote>
         </div>
     );
 
-    // Module 7: Interactive Lab Component
+    // Module 7: Interactive Lab
     const InteractiveLab = () => {
         const [selected, setSelected] = useState(null);
         return (
@@ -494,7 +609,7 @@ const App = () => {
         );
     };
 
-    // Module 8: External Resources
+    // Module 8: Resources
     const ExternalResources = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg text-slate-600 dark:text-slate-300">{m.desc}</p>
@@ -516,7 +631,7 @@ const App = () => {
         </div>
     );
 
-    // Module 9: Learning Journey
+    // Module 9: Journey
     const LearningJourney = () => {
         const completedCount = visited.filter(v => v).length;
         const progress = Math.round((completedCount / TOTAL_MODULES) * 100);
@@ -531,7 +646,7 @@ const App = () => {
                     <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-4 mb-8 overflow-hidden border border-slate-200 dark:border-slate-600">
                         <div className="bg-brand-dark dark:bg-brand-gold h-full rounded-full transition-all duration-1000 ease-out" style={{ width: `${progress}%` }}></div>
                     </div>
-                    <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+                    <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
                         {t.nav.map((n, i) => (
                             <button 
                                 key={i}
@@ -554,22 +669,23 @@ const App = () => {
 
     const renderContent = () => {
         switch(module) {
-            case 0: return renderIntro();
-            case 1: return renderDecision();
-            case 2: return renderConflict();
-            case 3: return renderMatrix();
-            case 4: return renderDriver();
-            case 5: return renderConclusion();
-            case 6: return <InteractiveLab />;
-            case 7: return <ExternalResources />;
-            case 8: return <LearningJourney />;
-            default: return renderIntro();
+            case 0: return renderExec();
+            case 1: return renderNPD();
+            case 2: return renderPMComp();
+            case 3: 
+            case 4: return renderFrameworks();
+            case 5: return renderSynRoles();
+            case 6: return renderSynDrivers();
+            case 7: return <InteractiveLab />;
+            case 8: return <ExternalResources />;
+            case 9: return <LearningJourney />;
+            default: return renderExec();
         }
     };
 
     return (
         <div className="h-screen flex flex-col font-sans">
-            {/* Header (Matching Reference App) */}
+            {/* Header */}
             <header className="shrink-0 bg-brand-dark border-b border-brand-gold shadow-md">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
@@ -604,7 +720,7 @@ const App = () => {
             </div>
 
             {/* Main App Layout */}
-            <div className="flex-1 flex overflow-hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 gap-6">
+            <div className="flex-1 flex overflow-hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 gap-6 relative">
                 
                 {/* Sidebar Navigation */}
                 <aside className={`md:w-72 flex-shrink-0 absolute md:relative z-30 h-full transition-transform transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-[150%] md:translate-x-0'} left-0 top-0 pt-2 md:pt-0 pl-4 md:pl-0`}>
@@ -634,13 +750,24 @@ const App = () => {
 
                 {/* Content Area */}
                 <main ref={contentRef} className="flex-1 overflow-y-auto rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 relative scroll-smooth" onClick={() => isMobileMenuOpen && setIsMobileMenuOpen(false)}>
-                    <div className="p-5 sm:p-8 md:p-10 min-h-full flex flex-col">
-                        <div className="flex-1">
-                            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-slate-800 dark:text-white border-b-2 border-brand-gold inline-block pb-2">{m.title}</h2>
+                    <div className="p-5 sm:p-8 md:p-10 min-h-full flex flex-col relative">
+                        {/* Audio TTS Button */}
+                        <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+                            <button 
+                                onClick={playTTS} 
+                                className={`flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all shadow-sm border ${isPlaying ? 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400' : 'bg-slate-100 text-brand-dark border-slate-200 hover:bg-brand-gold/20 dark:bg-slate-700 dark:text-brand-gold dark:border-slate-600'}`}
+                            >
+                                <Icon name={isPlaying ? "stop" : "volume"} size={16} />
+                                <span className="hidden sm:inline">{isPlaying ? t.audio_stop : t.audio_play}</span>
+                            </button>
+                        </div>
+
+                        <div className="flex-1 mt-6 sm:mt-0">
+                            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-slate-800 dark:text-white border-b-2 border-brand-gold inline-block pb-2 pr-4">{m.title}</h2>
                             {renderContent()}
                         </div>
                         
-                        {/* Footer Navigation (Next/Prev Buttons) - Matching Reference */}
+                        {/* Footer Navigation (Next/Prev Buttons) */}
                         <div className="mt-12 pt-6 border-t border-slate-200 dark:border-slate-700 flex justify-between shrink-0">
                             <button 
                                 onClick={() => setModule(Math.max(0, module - 1))} 
@@ -661,7 +788,7 @@ const App = () => {
                 </main>
             </div>
 
-            {/* Application Footer (Matching Reference Architecture) */}
+            {/* Application Footer */}
             <footer className="h-8 bg-brand-dark flex items-center justify-between px-4 shrink-0 shadow-inner">
                 <span className="text-brand-gold/60 text-[10px] sm:text-xs truncate">{t.date} · {t.copyright}</span>
                 <span className="text-brand-gold/60 text-[10px] sm:text-xs flex items-center gap-3">
