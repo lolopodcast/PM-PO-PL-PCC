@@ -4,6 +4,40 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>PM Align 硬體/軟體產品管理架構校準 | PMA</title>
+
+<!-- === 安全防禦機制 (Security Scripts) === -->
+<script>
+    // 1. 網域綁定 (Domain Whitelisting)
+    // 請將 'your-official-site.com' 替換為您實際部署的網域名稱
+    const ALLOWED_DOMAINS = ['localhost', '127.0.0.1', 'your-official-site.com']; 
+    const currentDomain = window.location.hostname;
+    // 判斷：如果有網域 (非 file:// 本地開啟) 且不在白名單內，則觸發防護
+    if (window.location.protocol !== 'file:' && currentDomain && !ALLOWED_DOMAINS.includes(currentDomain)) {
+        document.documentElement.innerHTML = '<body style="background:#111;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;"><h1>未授權的網域存取 (Unauthorized Domain)</h1></body>';
+        throw new Error("Unauthorized access detected.");
+    }
+
+    // 2. 禁用右鍵與開發者快捷鍵
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        // 禁用 F12
+        if (e.key === 'F12') e.preventDefault();
+        // 禁用 Ctrl+Shift+I / J / C (開發者工具)
+        if (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) e.preventDefault();
+        // 禁用 Ctrl+U (檢視原始碼), Ctrl+S (存檔), Ctrl+P (列印)
+        if (e.ctrlKey && ['U', 'S', 'P'].includes(e.key.toUpperCase())) e.preventDefault();
+        // 禁用 Ctrl+C (複製)
+        if (e.ctrlKey && e.key.toUpperCase() === 'C') {
+            e.preventDefault();
+            // 可選：警告提示
+            // alert('版權所有，禁止複製');
+        }
+    });
+
+    // 3. 禁用拖曳 (防止圖文被拖曳另存)
+    document.addEventListener('dragstart', e => e.preventDefault());
+</script>
+
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -38,6 +72,21 @@ tailwind.config = {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 .dark ::-webkit-scrollbar-thumb { background: #475569; }
+
+/* 禁用文字選取的全局樣式 */
+body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+/* 允許表單元素可以被選取與輸入 */
+input, textarea, select {
+    -webkit-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
+}
 </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300">
@@ -822,16 +871,18 @@ const App = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [ttsState, setTtsState] = useState('idle');
     
+    // Quiz & Flip Card Tracking States
     const [quizIndices, setQuizIndices] = useState([]);
     const [quizAnswers, setQuizAnswers] = useState({});
     const [flipIndices, setFlipIndices] = useState([]);
     
+    // Global tracking across sessions (State only, resets on reload)
     const [globalQuizHistory, setGlobalQuizHistory] = useState({}); 
     const [globalFlipHistory, setGlobalFlipHistory] = useState({}); 
     
     const [exportData, setExportData] = useState({ group: 'G1', studentId: '', name: '' });
     
-    // States that MUST be at top level to not reset on re-renders, but must NOT trigger constant re-renders
+    // Lab States
     const [labStep, setLabStep] = useState(0);
     const [labSelected, setLabSelected] = useState(null);
     const [labScenarioIdx, setLabScenarioIdx] = useState(0);
@@ -839,6 +890,7 @@ const App = () => {
     const moduleTimesRef = useRef({});
     const moduleClicksRef = useRef({});
     const totalClicksRef = useRef(0);
+    
     const activeQuizIndicesRef = useRef({});
     const activeFlipIndicesRef = useRef({});
     const quizOffsetRef = useRef({});
@@ -850,7 +902,7 @@ const App = () => {
     const t = contentData[lang];
     const m = t.modules[module];
 
-    // Tracker Interval (Background only)
+    // Tracker Interval (Background only, no state triggering to prevent flicker)
     useEffect(() => {
         const timer = setInterval(() => {
             moduleTimesRef.current[module] = (moduleTimesRef.current[module] || 0) + 1;
@@ -883,20 +935,17 @@ const App = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // Helper: Round-Robin Pool Drawer
+    // Helper: Strict Round-Robin Array Picker
     const drawFromRefPool = (poolRef, modIdx, count, maxVal) => {
         let pool = poolRef.current[modIdx] ? [...poolRef.current[modIdx]] : [];
         let drawn = [];
         while (drawn.length < count) {
             if (pool.length === 0) {
+                // Simple sequential refill
                 let arr = Array.from({length: maxVal}, (_, i) => i);
-                for (let i = arr.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [arr[i], arr[j]] = [arr[j], arr[i]];
-                }
                 pool = arr;
             }
-            drawn.push(pool.pop());
+            drawn.push(pool.shift()); // FIFO
         }
         poolRef.current[modIdx] = pool;
         return drawn;
@@ -1012,12 +1061,12 @@ const App = () => {
         for(let i=1; i<=6; i++) {
             const bank = t.modules[i].quizBank;
             const hist = globalQuizHistory[i] || {};
-            const tQ = bank ? bank.length : 0;
-            const tA = Object.keys(hist).length;
-            const tC = Object.values(hist).filter(v=>v).length;
-            const tTime = moduleTimesRef.current[i] || 0;
-            const tClicks = moduleClicksRef.current[i] || 0;
-            csvContent += `"${t.modules[i].title}",${tTime},${tClicks},${tC},${tA},${tQ}\n`;
+            const mQ = bank ? bank.length : 0;
+            const mA = Object.keys(hist).length;
+            const mC = Object.values(hist).filter(v=>v).length;
+            const mTime = moduleTimesRef.current[i] || 0;
+            const mClicks = moduleClicksRef.current[i] || 0;
+            csvContent += `"${t.modules[i].title}",${mTime},${mClicks},${mC},${mA},${mQ}\n`;
         }
 
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1073,13 +1122,13 @@ const App = () => {
         }
 
         if (mod.quizBank && quizIndices.length > 0) {
-            parts.push(lang === 'zh' ? '隨機知識檢定：' : 'Random Knowledge Check:');
+            parts.push(lang === 'zh' ? '模組知識檢定：' : 'Knowledge Check:');
             const qModHist = globalQuizHistory[module] || {};
             const qAnswered = Object.keys(qModHist).length;
             const qCorrect = Object.values(qModHist).filter(v=>v).length;
             const qTotal = mod.quizBank.length;
             if (lang === 'zh') {
-                parts.push(`目前測驗得分：答對 ${qCorrect} 題，已答 ${qAnswered} 題，共 ${qTotal} 題。`);
+                parts.push(`目前得分：答對 ${qCorrect} 題，已答 ${qAnswered} 題，共 ${qTotal} 題。`);
             } else {
                 parts.push(`Current Score: ${qCorrect} correct, ${qAnswered} answered, out of ${qTotal} total.`);
             }
@@ -1122,7 +1171,7 @@ const App = () => {
             const totalAcc = totalA > 0 ? Math.round((totalC/totalA)*100) : 0;
 
             parts.push(lang === 'zh' 
-                ? `動態成績儀表板。總學習時間 ${totalTime} 秒，總互動點擊 ${totalClicksRef.current} 次，總答題正確率 ${totalAcc}%。` 
+                ? `動態成績儀表板。總學習時間 ${totalTime} 秒，總互動數 ${totalClicksRef.current} 次，總答題正確率 ${totalAcc}%。` 
                 : `Dynamic Dashboard. Total Learning Time ${totalTime} seconds, Total Interactions ${totalClicksRef.current}, Overall Accuracy ${totalAcc}%.`);
             
             for(let i=1; i<=6; i++) {
@@ -1176,8 +1225,10 @@ const App = () => {
         setTtsState('idle');
     };
 
-    // --- Content Renderers ---
-    const renderDeepDive = (paragraphs) => {
+    // --- Reusable Component Renderers (Defined directly to prevent input re-rendering) ---
+
+    // Deep Dive
+    const DeepDiveBlock = ({ paragraphs }) => {
         if (!paragraphs) return null;
         return (
             <div className="space-y-4 mb-8">
@@ -1190,8 +1241,9 @@ const App = () => {
         );
     };
 
-    const renderFlipCards = (cards) => {
-        if (!cards || flipIndices.length === 0) return null;
+    // Flip Cards
+    const FlipCardsBlock = ({ cards, indices }) => {
+        if (!cards || indices.length === 0) return null;
         const viewedCount = (globalFlipHistory[module] || []).length;
         const flipScoreText = t.flip_score.replace('{viewed}', viewedCount).replace('{total}', cards.length);
 
@@ -1207,7 +1259,7 @@ const App = () => {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 perspective">
-                    {flipIndices.map((cIdx, idx) => {
+                    {indices.map((cIdx, idx) => {
                         const card = cards[cIdx];
                         return (
                             <div key={idx} className="flip-card h-56 group cursor-pointer relative" onClick={() => handleFlipView(cIdx)}>
@@ -1226,7 +1278,7 @@ const App = () => {
                 </div>
                 <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-end">
                     <button 
-                        onClick={() => loadNextFlips()} 
+                        onClick={() => loadNextFlips(module)} 
                         className="w-full sm:w-auto px-6 py-3 bg-slate-100 dark:bg-slate-700/50 hover:bg-[#D8C3A5]/20 dark:hover:bg-slate-700 text-[#004030] dark:text-[#D8C3A5] rounded-xl text-sm font-bold shadow-sm transition-colors border border-slate-200 dark:border-slate-600 flex items-center justify-center gap-2 uppercase tracking-wider"
                     >
                         <Icon name="refresh" size={16} />
@@ -1237,9 +1289,9 @@ const App = () => {
         );
     };
 
-    const renderRandomQuiz = (bank) => {
-        if (!bank || quizIndices.length === 0) return null;
-        
+    // Quizzes
+    const RandomQuizBlock = ({ bank, indices }) => {
+        if (!bank || indices.length === 0) return null;
         const qModHist = globalQuizHistory[module] || {};
         const qAnswered = Object.keys(qModHist).length;
         const qCorrect = Object.values(qModHist).filter(v=>v).length;
@@ -1257,7 +1309,7 @@ const App = () => {
                     </div>
                 </div>
                 <div className="space-y-8">
-                    {quizIndices.map((qIdx, idx) => {
+                    {indices.map((qIdx, idx) => {
                         const q = bank[qIdx];
                         const selectedOption = quizAnswers[qIdx];
                         return (
@@ -1298,7 +1350,7 @@ const App = () => {
                 </div>
                 <div className="mt-8 pt-4 border-t border-[#004030]/10 dark:border-slate-700 flex justify-end">
                     <button 
-                        onClick={() => loadNextQuizzes()} 
+                        onClick={() => loadNextQuizzes(module)} 
                         className="w-full sm:w-auto px-6 py-3 bg-[#004030] dark:bg-[#D8C3A5] text-[#D8C3A5] dark:text-[#004030] rounded-xl text-sm font-bold shadow-md hover:bg-[#002b20] dark:hover:bg-white transition-colors flex items-center justify-center gap-2 uppercase tracking-wider"
                     >
                         <Icon name="refresh" size={16} />
@@ -1309,6 +1361,7 @@ const App = () => {
         );
     };
 
+    // --- Specific Page Renderers ---
     const renderExec = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium leading-relaxed">{m.desc}</p>
@@ -1342,7 +1395,7 @@ const App = () => {
     const renderNPD = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
-            {renderDeepDive(m.deepDive)}
+            <DeepDiveBlock paragraphs={m.deepDive} />
             {m.image && (
                 <div className="mt-6 w-full bg-white dark:bg-slate-200 p-2 rounded-xl shadow-md border border-slate-200 overflow-hidden group">
                     <img src={m.image} alt={m.imageAlt} className="w-full h-auto object-contain max-h-[400px] transform transition duration-500 group-hover:scale-[1.02]" />
@@ -1361,15 +1414,15 @@ const App = () => {
                     </div>
                 ))}
             </div>
-            {renderFlipCards(m.flipCards)}
-            {renderRandomQuiz(m.quizBank)}
+            <FlipCardsBlock cards={m.flipCards} indices={flipIndices} />
+            <RandomQuizBlock bank={m.quizBank} indices={quizIndices} />
         </div>
     );
 
     const renderPMComp = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
-            {renderDeepDive(m.deepDive)}
+            <DeepDiveBlock paragraphs={m.deepDive} />
             {m.image && (
                 <div className="mt-6 w-full bg-white dark:bg-slate-200 p-2 rounded-xl shadow-md border border-slate-200 overflow-hidden group">
                     <img src={m.image} alt={m.imageAlt} className="w-full h-auto object-contain max-h-[400px] transform transition duration-500 group-hover:scale-[1.02]" />
@@ -1395,15 +1448,15 @@ const App = () => {
                     </tbody>
                 </table>
             </div>
-            {renderFlipCards(m.flipCards)}
-            {renderRandomQuiz(m.quizBank)}
+            <FlipCardsBlock cards={m.flipCards} indices={flipIndices} />
+            <RandomQuizBlock bank={m.quizBank} indices={quizIndices} />
         </div>
     );
 
     const renderFrameworks = () => (
         <div className="animate-fade-in space-y-6">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
-            {renderDeepDive(m.deepDive)}
+            <DeepDiveBlock paragraphs={m.deepDive} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 {m.points.map((pt, idx) => (
                     <div key={idx} className={`bg-white dark:bg-slate-800 p-6 rounded-xl border-t-4 shadow-sm ${module === 3 ? 'border-blue-500 dark:border-blue-400' : 'border-purple-500 dark:border-purple-400'}`}>
@@ -1415,15 +1468,15 @@ const App = () => {
                     </div>
                 ))}
             </div>
-            {renderFlipCards(m.flipCards)}
-            {renderRandomQuiz(m.quizBank)}
+            <FlipCardsBlock cards={m.flipCards} indices={flipIndices} />
+            <RandomQuizBlock bank={m.quizBank} indices={quizIndices} />
         </div>
     );
 
     const renderSynRoles = () => (
         <div className="animate-fade-in space-y-8">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
-            {renderDeepDive(m.deepDive)}
+            <DeepDiveBlock paragraphs={m.deepDive} />
             <div className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-8 transform transition hover:scale-[1.01]">
                 <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/30 rounded-xl border border-blue-100 dark:border-blue-800 w-full lg:w-auto">
                     <div className="font-bold text-2xl text-blue-700 dark:text-blue-400">{m.equation.left}</div>
@@ -1462,22 +1515,22 @@ const App = () => {
                     </tbody>
                 </table>
             </div>
-            {renderFlipCards(m.flipCards)}
-            {renderRandomQuiz(m.quizBank)}
+            <FlipCardsBlock cards={m.flipCards} indices={flipIndices} />
+            <RandomQuizBlock bank={m.quizBank} indices={quizIndices} />
         </div>
     );
 
     const renderSynDrivers = () => (
         <div className="animate-fade-in space-y-8">
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium">{m.desc}</p>
-            {renderDeepDive(m.deepDive)}
+            <DeepDiveBlock paragraphs={m.deepDive} />
             <blockquote className="relative p-6 sm:p-8 bg-[#D8C3A5]/10 dark:bg-slate-800/80 rounded-2xl border-l-8 border-[#004030] dark:border-[#D8C3A5] shadow-sm mb-8">
                 <p className="text-lg md:text-xl font-serif leading-relaxed text-slate-800 dark:text-slate-200">
                     {m.quote}
                 </p>
             </blockquote>
-            {renderFlipCards(m.flipCards)}
-            {renderRandomQuiz(m.quizBank)}
+            <FlipCardsBlock cards={m.flipCards} indices={flipIndices} />
+            <RandomQuizBlock bank={m.quizBank} indices={quizIndices} />
         </div>
     );
 
@@ -1487,6 +1540,16 @@ const App = () => {
         const steps = currentScenario.steps;
         const currentData = steps[labStep];
         const isLastStep = labStep === steps.length - 1;
+
+        const handleOptionClick = (oIdx, opt) => {
+            setLabSelected(oIdx);
+            if (opt.correct) {
+                setTimeout(() => {
+                    setLabStep(prev => prev + 1);
+                    setLabSelected(null);
+                }, 3000);
+            }
+        };
 
         return (
             <div className="animate-fade-in space-y-6 w-full max-w-full">
@@ -1509,7 +1572,6 @@ const App = () => {
                     ))}
                 </div>
 
-                {/* Progress Bar for Lab */}
                 <div className="flex gap-2 mb-4">
                     {steps.map((_, i) => (
                         <div key={i} className={`h-2 flex-1 rounded-full transition-all duration-500 ${i <= labStep ? 'bg-[#004030] dark:bg-[#D8C3A5]' : 'bg-slate-200 dark:bg-slate-700'}`}></div>
@@ -1517,7 +1579,6 @@ const App = () => {
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Left: Context */}
                     <div className="lg:w-2/5 bg-[#004030] text-[#D8C3A5] p-6 md:p-8 rounded-2xl shadow-sm h-full min-h-[300px]">
                         <h3 className="text-xl font-bold mb-4 flex items-center gap-2 border-b border-[#D8C3A5]/30 pb-3">
                             <Icon name="flask" size={24} />
@@ -1528,7 +1589,6 @@ const App = () => {
                         </p>
                     </div>
                     
-                    {/* Right: Question & Options */}
                     <div className="lg:w-3/5 bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-center min-h-[300px]">
                         {currentData.question && (
                             <h4 className="text-lg sm:text-xl font-bold text-slate-800 dark:text-slate-200 mb-6 leading-relaxed">
@@ -1541,15 +1601,7 @@ const App = () => {
                                 {currentData.options.map((opt, i) => (
                                     <button
                                         key={i}
-                                        onClick={() => {
-                                            setLabSelected(i);
-                                            if (opt.correct) {
-                                                setTimeout(() => {
-                                                    setLabStep(prev => prev + 1);
-                                                    setLabSelected(null);
-                                                }, 3000);
-                                            }
-                                        }}
+                                        onClick={() => handleOptionClick(i, opt)}
                                         disabled={labSelected !== null && currentData.options[labSelected].correct}
                                         className={`p-4 sm:p-5 text-left rounded-xl border-2 transition-all duration-300 shadow-sm ${
                                             labSelected === i 
@@ -1703,7 +1755,7 @@ const App = () => {
                                 <select 
                                     name="group" 
                                     value={exportData.group} 
-                                    onChange={(e) => setExportData({...exportData, group: e.target.value})}
+                                    onChange={handleInputChange}
                                     className="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D8C3A5]"
                                 >
                                     {[...Array(12)].map((_, i) => <option key={i} value={`G${i+1}`}>G{i+1}</option>)}
@@ -1716,7 +1768,7 @@ const App = () => {
                                     type="text" 
                                     name="studentId" 
                                     value={exportData.studentId} 
-                                    onChange={(e) => setExportData({...exportData, studentId: e.target.value})}
+                                    onChange={handleInputChange}
                                     placeholder="113212099" 
                                     className="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-700 dark:text-white placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#D8C3A5]"
                                 />
@@ -1727,63 +1779,14 @@ const App = () => {
                                     type="text" 
                                     name="name" 
                                     value={exportData.name} 
-                                    onChange={(e) => setExportData({...exportData, name: e.target.value})}
+                                    onChange={handleInputChange}
                                     placeholder="Jimmy Lo" 
                                     className="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-700 dark:text-white placeholder-slate-300 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#D8C3A5]"
                                 />
                             </div>
                         </div>
                         <button 
-                            onClick={() => {
-                                if(!exportData.group || !exportData.studentId || !exportData.name) {
-                                    alert(t.export_alert);
-                                    return;
-                                }
-                                const date = new Date();
-                                const dateStr = date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0') + String(date.getDate()).padStart(2, '0');
-                                const filename = `${t.brand}_${exportData.group}_${exportData.name}_${dateStr}.csv`;
-
-                                let csvContent = "\uFEFF"; // UTF-8 BOM
-                                csvContent += (lang === 'zh' ? "組別,學號,姓名,日期\n" : "Group,Student ID,Name,Date\n");
-                                csvContent += `${exportData.group},${exportData.studentId},${exportData.name},${dateStr}\n\n`;
-
-                                const tTime = Object.values(moduleTimesRef.current).reduce((a,b)=>a+b, 0);
-                                let tQ = 0, tA = 0, tC = 0;
-                                for(let i=1; i<=6; i++) {
-                                    const bank = t.modules[i].quizBank;
-                                    const hist = globalQuizHistory[i] || {};
-                                    tQ += bank ? bank.length : 0;
-                                    tA += Object.keys(hist).length;
-                                    tC += Object.values(hist).filter(v=>v).length;
-                                }
-                                const tAcc = tA > 0 ? Math.round((tC/tA)*100) : 0;
-
-                                csvContent += (lang === 'zh' ? "總學習時間(秒),總互動數,總答題正確率\n" : "Total Time(s),Total Clicks,Total Accuracy\n");
-                                csvContent += `${tTime},${totalClicksRef.current},${tAcc}%\n\n`;
-
-                                csvContent += (lang === 'zh' ? "模組,時間(s),互動次數,答對,已答,總題數\n" : "Module,Time(s),Clicks,Correct,Answered,Total\n");
-
-                                for(let i=1; i<=6; i++) {
-                                    const bank = t.modules[i].quizBank;
-                                    const hist = globalQuizHistory[i] || {};
-                                    const mQ = bank ? bank.length : 0;
-                                    const mA = Object.keys(hist).length;
-                                    const mC = Object.values(hist).filter(v=>v).length;
-                                    const mTime = moduleTimesRef.current[i] || 0;
-                                    const mClicks = moduleClicksRef.current[i] || 0;
-                                    csvContent += `"${t.modules[i].title}",${mTime},${mClicks},${mC},${mA},${mQ}\n`;
-                                }
-
-                                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                                const link = document.createElement("a");
-                                const url = URL.createObjectURL(blob);
-                                link.setAttribute("href", url);
-                                link.setAttribute("download", filename);
-                                link.style.visibility = 'hidden';
-                                document.body.appendChild(link);
-                                link.click();
-                                document.body.removeChild(link);
-                            }}
+                            onClick={handleExportCSV}
                             className="mt-6 w-full px-6 py-4 bg-[#004030] dark:bg-[#D8C3A5] text-[#D8C3A5] dark:text-[#004030] rounded-xl font-bold shadow-md hover:bg-[#002b20] dark:hover:bg-white transition-colors flex items-center justify-center gap-2 uppercase tracking-wider shrink-0"
                         >
                             <Icon name="download" size={18} />
@@ -1793,22 +1796,6 @@ const App = () => {
                 </div>
             </div>
         );
-    };
-
-    const renderContent = () => {
-        switch(module) {
-            case 0: return renderExec();
-            case 1: return renderNPD();
-            case 2: return renderPMComp();
-            case 3: return renderFrameworks();
-            case 4: return renderFrameworks();
-            case 5: return renderSynRoles();
-            case 6: return renderSynDrivers();
-            case 7: return renderInteractiveLab();
-            case 8: return renderExternalResources();
-            case 9: return renderLearningJourney();
-            default: return renderExec();
-        }
     };
 
     return (
@@ -1934,7 +1921,16 @@ const App = () => {
                         <h2 className="text-xl md:text-2xl font-bold mb-6 text-[#004030] dark:text-[#D8C3A5] border-b-2 border-[#D8C3A5] inline-block pb-2 pr-4 shrink-0">{m.title}</h2>
                         
                         <div className="flex-1">
-                            {renderContent()}
+                            {module === 0 && renderExec()}
+                            {module === 1 && renderNPD()}
+                            {module === 2 && renderPMComp()}
+                            {module === 3 && renderFrameworks()}
+                            {module === 4 && renderFrameworks()}
+                            {module === 5 && renderSynRoles()}
+                            {module === 6 && renderSynDrivers()}
+                            {module === 7 && <InteractiveLab />}
+                            {module === 8 && <ExternalResources />}
+                            {module === 9 && <LearningJourney />}
                         </div>
                         
                         {/* Footer Navigation (Next/Prev Buttons) */}
