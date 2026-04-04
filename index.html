@@ -8,7 +8,7 @@
 <!-- === 安全防禦機制 (Security Scripts) === -->
 <script>
     // 1. 網域綁定 (Domain Whitelisting)
-    const ALLOWED_DOMAINS = ['localhost', '127.0.0.1', 'https://lolopodcast.github.io/PM-PO-PL-PCC/']; 
+    const ALLOWED_DOMAINS = ['localhost', '127.0.0.1', 'https://lolopodcast.github.io']; 
     const currentDomain = window.location.hostname;
     if (window.location.protocol !== 'file:' && currentDomain && !ALLOWED_DOMAINS.includes(currentDomain)) {
         document.documentElement.innerHTML = '<body style="background:#111;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;"><h1>未授權的網域存取 (Unauthorized Domain)</h1></body>';
