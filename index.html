@@ -98,20 +98,20 @@ const contentData = {
         audio_pause: "暫停",
         audio_resume: "繼續",
         audio_stop: "停止",
-        quiz_title: "隨機知識檢定",
+        quiz_title: "模組知識檢定",
         flip_title: "關鍵專有名詞翻轉卡",
         next_cards: "換一批圖卡 (Next Cards)",
         next_quizzes: "換一批題目 (Next Quizzes)",
         quiz_score: "答對 {correct} / 已答 {answered} / 全數 {total}",
         flip_score: "已翻閱 {viewed} / 全數 {total}",
         journey_title: "動態成績儀表板與匯出中心",
-        journey_total_time: "總學習時間 (秒)",
+        journey_total_time: "總學習時間 (秒數)",
         journey_total_clicks: "總互動 (點擊) 數",
         journey_total_acc: "總答題正確率",
         col_module: "分頁主題",
         col_time: "時間 (s)",
         col_clicks: "次數",
-        col_score: "對 / 答 / 總數",
+        col_score: "答對 / 已答 / 總數",
         export_btn: "匯出 CSV 學習紀錄",
         export_alert: "請完整填寫組別、學號與姓名！",
         group_label: "組別 (Group)",
@@ -836,14 +836,14 @@ const App = () => {
     // Active Scenario in Lab
     const [labScenarioIdx, setLabScenarioIdx] = useState(0);
 
-    // Global Time and Click Tracking
-    const [moduleTimes, setModuleTimes] = useState({});
-    const [moduleClicks, setModuleClicks] = useState({});
-    const [totalClicks, setTotalClicks] = useState(0);
-
-    // Pools for Round-Robin
-    const quizPoolsRef = useRef({});
-    const flipPoolsRef = useRef({});
+    // Global Time and Click Tracking using Refs (prevents flickering)
+    const moduleTimesRef = useRef({});
+    const moduleClicksRef = useRef({});
+    const totalClicksRef = useRef(0);
+    const activeQuizIndicesRef = useRef({});
+    const activeFlipIndicesRef = useRef({});
+    const quizOffsetRef = useRef({});
+    const flipOffsetRef = useRef({});
 
     const contentRef = useRef(null);
     const menuRef = useRef(null);
@@ -851,44 +851,18 @@ const App = () => {
     const t = contentData[lang];
     const m = t.modules[module];
 
-    // Helper: Round-Robin Pool Drawer
-    const drawFromRefPool = (poolRef, modIdx, count, maxVal) => {
-        let pool = poolRef.current[modIdx] ? [...poolRef.current[modIdx]] : [];
-        let drawn = [];
-        while (drawn.length < count) {
-            if (pool.length === 0) {
-                // Refill and shuffle
-                let arr = Array.from({length: maxVal}, (_, i) => i);
-                for (let i = arr.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [arr[i], arr[j]] = [arr[j], arr[i]];
-                }
-                pool = arr;
-            }
-            drawn.push(pool.pop());
-        }
-        poolRef.current[modIdx] = pool;
-        return drawn;
-    };
-
     // Tracking Timer
     useEffect(() => {
         const timer = setInterval(() => {
-            setModuleTimes(prev => ({
-                ...prev,
-                [module]: (prev[module] || 0) + 1
-            }));
+            moduleTimesRef.current[module] = (moduleTimesRef.current[module] || 0) + 1;
         }, 1000);
         return () => clearInterval(timer);
     }, [module]);
 
     // Tracking Clicks
     const handleGlobalClick = () => {
-        setTotalClicks(c => c + 1);
-        setModuleClicks(prev => ({
-            ...prev,
-            [module]: (prev[module] || 0) + 1
-        }));
+        totalClicksRef.current += 1;
+        moduleClicksRef.current[module] = (moduleClicksRef.current[module] || 0) + 1;
     };
 
     useEffect(() => {
@@ -911,6 +885,39 @@ const App = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const loadNextQuizzes = (modIdx = module) => {
+        const bank = t.modules[modIdx].quizBank;
+        if (!bank) return;
+        const size = bank.length;
+        if (size === 0) return;
+        let offset = quizOffsetRef.current[modIdx] || 0;
+        const q1 = offset % size;
+        const q2 = (offset + 1) % size;
+        quizOffsetRef.current[modIdx] = (offset + 2) % size;
+        const newIndices = [q1, q2];
+        activeQuizIndicesRef.current[modIdx] = newIndices;
+        if (modIdx === module) {
+            setQuizIndices(newIndices);
+            setQuizAnswers({});
+        }
+    };
+
+    const loadNextFlips = (modIdx = module) => {
+        const cards = t.modules[modIdx].flipCards;
+        if (!cards) return;
+        const size = cards.length;
+        if (size === 0) return;
+        let offset = flipOffsetRef.current[modIdx] || 0;
+        const c1 = offset % size;
+        const c2 = (offset + 1) % size;
+        flipOffsetRef.current[modIdx] = (offset + 2) % size;
+        const newIndices = [c1, c2];
+        activeFlipIndicesRef.current[modIdx] = newIndices;
+        if (modIdx === module) {
+            setFlipIndices(newIndices);
+        }
+    };
+
     useEffect(() => {
         setVisited(prev => {
             const next = [...prev];
@@ -921,10 +928,17 @@ const App = () => {
         stopTTS();
 
         if (module >= 1 && module <= 6 && t.modules[module].quizBank && t.modules[module].flipCards) {
-            // Draw fresh for round-robin
-            setQuizIndices(drawFromRefPool(quizPoolsRef, module, 2, 6));
-            setFlipIndices(drawFromRefPool(flipPoolsRef, module, 2, 6));
-            setQuizAnswers({});
+            if (!activeQuizIndicesRef.current[module]) {
+                loadNextQuizzes(module);
+            } else {
+                setQuizIndices(activeQuizIndicesRef.current[module]);
+                setQuizAnswers({}); // Clear local selection on revisit
+            }
+            if (!activeFlipIndicesRef.current[module]) {
+                loadNextFlips(module);
+            } else {
+                setFlipIndices(activeFlipIndicesRef.current[module]);
+            }
         } else {
             setQuizIndices([]);
             setFlipIndices([]);
@@ -934,19 +948,9 @@ const App = () => {
         if (module !== 7) setLabScenarioIdx(0);
     }, [module]);
 
-    const loadNextQuizzes = () => {
-        setQuizIndices(drawFromRefPool(quizPoolsRef, module, 2, 6));
-        setQuizAnswers({});
-    };
-
-    const loadNextFlips = () => {
-        setFlipIndices(drawFromRefPool(flipPoolsRef, module, 2, 6));
-    };
-
     const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
     const toggleLang = () => { stopTTS(); setLang(lang === 'zh' ? 'en' : 'zh'); };
 
-    // Handlers to track flip and quiz completion
     const handleQuizSelection = (qIdx, oIdx, isCorrect) => {
         setQuizAnswers(prev => ({...prev, [qIdx]: oIdx}));
         setGlobalQuizHistory(prev => {
@@ -981,7 +985,7 @@ const App = () => {
         csvContent += (lang === 'zh' ? "組別,學號,姓名,日期\n" : "Group,Student ID,Name,Date\n");
         csvContent += `${exportData.group},${exportData.studentId},${exportData.name},${dateStr}\n\n`;
 
-        const totalTime = Object.values(moduleTimes).reduce((a,b)=>a+b, 0);
+        const totalTime = Object.values(moduleTimesRef.current).reduce((a,b)=>a+b, 0);
         let totalQ = 0, totalA = 0, totalC = 0;
         for(let i=1; i<=6; i++) {
             const bank = t.modules[i].quizBank;
@@ -992,8 +996,8 @@ const App = () => {
         }
         const totalAcc = totalA > 0 ? Math.round((totalC/totalA)*100) : 0;
 
-        csvContent += (lang === 'zh' ? "總學習時間(s),總互動數,總答題正確率\n" : "Total Time(s),Total Clicks,Total Accuracy\n");
-        csvContent += `${totalTime},${totalClicks},${totalAcc}%\n\n`;
+        csvContent += (lang === 'zh' ? "總學習時間(秒),總互動數,總答題正確率\n" : "Total Time(s),Total Clicks,Total Accuracy\n");
+        csvContent += `${totalTime},${totalClicksRef.current},${totalAcc}%\n\n`;
 
         csvContent += (lang === 'zh' ? "模組,時間(s),互動次數,答對,已答,總題數\n" : "Module,Time(s),Clicks,Correct,Answered,Total\n");
 
@@ -1003,8 +1007,8 @@ const App = () => {
             const tQ = bank ? bank.length : 0;
             const tA = Object.keys(hist).length;
             const tC = Object.values(hist).filter(v=>v).length;
-            const tTime = moduleTimes[i] || 0;
-            const tClicks = moduleClicks[i] || 0;
+            const tTime = moduleTimesRef.current[i] || 0;
+            const tClicks = moduleClicksRef.current[i] || 0;
             csvContent += `"${t.modules[i].title}",${tTime},${tClicks},${tC},${tA},${tQ}\n`;
         }
 
@@ -1098,7 +1102,7 @@ const App = () => {
         }
         
         if (module === 9) {
-            const totalTime = Object.values(moduleTimes).reduce((a,b)=>a+b, 0);
+            const totalTime = Object.values(moduleTimesRef.current).reduce((a,b)=>a+b, 0);
             let totalQ = 0, totalA = 0, totalC = 0;
             for(let i=1; i<=6; i++) {
                 const bank = t.modules[i].quizBank;
@@ -1110,8 +1114,8 @@ const App = () => {
             const totalAcc = totalA > 0 ? Math.round((totalC/totalA)*100) : 0;
 
             parts.push(lang === 'zh' 
-                ? `動態成績儀表板。總學習時間 ${totalTime} 秒，總互動點擊 ${totalClicks} 次，總答題正確率 ${totalAcc}%。` 
-                : `Dynamic Dashboard. Total Learning Time ${totalTime} seconds, Total Interactions ${totalClicks}, Overall Accuracy ${totalAcc}%.`);
+                ? `動態成績儀表板。總學習時間 ${totalTime} 秒，總互動點擊 ${totalClicksRef.current} 次，總答題正確率 ${totalAcc}%。` 
+                : `Dynamic Dashboard. Total Learning Time ${totalTime} seconds, Total Interactions ${totalClicksRef.current}, Overall Accuracy ${totalAcc}%.`);
             
             for(let i=1; i<=6; i++) {
                 const bank = t.modules[i].quizBank;
@@ -1119,8 +1123,8 @@ const App = () => {
                 const tQ = bank ? bank.length : 0;
                 const tA = Object.keys(hist).length;
                 const tC = Object.values(hist).filter(v=>v).length;
-                const tTime = moduleTimes[i] || 0;
-                const tClicks = moduleClicks[i] || 0;
+                const tTime = moduleTimesRef.current[i] || 0;
+                const tClicks = moduleClicksRef.current[i] || 0;
                 parts.push(lang === 'zh' 
                     ? `${t.modules[i].title}：時間 ${tTime} 秒，互動 ${tClicks} 次，答對 ${tC} 題，已答 ${tA} 題，共 ${tQ} 題。` 
                     : `${t.modules[i].title}: Time ${tTime} seconds, Clicks ${tClicks}, ${tC} correct out of ${tA} answered, total ${tQ}.`);
@@ -1214,7 +1218,7 @@ const App = () => {
                 </div>
                 <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-end">
                     <button 
-                        onClick={loadNextFlips} 
+                        onClick={() => loadNextFlips()} 
                         className="w-full sm:w-auto px-6 py-3 bg-slate-100 dark:bg-slate-700/50 hover:bg-[#D8C3A5]/20 dark:hover:bg-slate-700 text-[#004030] dark:text-[#D8C3A5] rounded-xl text-sm font-bold shadow-sm transition-colors border border-slate-200 dark:border-slate-600 flex items-center justify-center gap-2 uppercase tracking-wider"
                     >
                         <Icon name="refresh" size={16} />
@@ -1286,7 +1290,7 @@ const App = () => {
                 </div>
                 <div className="mt-8 pt-4 border-t border-[#004030]/10 dark:border-slate-700 flex justify-end">
                     <button 
-                        onClick={loadNextQuizzes} 
+                        onClick={() => loadNextQuizzes()} 
                         className="w-full sm:w-auto px-6 py-3 bg-[#004030] dark:bg-[#D8C3A5] text-[#D8C3A5] dark:text-[#004030] rounded-xl text-sm font-bold shadow-md hover:bg-[#002b20] dark:hover:bg-white transition-colors flex items-center justify-center gap-2 uppercase tracking-wider"
                     >
                         <Icon name="refresh" size={16} />
@@ -1621,14 +1625,14 @@ const App = () => {
         </div>
     );
 
-    // Module 9: Learning Journey & Export (No Scroll Design)
+    // Module 9: Learning Journey & Export (Static Dashboard, Non-Flickering)
     const LearningJourney = () => {
         const handleInputChange = (e) => {
             const { name, value } = e.target;
             setExportData(prev => ({...prev, [name]: value}));
         };
 
-        const totalTime = Object.values(moduleTimes).reduce((a,b)=>a+b, 0);
+        const totalTime = Object.values(moduleTimesRef.current).reduce((a,b)=>a+b, 0);
         let totalQ = 0, totalA = 0, totalC = 0;
         for(let i=1; i<=6; i++) {
             const bank = t.modules[i].quizBank;
@@ -1647,11 +1651,11 @@ const App = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-2 shrink-0">
                     <div className="bg-[#004030]/5 dark:bg-slate-800/40 p-4 rounded-xl border border-[#004030]/10 dark:border-slate-700 text-center shadow-sm">
                         <div className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-1">{t.journey_total_time}</div>
-                        <div className="text-2xl font-black text-[#004030] dark:text-[#D8C3A5]">{totalTime} s</div>
+                        <div className="text-2xl font-black text-[#004030] dark:text-[#D8C3A5]">{totalTime}</div>
                     </div>
                     <div className="bg-[#004030]/5 dark:bg-slate-800/40 p-4 rounded-xl border border-[#004030]/10 dark:border-slate-700 text-center shadow-sm">
                         <div className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-1">{t.journey_total_clicks}</div>
-                        <div className="text-2xl font-black text-[#004030] dark:text-[#D8C3A5]">{totalClicks}</div>
+                        <div className="text-2xl font-black text-[#004030] dark:text-[#D8C3A5]">{totalClicksRef.current}</div>
                     </div>
                     <div className="bg-[#004030]/5 dark:bg-slate-800/40 p-4 rounded-xl border border-[#004030]/10 dark:border-slate-700 text-center shadow-sm">
                         <div className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-1">{t.journey_total_acc}</div>
@@ -1683,8 +1687,8 @@ const App = () => {
                                         const tQ = bank ? bank.length : 0;
                                         const tA = Object.keys(hist).length;
                                         const tC = Object.values(hist).filter(v=>v).length;
-                                        const timeSpent = moduleTimes[modIdx] || 0;
-                                        const clicks = moduleClicks[modIdx] || 0;
+                                        const timeSpent = moduleTimesRef.current[modIdx] || 0;
+                                        const clicks = moduleClicksRef.current[modIdx] || 0;
                                         return (
                                             <tr key={modIdx} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                                                 <td className="p-3 text-sm font-medium text-slate-700 dark:text-slate-300">{t.modules[modIdx].title}</td>
@@ -1926,7 +1930,7 @@ const App = () => {
                         <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs truncate hidden sm:inline">{t.copyright}</span>
                     </div>
                     <div className="flex items-center gap-4 shrink-0">
-                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs flex items-center gap-1 shrink-0">
+                        <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs hidden sm:flex items-center gap-1">
                             Architect:&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-[#D8C3A5] hover:text-white underline underline-offset-2 transition-colors truncate">Prof. Shihmin Lo</a>
                         </span>
                         <button onClick={scrollToTop} className="text-[#D8C3A5] hover:text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 uppercase tracking-wider transition-colors shrink-0 group border-l border-[#D8C3A5]/30 pl-4">
