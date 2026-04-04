@@ -105,6 +105,13 @@ const contentData = {
         quiz_score: "答對 {correct} / 已答 {answered} / 全數 {total}",
         flip_score: "已翻閱 {viewed} / 全數 {total}",
         journey_title: "動態成績儀表板與匯出中心",
+        journey_total_time: "總學習時間 (秒)",
+        journey_total_clicks: "總互動 (點擊) 數",
+        journey_total_acc: "總答題正確率",
+        col_module: "分頁主題",
+        col_time: "時間 (s)",
+        col_clicks: "次數",
+        col_score: "對 / 答 / 總數",
         export_btn: "匯出 CSV 學習紀錄",
         export_alert: "請完整填寫組別、學號與姓名！",
         group_label: "組別 (Group)",
@@ -442,10 +449,10 @@ const contentData = {
     },
     en: {
         brand: "PMA",
-        headerTitle: "PM Align - HW/SW Product Management",
+        headerTitle: "HW/SW Product Management",
         docTitle: "HW/SW PM Architecture Alignment",
         subtitle: "Organizational Design & Methodologies",
-        date: "2026.04.03",
+        date: "2026.04.04",
         copyright: "All Rights Reserved",
         web_version: "Version",
         architect_url: "https://www.ibs.ncnu.edu.tw/index.php/faculty/tenured-professor/299-smlo",
@@ -462,6 +469,13 @@ const contentData = {
         quiz_score: "{correct} Correct / {answered} Answered / {total} Total",
         flip_score: "{viewed} Viewed / {total} Total",
         journey_title: "Dynamic Dashboard & Export",
+        journey_total_time: "Total Learning Time (s)",
+        journey_total_clicks: "Total Interactions (clicks)",
+        journey_total_acc: "Overall Accuracy",
+        col_module: "Module",
+        col_time: "Time (s)",
+        col_clicks: "Clicks",
+        col_score: "Correct/Ans/Total",
         export_btn: "Export CSV Record",
         export_alert: "Please fill in Group, Student ID, and Name!",
         group_label: "Group",
@@ -822,29 +836,59 @@ const App = () => {
     // Active Scenario in Lab
     const [labScenarioIdx, setLabScenarioIdx] = useState(0);
 
+    // Global Time and Click Tracking
+    const [moduleTimes, setModuleTimes] = useState({});
+    const [moduleClicks, setModuleClicks] = useState({});
+    const [totalClicks, setTotalClicks] = useState(0);
+
+    // Pools for Round-Robin
+    const quizPoolsRef = useRef({});
+    const flipPoolsRef = useRef({});
+
     const contentRef = useRef(null);
     const menuRef = useRef(null);
 
     const t = contentData[lang];
     const m = t.modules[module];
 
-    // Helper: Random Index Generator
-    const getRandomIndices = (max, count, exclude = []) => {
-        if (max === 0) return [];
-        const indices = [];
-        let attempts = 0;
-        while(indices.length < count && attempts < 50) {
-            const r = Math.floor(Math.random() * max);
-            if(!indices.includes(r) && !exclude.includes(r)) indices.push(r);
-            attempts++;
-        }
-        if(indices.length < count) {
-            while(indices.length < count) {
-                const r = Math.floor(Math.random() * max);
-                if(!indices.includes(r)) indices.push(r);
+    // Helper: Round-Robin Pool Drawer
+    const drawFromRefPool = (poolRef, modIdx, count, maxVal) => {
+        let pool = poolRef.current[modIdx] ? [...poolRef.current[modIdx]] : [];
+        let drawn = [];
+        while (drawn.length < count) {
+            if (pool.length === 0) {
+                // Refill and shuffle
+                let arr = Array.from({length: maxVal}, (_, i) => i);
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                pool = arr;
             }
+            drawn.push(pool.pop());
         }
-        return indices;
+        poolRef.current[modIdx] = pool;
+        return drawn;
+    };
+
+    // Tracking Timer
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setModuleTimes(prev => ({
+                ...prev,
+                [module]: (prev[module] || 0) + 1
+            }));
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [module]);
+
+    // Tracking Clicks
+    const handleGlobalClick = () => {
+        setTotalClicks(c => c + 1);
+        setModuleClicks(prev => ({
+            ...prev,
+            [module]: (prev[module] || 0) + 1
+        }));
     };
 
     useEffect(() => {
@@ -877,8 +921,9 @@ const App = () => {
         stopTTS();
 
         if (module >= 1 && module <= 6 && t.modules[module].quizBank && t.modules[module].flipCards) {
-            setQuizIndices(getRandomIndices(6, 2));
-            setFlipIndices(getRandomIndices(6, 2));
+            // Draw fresh for round-robin
+            setQuizIndices(drawFromRefPool(quizPoolsRef, module, 2, 6));
+            setFlipIndices(drawFromRefPool(flipPoolsRef, module, 2, 6));
             setQuizAnswers({});
         } else {
             setQuizIndices([]);
@@ -890,12 +935,12 @@ const App = () => {
     }, [module]);
 
     const loadNextQuizzes = () => {
-        setQuizIndices(getRandomIndices(6, 2, quizIndices));
+        setQuizIndices(drawFromRefPool(quizPoolsRef, module, 2, 6));
         setQuizAnswers({});
     };
 
     const loadNextFlips = () => {
-        setFlipIndices(getRandomIndices(6, 2, flipIndices));
+        setFlipIndices(drawFromRefPool(flipPoolsRef, module, 2, 6));
     };
 
     const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
@@ -936,21 +981,32 @@ const App = () => {
         csvContent += (lang === 'zh' ? "組別,學號,姓名,日期\n" : "Group,Student ID,Name,Date\n");
         csvContent += `${exportData.group},${exportData.studentId},${exportData.name},${dateStr}\n\n`;
 
-        csvContent += (lang === 'zh' ? "模組,總題數,已答題數,答對題數,正確率\n" : "Module,Total,Answered,Correct,Accuracy\n");
-
+        const totalTime = Object.values(moduleTimes).reduce((a,b)=>a+b, 0);
         let totalQ = 0, totalA = 0, totalC = 0;
+        for(let i=1; i<=6; i++) {
+            const bank = t.modules[i].quizBank;
+            const hist = globalQuizHistory[i] || {};
+            totalQ += bank ? bank.length : 0;
+            totalA += Object.keys(hist).length;
+            totalC += Object.values(hist).filter(v=>v).length;
+        }
+        const totalAcc = totalA > 0 ? Math.round((totalC/totalA)*100) : 0;
+
+        csvContent += (lang === 'zh' ? "總學習時間(s),總互動數,總答題正確率\n" : "Total Time(s),Total Clicks,Total Accuracy\n");
+        csvContent += `${totalTime},${totalClicks},${totalAcc}%\n\n`;
+
+        csvContent += (lang === 'zh' ? "模組,時間(s),互動次數,答對,已答,總題數\n" : "Module,Time(s),Clicks,Correct,Answered,Total\n");
+
         for(let i=1; i<=6; i++) {
             const bank = t.modules[i].quizBank;
             const hist = globalQuizHistory[i] || {};
             const tQ = bank ? bank.length : 0;
             const tA = Object.keys(hist).length;
             const tC = Object.values(hist).filter(v=>v).length;
-            const acc = tA > 0 ? Math.round((tC/tA)*100) + '%' : '0%';
-            csvContent += `"${t.modules[i].title}",${tQ},${tA},${tC},${acc}\n`;
-            totalQ += tQ; totalA += tA; totalC += tC;
+            const tTime = moduleTimes[i] || 0;
+            const tClicks = moduleClicks[i] || 0;
+            csvContent += `"${t.modules[i].title}",${tTime},${tClicks},${tC},${tA},${tQ}\n`;
         }
-        const totalAcc = totalA > 0 ? Math.round((totalC/totalA)*100) + '%' : '0%';
-        csvContent += `\n${lang==='zh'?'總計':'Total'},${totalQ},${totalA},${totalC},${totalAcc}\n`;
 
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
@@ -1042,18 +1098,34 @@ const App = () => {
         }
         
         if (module === 9) {
-            parts.push(lang === 'zh' ? '目前各模組測驗成績總覽：' : 'Current Quiz Score Summary:');
-            let totalQ = 0, totalC = 0;
+            const totalTime = Object.values(moduleTimes).reduce((a,b)=>a+b, 0);
+            let totalQ = 0, totalA = 0, totalC = 0;
+            for(let i=1; i<=6; i++) {
+                const bank = t.modules[i].quizBank;
+                const hist = globalQuizHistory[i] || {};
+                totalQ += bank ? bank.length : 0;
+                totalA += Object.keys(hist).length;
+                totalC += Object.values(hist).filter(v=>v).length;
+            }
+            const totalAcc = totalA > 0 ? Math.round((totalC/totalA)*100) : 0;
+
+            parts.push(lang === 'zh' 
+                ? `動態成績儀表板。總學習時間 ${totalTime} 秒，總互動點擊 ${totalClicks} 次，總答題正確率 ${totalAcc}%。` 
+                : `Dynamic Dashboard. Total Learning Time ${totalTime} seconds, Total Interactions ${totalClicks}, Overall Accuracy ${totalAcc}%.`);
+            
             for(let i=1; i<=6; i++) {
                 const bank = t.modules[i].quizBank;
                 const hist = globalQuizHistory[i] || {};
                 const tQ = bank ? bank.length : 0;
+                const tA = Object.keys(hist).length;
                 const tC = Object.values(hist).filter(v=>v).length;
-                totalQ += tQ;
-                totalC += tC;
-                parts.push(lang === 'zh' ? `${t.modules[i].title}：答對 ${tC} 題，共 ${tQ} 題。` : `${t.modules[i].title}: ${tC} out of ${tQ} correct.`);
+                const tTime = moduleTimes[i] || 0;
+                const tClicks = moduleClicks[i] || 0;
+                parts.push(lang === 'zh' 
+                    ? `${t.modules[i].title}：時間 ${tTime} 秒，互動 ${tClicks} 次，答對 ${tC} 題，已答 ${tA} 題，共 ${tQ} 題。` 
+                    : `${t.modules[i].title}: Time ${tTime} seconds, Clicks ${tClicks}, ${tC} correct out of ${tA} answered, total ${tQ}.`);
             }
-            parts.push(lang === 'zh' ? `總計答對 ${totalC} 題，共 ${totalQ} 題。請填寫您的組別、學號與姓名後，點擊匯出 CSV 學習紀錄。` : `Total: ${totalC} out of ${totalQ} correct. Please fill in your Group, Student ID, and Name to export the CSV record.`);
+            parts.push(lang === 'zh' ? `請填寫您的組別、學號與姓名後，點擊匯出 CSV 學習紀錄。` : `Please fill in your Group, Student ID, and Name to export the CSV record.`);
         }
 
         return parts.join(' ');
@@ -1556,13 +1628,40 @@ const App = () => {
             setExportData(prev => ({...prev, [name]: value}));
         };
 
+        const totalTime = Object.values(moduleTimes).reduce((a,b)=>a+b, 0);
+        let totalQ = 0, totalA = 0, totalC = 0;
+        for(let i=1; i<=6; i++) {
+            const bank = t.modules[i].quizBank;
+            const hist = globalQuizHistory[i] || {};
+            totalQ += bank ? bank.length : 0;
+            totalA += Object.keys(hist).length;
+            totalC += Object.values(hist).filter(v=>v).length;
+        }
+        const totalAcc = totalA > 0 ? Math.round((totalC/totalA)*100) : 0;
+
         return (
             <div className="animate-fade-in h-full flex flex-col space-y-6">
                 <p className="text-lg text-slate-600 dark:text-slate-300 shrink-0">{m.desc}</p>
                 
+                {/* Dashboard Metrics */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-2 shrink-0">
+                    <div className="bg-[#004030]/5 dark:bg-slate-800/40 p-4 rounded-xl border border-[#004030]/10 dark:border-slate-700 text-center shadow-sm">
+                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-1">{t.journey_total_time}</div>
+                        <div className="text-2xl font-black text-[#004030] dark:text-[#D8C3A5]">{totalTime} s</div>
+                    </div>
+                    <div className="bg-[#004030]/5 dark:bg-slate-800/40 p-4 rounded-xl border border-[#004030]/10 dark:border-slate-700 text-center shadow-sm">
+                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-1">{t.journey_total_clicks}</div>
+                        <div className="text-2xl font-black text-[#004030] dark:text-[#D8C3A5]">{totalClicks}</div>
+                    </div>
+                    <div className="bg-[#004030]/5 dark:bg-slate-800/40 p-4 rounded-xl border border-[#004030]/10 dark:border-slate-700 text-center shadow-sm">
+                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-1">{t.journey_total_acc}</div>
+                        <div className="text-2xl font-black text-[#004030] dark:text-[#D8C3A5]">{totalAcc}%</div>
+                    </div>
+                </div>
+
                 <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
                     {/* Left: Score Summary Table */}
-                    <div className="lg:w-2/3 bg-white dark:bg-slate-800 p-4 sm:p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
+                    <div className="lg:w-2/3 bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
                         <h3 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5] mb-4 border-b border-slate-200 dark:border-slate-700 pb-3 flex items-center gap-2 shrink-0">
                             <Icon name="star" size={24} />
                             {t.journey_title}
@@ -1571,28 +1670,27 @@ const App = () => {
                             <table className="w-full text-left border-collapse min-w-[500px]">
                                 <thead>
                                     <tr className="bg-slate-100 dark:bg-slate-900 border-y border-slate-200 dark:border-slate-700">
-                                        <th className="p-3 text-sm font-bold text-slate-600 dark:text-slate-400">{lang==='zh'?'模組名稱':'Module'}</th>
-                                        <th className="p-3 text-sm font-bold text-center text-slate-600 dark:text-slate-400">{lang==='zh'?'總題數':'Total'}</th>
-                                        <th className="p-3 text-sm font-bold text-center text-slate-600 dark:text-slate-400">{lang==='zh'?'已答題數':'Answered'}</th>
-                                        <th className="p-3 text-sm font-bold text-center text-emerald-600 dark:text-emerald-400">{lang==='zh'?'答對題數':'Correct'}</th>
-                                        <th className="p-3 text-sm font-bold text-center text-slate-600 dark:text-slate-400">{lang==='zh'?'正確率':'Accuracy'}</th>
+                                        <th className="p-3 text-sm font-bold text-slate-600 dark:text-slate-400">{t.col_module}</th>
+                                        <th className="p-3 text-sm font-bold text-center text-slate-600 dark:text-slate-400">{t.col_time}</th>
+                                        <th className="p-3 text-sm font-bold text-center text-slate-600 dark:text-slate-400">{t.col_clicks}</th>
+                                        <th className="p-3 text-sm font-bold text-center text-emerald-600 dark:text-emerald-400">{t.col_score}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
                                     {[1,2,3,4,5,6].map(modIdx => {
                                         const bank = t.modules[modIdx].quizBank;
                                         const hist = globalQuizHistory[modIdx] || {};
-                                        const totalQ = bank ? bank.length : 0;
-                                        const answered = Object.keys(hist).length;
-                                        const correct = Object.values(hist).filter(v=>v).length;
-                                        const acc = answered > 0 ? Math.round((correct/answered)*100) : 0;
+                                        const tQ = bank ? bank.length : 0;
+                                        const tA = Object.keys(hist).length;
+                                        const tC = Object.values(hist).filter(v=>v).length;
+                                        const timeSpent = moduleTimes[modIdx] || 0;
+                                        const clicks = moduleClicks[modIdx] || 0;
                                         return (
                                             <tr key={modIdx} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                                                 <td className="p-3 text-sm font-medium text-slate-700 dark:text-slate-300">{t.modules[modIdx].title}</td>
-                                                <td className="p-3 text-sm text-center text-slate-500 dark:text-slate-400">{totalQ}</td>
-                                                <td className="p-3 text-sm text-center text-slate-500 dark:text-slate-400">{answered}</td>
-                                                <td className="p-3 text-sm text-center font-bold text-emerald-600 dark:text-emerald-400">{correct}</td>
-                                                <td className="p-3 text-sm text-center text-slate-500 dark:text-slate-400">{acc}%</td>
+                                                <td className="p-3 text-sm text-center text-slate-500 dark:text-slate-400">{timeSpent}</td>
+                                                <td className="p-3 text-sm text-center text-slate-500 dark:text-slate-400">{clicks}</td>
+                                                <td className="p-3 text-sm text-center font-bold text-emerald-600 dark:text-emerald-400">{tC} / {tA} / {tQ}</td>
                                             </tr>
                                         );
                                     })}
@@ -1602,12 +1700,12 @@ const App = () => {
                     </div>
 
                     {/* Right: Export Form */}
-                    <div className="lg:w-1/3 bg-[#004030]/5 dark:bg-slate-800/40 p-4 sm:p-6 md:p-8 rounded-2xl border border-[#004030]/10 dark:border-slate-700 shadow-sm flex flex-col">
-                        <h3 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5] mb-4 border-b border-[#004030]/10 dark:border-slate-700 pb-3 flex items-center gap-2 shrink-0">
-                            <Icon name="download" size={24} />
-                            {t.export_btn}
-                        </h3>
-                        <div className="flex-1 space-y-5">
+                    <div className="lg:w-1/3 bg-[#004030]/5 dark:bg-slate-800/40 p-4 sm:p-6 rounded-2xl border border-[#004030]/10 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-bold text-[#004030] dark:text-[#D8C3A5] mb-4 border-b border-[#004030]/10 dark:border-slate-700 pb-3 flex items-center gap-2 shrink-0">
+                                <Icon name="download" size={24} />
+                                {t.export_btn}
+                            </h3>
                             <div>
                                 <label className="block text-sm font-bold text-[#004030] dark:text-[#D8C3A5] mb-2">{t.group_label}</label>
                                 <select 
@@ -1673,7 +1771,7 @@ const App = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col pt-16 pb-12 font-sans bg-slate-50 dark:bg-slate-900 relative">
+        <div className="min-h-screen flex flex-col pt-16 pb-12 font-sans bg-slate-50 dark:bg-slate-900 relative" onClickCapture={handleGlobalClick}>
             {/* Header - Fixed & Never Moving */}
             <header className="fixed top-0 left-0 right-0 h-16 z-50 bg-[#004030] shadow-md border-b border-[#D8C3A5]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex justify-between items-center">
@@ -1829,7 +1927,7 @@ const App = () => {
                     </div>
                     <div className="flex items-center gap-4 shrink-0">
                         <span className="text-[#D8C3A5]/80 text-[10px] sm:text-xs flex items-center gap-1 shrink-0">
-                            Architect:&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-[#D8C3A5] hover:text-white underline underline-offset-2 transition-colors truncate">Shihmin Lo</a>
+                            Architect:&nbsp;<a href={t.architect_url} target="_blank" rel="noopener noreferrer" className="text-[#D8C3A5] hover:text-white underline underline-offset-2 transition-colors truncate">Prof. Shihmin Lo</a>
                         </span>
                         <button onClick={scrollToTop} className="text-[#D8C3A5] hover:text-white text-[10px] sm:text-xs font-bold flex items-center gap-1 uppercase tracking-wider transition-colors shrink-0 group border-l border-[#D8C3A5]/30 pl-4">
                             Top <Icon name="arrowUp" size={14} className="group-hover:-translate-y-0.5 transition-transform" />
