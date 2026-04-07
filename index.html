@@ -55,11 +55,23 @@ tailwind.config = {
 .transform-style-3d { transform-style: preserve-3d; }
 .backface-hidden { backface-visibility: hidden; }
 .rotate-y-180 { transform: rotateY(180deg); }
-.flip-card-inner { transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
-.flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
-@media (hover: hover) {
-    .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+
+/* --- 翻轉卡片手機端流暢度優化 --- */
+.flip-card { 
+    -webkit-tap-highlight-color: transparent; /* 消除 iOS 點擊灰底 */
+    touch-action: manipulation; /* 消除手機 300ms 點擊延遲 */
 }
+.flip-card-inner { 
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+    transform-style: preserve-3d; 
+}
+.flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+
+/* 加入點擊瞬間的物理微縮回饋，提升操作手感 */
+.flip-card:active .flip-card-inner { transform: scale(0.96); transition: transform 0.1s; }
+.flip-card.flipped:active .flip-card-inner { transform: rotateY(180deg) scale(0.96); transition: transform 0.1s; }
+/* -------------------------------- */
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
